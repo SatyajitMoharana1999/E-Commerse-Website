@@ -1,0 +1,132 @@
+﻿@model Product;
+@{
+    var productImage = Model.product_image ?? string.Empty;
+}
+
+<div class="container p-3 ps-4">
+    <div class="row">
+        <div class="col-lg-4 pe-4 d-flex flex-column justify-content-baseline align-items-center">
+            <div class="box my-3 ">
+            </div>
+            <div>
+                <a class="btn btn-secondary" asp-action="productList">Back to list</a>
+                <a class="btn btn-primary" asp-action="ProductUpsert" asp-route-id="@Model.product_id">Edit</a>
+                <button class="btn btn-danger" id="cd_delete" data-delete="@Model.product_id">Delete</button>
+            </div>
+        </div>
+        <ol class="list-group list-group col-lg-7 my-2">
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <strong>Name :- </strong>
+                    </div>
+                    <div class="col-lg">
+                        @Model.product_name
+                    </div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <strong>Price :- </strong>
+                    </div>
+                    <div class="col-lg">
+                        @Model.product_price
+                    </div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <strong>Category :- </strong>
+                    </div>
+                    <div class="col-lg">
+                        @Model.Category.category_name
+                    </div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <strong>Created By :- </strong>
+                    </div>
+                    <div class="col-lg">
+                        @Model.Admin.admin_name
+                    </div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <strong style="font-size:.8rem;">Description </strong>
+                    </div>
+                    <div class="col-lg">
+                        @Model.product_description
+                    </div>
+                </div>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 text-primary" id="exampleModalLabel">Are You Sure ?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex flex-column justify-content-center align-items-center ">
+                    <div class="c_img_box">
+                    </div>
+                    <ul class="list-group mt-3">
+                        <li class="list-group-item active" aria-current="true">
+                            <b>Name :- </b><span id="c_name">@Model.product_name</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="m_delete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(function(){
+            let p_image = "@productImage";
+            if (p_image != "") {
+                $(".box").css("background-image", "url('"+@Url.Content("~/ProductImages/") +"@Model.product_image')");
+            }
+
+            $("#cd_delete").click(function () {
+                $("#deleteModal").modal("show", true);
+            })
+
+            $("#m_delete").click(function(){
+                let did = $("#cd_delete").data("delete");
+                $.ajax({
+                    url: "/category/productDelete",
+                    type: "post",
+                    data: {id:did},
+                    success: function (res) {
+                        if (res) {
+                            $("#deleteModal").modal("hide", true);
+                            window.location.href = "/category/productlist";
+                            alert("successfully deleted");
+                        }
+                        else {
+                            alert("failed");
+                        }
+                    }
+                });
+            })
+
+        })
+    </script>
+}

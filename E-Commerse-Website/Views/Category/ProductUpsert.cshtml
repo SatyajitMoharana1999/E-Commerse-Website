@@ -1,0 +1,270 @@
+﻿@model ProductVM;
+@{
+    var productimage = Model.product.product_image ?? string.Empty;
+}
+<style>
+    .p_img_wrap {
+        max-width:250px;
+        width: 100%;
+        aspect-ratio:1/1;
+        position: relative;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    #image_cancel_button {
+        position: absolute;
+        top: 0px;
+        right: 5px;
+        color: red;
+        font-size: 1.2rem;
+    }
+
+    .p_img_wrap .inp_container i {
+        display: inline-block;
+        font-size: 3rem;
+        opacity: 60%;
+    }
+
+    .inp_file {
+        width: 150px;
+        position: absolute;
+        bottom: 0%;
+        left: 50%;
+        transform: translate(-50%,0%);
+    }
+
+    .inp_wrapper {
+        overflow: hidden;
+    }
+
+    .inp_file #p_img-error {
+        position: absolute;
+        top: 35px;
+        width: 150px;
+    }
+
+    .inp_file input[type="file"] {
+        opacity: 0;
+    }
+
+    #p_img {
+        z-index: -1;
+        overflow: hidden;
+    }
+
+    .inp_file .up_text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        z-index: 2;
+    }
+
+</style>
+<div class="container p-3 px-4">
+    <h4 class="text-secondary">@(Model.product.product_id != 0 ? "Update Product" : "Add Product")</h4>
+    <form id="p_form" enctype="multipart/form-data">
+        <div class="container p-0 mb-1">
+            <div class="row mb-3">
+                <div class="col-lg-4 col-sm-12">
+                    <div>
+                        <div class="d-flex flex-column justify-content-center align-items-center">
+                            <div class="p_img_wrap border border-success shadow mt-3">
+                                <i class="bi bi-x-square" id="image_cancel_button"></i>
+                                <div class="inp_container">
+                                    <label for="p_img">
+                                        <i class="bi bi-arrow-up-square text-success"></i>
+                                    </label>
+                                    <div class="inp_file">
+                                        <div class="up_text text-primary">
+                                            <label for="p_img" class="upload_text">Upload</label>
+                                        </div>
+                                        <div class="inp_wrapper">
+                                            <input type="file" id="p_img" accept="image/*" name="p_img" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 col-sm-12">
+                    <div class="mb-3">
+                        <input type="hidden" id="p_id" name="p_id" asp-for="@Model.product.product_id" />
+                        <label for="p_name" class="text-primary">Name</label>
+                        <input type="text" id="p_name" class="form-control" name="p_name" asp-for="@Model.product.product_name" />
+                    </div>
+                    <div class="mb-3">
+                        <div class="row g-3"> 
+                            <div class="col-sm-6 col-lg-12 col-xl-6">
+                                <label for="p_category" class="text-primary">Category</label>
+                                <select type="number" id="p_category" class="form-select" name="p_category" asp-for="@Model.product.cat_id" asp-items="@Model.categoryList">
+                                    <option selected disabled>-- Category --</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6 col-lg-12 col-xl-6">
+                                <label for="p_price" class="text-primary">Price</label>
+                                <input type="number" id="p_price" class="form-control" name="p_price" asp-for="@Model.product.product_price"/>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="">
+                        <label for="p_description" class="text-primary">Description</label>
+                        <textarea id="p_description" name="p_description" asp-for="@Model.product.product_description" class="form-control" cols="50" rows="2" style="resize:none"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row px-4 pt-3">
+                <div class="d-flex justify-content-end align-items-center">
+                    <a href="@Url.Action("productlist","Category")" class="btn btn-danger mx-1">Back To List</a>
+                    <button type="button" class="btn btn-success mx-1" id="p_add_submit"><i class="bi bi-plus-circle"></i> Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+@section Scripts{
+    <script>
+        $(function(){
+            $("#image_cancel_button").hide();
+            SetProductImageComesFromEdit();
+            function SetProductImageComesFromEdit() {
+                var ImageVariable = '@productimage';
+                if (ImageVariable != "" && ImageVariable != null) {
+                    $(".p_img_wrap").css("background-image", "url('" + "@Url.Content("~/ProductImages/")" + ImageVariable + "')");
+                    $("#image_cancel_button").show();
+                    $('label[for="p_img"]').hide();
+                }
+            }
+            $("#p_form").validate({
+                rules: {
+                    p_name: {
+                        required: true
+                    },
+                    p_price: {
+                        required: true,
+                    },
+                    p_description: {
+                        required: true
+                    },
+                    p_img: {
+                        required: true
+                    },
+                    p_category:{
+                        required: true
+                    }
+                },
+                messages: {
+                    p_name: {
+                        required: "Product Name is  Required"
+                    },
+                    p_price: {
+                        required: "Product Price is required",
+                    },
+                    p_description: {
+                        required: "You have to describe your Product"
+                    },
+                    p_img: {
+                        required: "Select a Image Here"
+                    },
+                    p_category:{
+                        required: "Choose A Category Here"
+                    }
+                },
+            });
+            $("#p_img").change(function () {
+                // Function to display the selected image
+                displaySelectedImage(this);
+            });
+            function displaySelectedImage(input) {
+                if (input.files && input.files[0]) {
+                    $("#image_cancel_button").show();
+                    $('label[for="p_img"]').hide();
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $(".p_img_wrap").css(`background-image`, `url('${e.target.result}')`);
+                        //currentImage = e.target.result;
+                        //console.log(currentImage);
+                        //$(".p_img_wrap").css(`background-image`, `url('${currentImage}')`);
+                    };
+
+                    // Read the selected image as data URL
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+            $("#image_cancel_button").click(function () {
+                $("#image_cancel_button").hide();
+                $('label[for="p_img"]').show();
+                $("#p_img").val(null);
+                $(".p_img_wrap").css(`background-image`, ``);
+            })
+
+            function clearForm() {
+                $("#p_name").val("");
+                $("#p_category").val("");
+                $("#p_price").val("");
+                $("#p_description").val("");
+                $("#ImageSave").val(null);
+                $(".p_img_wrap").css(`background-image`, ``);
+                $("#image_cancel_button").hide();
+                $('label[for="p_img"]').show();
+            }
+            $("#p_add_submit").click(function(){
+                if ($("#p_id").val() != 0) {
+                    //$("#p_form").validate().settings.rules["p_name"] = undefined;
+                    $('#p_img').rules('remove', 'required');
+                }
+                let isvalid = $("#p_form").valid();
+                if (isvalid) {
+                    let obj = {
+                        product_id: $("#p_id").val(),
+                        product_name: $("#p_name").val(),
+                        product_price: $("#p_price").val(),
+                        cat_id: $("#p_category").val(),
+                        product_description: $("#p_description").val(),
+                    }
+                    console.log(obj);
+                    let imagefile = $("#p_img")[0].files[0];
+
+                    let pvm = new FormData();
+                    for (let p in obj) {
+                        pvm.append(`product.${p}`, obj[p]);
+                    }
+                    pvm.append(`imagefile`, imagefile);
+                    $.ajax({
+                        url: "/Category/productupsert",
+                        type: "post",
+                        contentType: false,
+                        processData: false,
+                        data: pvm,
+                        success: function (res) {
+                            if (res) {
+                                console.log("success");
+                                clearForm();
+                                window.location.href="/Category/productlist"
+                            }
+                        }
+                    })
+                }
+                else{
+                    $("#p_form").validate().showErrors();
+                }
+                
+            })
+            
+        })
+    </script>
+}

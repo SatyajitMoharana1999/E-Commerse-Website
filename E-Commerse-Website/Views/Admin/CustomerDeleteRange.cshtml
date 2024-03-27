@@ -1,0 +1,195 @@
+﻿@model List<Customer>;
+@section Styles{
+    <style>
+        .c_img{
+            background-size:cover;
+            background-position:center;
+
+        }
+        .modal b{
+            display:inline-block;
+            width:35%;
+        }
+    </style>
+}
+
+<div class="container d-flex flex-wrap flex-column">
+    <div class="shadow mt-2 border">
+        <div class="d-flex flex-wrap p-2 " style="width:100%">
+            @foreach (var cus in Model)
+            {
+                <div class="card m-2" style="width: 15rem;">
+                    <div class="container c_img" style="height:12rem; background-image:url('@Url.Content("~/CustomerImages/"+@cus.customer_image)')">
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title text-center text-primary" style="font-weight:600">@cus.customer_name</div>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <b class="text-primary">Gender: </b><span class="">@cus.customer_gender</span>
+                            </li>
+                            <li class="list-group-item">
+                                <b class="text-primary">Country: </b><span class="">@cus.customer_country</span>
+                            </li>
+                            <li class="list-group-item">
+                                <b class="text-primary">City: </b><span class="">@cus.customer_city</span>
+                            </li>
+                        </ul>
+                        <div class="pt-2">
+                            <button class="btn btn-primary btn-sm d_c_i" data-id="@cus.customer_id">info</button>
+                            <button class="btn btn-danger btn-sm delete" data-delete="@cus.customer_id">Delete This One</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="mx-3 mt-1 mb-3">
+            <a class="btn btn-secondary" asp-action="customerlist">Return To List</a>
+            <button class="btn btn-danger" id="conform_delete">Conform Delete</button>
+        </div>
+    </div>
+    
+</div>
+
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 text-primary" id="exampleModalLabel">Are You Sure ?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex flex-column justify-content-center align-items-center ">
+                    <div class="c_img_box">
+                    </div>
+                    <div class="container">
+                        @* <div class="row">
+                            <div class="col-lg-4">
+
+                            </div>
+                            <div class="col-lg-8">
+                                
+                            </div>
+                        </div> *@
+                        <div class="detailsInModal">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        $(function(){
+            let globalCustomers = [];
+            $(".d_c_i").click(function () {
+                debugger;
+                $("#deleteModal").modal("show", true);
+                let x = $(this).data("id");
+                $.ajax({
+                    url: "/admin/GetById/"+x,
+                    type:"get",
+                    success:function(res){
+                        if(res == null){
+                            alert("failed to load")
+                        }
+                        else{
+                            let html = ` <ul class="list-group mt-3">
+                                            <li class="list-group-item " aria-current="true">
+                                                <b class="text-primary">Name :- </b><span>${res.customer_name}</span>
+                                           </li>
+                                            <li class="list-group-item " aria-current="true">
+                                                <b class="text-primary">Phome :- </b><span>${res.customer_phone}</span>
+                                           </li>
+                                            <li class="list-group-item " aria-current="true">
+                                                <b class="text-primary">Email :- </b><span>${res.customer_email}</span>
+                                           </li>
+                                            <li class="list-group-item " aria-current="true">
+                                                <b class="text-primary">Password :- </b><span>${res.customer_password}</span>
+                                           </li>
+                                            <li class="list-group-item " aria-current="true">
+                                                <b class="text-primary">Gender :- </b><span>${res.customer_gender}</span>
+                                           </li>
+                                            <li class="list-group-item " aria-current="true">
+                                                <b class="text-primary">Country :- </b><span>${res.customer_country}</span>
+                                           </li>
+                                            <li class="list-group-item " aria-current="true">
+                                                <b class="text-primary">City :- </b><span>${res.customer_city}</span>
+                                           </li>
+                                            <li class="list-group-item " aria-current="true">
+                                                <b class="text-primary">Address :- </b><span>${res.customer_address}</span>
+                                           </li>
+                                        </ul>`;
+                            $(".detailsInModal").html(html);
+                        }
+                    }
+                })
+            })
+
+            $(".delete").click(function () {
+                let x = $(this).data('delete');
+                $.ajax({
+                    url: "/admin/CustomerDelete",
+                    data: { id:x },
+                    type:"post",
+                    success: function (res) {
+                        if(res){
+                           alert("success");
+                            RefreshThisPage();
+                        }
+                        else{
+                            alert("failed");
+                        }
+                    }
+                })
+            })
+            function RefreshThisPage(){
+                debugger;
+                // Assuming you have a List<Customer> in your model
+                var ids = [];
+
+                @foreach (var customer in Model)
+                {
+                    // Add each customer's ID to the JavaScript array
+                    <text>ids.push(@customer.customer_id); </text>
+                }
+
+                // Now you can use the customerIds array in your JavaScript code
+                console.log(ids);
+                let url = "/admin/CustomerDeleteRange?ids=" + encodeURIComponent(JSON.stringify(ids));
+                window.location.href = url;
+            }
+
+            $("#conform_delete").click(function(){
+                let ids = [];
+                @foreach (var customer in Model)
+                {
+                    // Add each customer's ID to the JavaScript array
+                    <text>ids.push(@customer.customer_id); </text>
+                }
+                $.ajax({
+                    url: "/admin/CustomerDeleteRange",
+                    type:"post",
+                    contentType: "application/json",
+                    data: JSON.stringify(ids),
+                    success:function(res){
+                        if (res) {
+                            window.location.href = "/admin/CustomerList";
+                        }
+                        else {
+                            alert("Something went wrong.Refresh the page before trying again");
+                        }
+                    }
+                })
+            })
+
+
+        })
+    </script>
+}

@@ -1,0 +1,370 @@
+﻿@model Category;
+@section styles{
+    <style>
+        .card i{
+            font-size:1.3rem;
+        }
+
+        .i_trash, .i_a_p {
+            color:red;
+        }
+
+        .c_b{
+            /* width:360px; */
+        }
+
+        .a_text{
+            font-size:.9rem;
+            font-weight:500;
+        }
+
+        .c_icon_wrap{
+            width:50px;
+            aspect-ratio:1/1;
+        }
+
+        .card .arrow_proceed {
+            font-size:2.2rem;
+        }
+
+        .card .p_img_wrap{
+            width:100%;
+            aspect-ratio:4/3;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+    </style>
+}
+<div class="container p-4">
+    @if (Model.ProductCount != 0)
+    {
+        <div class="row">
+        <div class="col-xl-4 col-lg-6 mb-3 mb-2">
+            <div class="card c_b shadow">
+                <div class="card-body p-3 ">
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <div class="p-2 d-flex justify-content-center align-items-center  rounded-circle border shadow-sm c_icon_wrap">
+                                <i class="bi bi-trash3-fill i_trash"></i>
+                            </div>
+                        </div>
+                        <div class="col-sm-9">
+                           <h3 class="float-end me-3 text-secondary">Delete</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <p class="card-text">
+                                <span class="a_text  text-secondary">Delete The Category With All The Products Belongs To It</span>
+                            </p>
+                        </div>
+                        <div class="col-sm-3">
+                            <span id="deleteCategoryAndProduct" data-dcp="@Model.category_id">
+                                <i class="bi bi-arrow-right-circle-fill arrow_proceed i_a_p text-secondary"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-lg-6 mb-3 mb-2">
+            <div class="card c_b shadow">
+                <div class="card-body p-3">
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <div class="p-2 d-flex justify-content-center align-items-center  rounded-circle border shadow-sm c_icon_wrap">
+                                <i class="bi bi-caret-right-fill text-success"></i>
+                            </div>
+                        </div>
+                        <div class="col-sm-9">
+                           <h3 class="float-end me-3 text-secondary">Recategorise</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <p class="card-text">
+                                <span class="a_text  text-secondary">Change The Category of All The Products Belongs To Ths Category</span>
+                            </p>
+                        </div>
+                        <div class="col-sm-3">
+                            <span id="recategorise" data-rc="@Model.category_id">
+                                <i class="bi bi-arrow-right-circle-fill arrow_proceed text-secondary"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="bg-light p-3 position-absolute top-50 start-50 translate-middle recategorise_form" style="height:100%;width:100%;display:none;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="text-secondary fw-bold">From Category</div>
+                            <div class="text-secondary fw-bold ">@Model.category_name</div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="text-secondary fw-bold">To Category</div>
+                            <div class="text-secondary fw-bold" id="dropdown_container"></div>
+                        </div>
+                        <div class="">
+                            <button class="btn btn-success btn-sm float-end ms-2 recategorise_form_conform">Conform</button>
+                            <button class="btn btn-secondary btn-sm float-end recategorise_form_cancel">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-lg-6 mb-3 mb-2">
+            <div class="card c_b shadow">
+                <div class="card-body p-3 ">
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <div class="p-2 d-flex justify-content-center align-items-center  rounded-circle border shadow-sm c_icon_wrap">
+                                 <i class="bi bi-capslock-fill text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="col-sm-9">
+                           <h3 class="float-end me-3 text-secondary">Add Product</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <p class="card-text">
+                                <span class="a_text  text-secondary">Go to the Product Add Page to Add A New Product</span>
+                            </p>
+                        </div>
+                        <div class="col-sm-3">
+                            <a href="@Url.Action("ProductUpsert","Category",new{cat_id=@Model.category_id})">
+                                <i class="bi bi-arrow-right-circle-fill arrow_proceed text-secondary"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+    <div class="row mt-2">
+        <div class="col-lg-12">
+            @if (Model.ProductCount != 0)
+            {
+                <h4 class="ps-4 p-3 shadow border rounded text-secondary d-flex">
+                    List Of Products Under Category 
+                    <span class="text-primary ps-2"> @Model.category_name</span>
+                    <div class="px-2 " style="margin-left:auto;">Count: <span class="text-primary">@Model.ProductCount</span></div>
+                </h4>
+            }
+            else
+            {
+                <div class="d-flex align-items-center ps-4 p-3 shadow border rounded">
+                    <h4 class="text-secondary">No Products Avilable Under Category <span class="text-primary">@Model.category_name</span></h4>
+                    <a href="@Url.Action("ProductUpsert","Category",new{cat_id=@Model.category_id})" class="btn btn-primary" style="margin-left:auto">
+                        <i class="bi bi-plus-circle arrow_proceed"></i> Add Product
+                    </a>
+                    <button class="btn btn-danger mx-2" type="button"  data-bs-toggle="modal" data-bs-target="#modalForDeleteCategory">
+                        <i class="bi bi-trash3-fill me-1"></i> Delete Category
+                    </button>
+                </div>
+                <div class="modal fade " id="modalForDeleteCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog  modal-sm">
+                        <div class="modal-content rounded-4 shadow">
+                            <div class="modal-header border-bottom-0">
+                                <h1 class="modal-title fs-5">Delete</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body py-0">
+                                <p>Are You Sure To Delete This Category ?</p>
+                            </div>
+                            <div class="modal-footer w-100 p-0 border-top-0">
+                                <div class="d-flex flex-row w-100">
+                                    <button type="button" class="btn btn-sm btn-secondary m-0 rounded-0 w-100" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-sm btn-danger m-0 rounded-0 w-100 c_delete" data-delete="@Model.category_id">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-lg-12">
+            <div class="container p-1 mt-2">
+                <div class="row">
+                    @foreach (var products in Model.Product)
+                    {
+                        <div class="col-sm-6 col-lg-4 col-xl-3 mb-3 ">
+                            <div class="card shadow">
+                                <div class="p_img_wrap" style="background-image: url('@Url.Content("~/ProductImages/" + products.product_image)')">
+                                    @* This Container Is For ProductImage Container *@
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <h6 class="card-title text-secondary">@products.product_name</h6>
+                                        </div>
+                                        <div class="col-4">
+                                            <span class="text-danger fw-bold float-end">₹. @products.product_price</span>
+                                        </div>
+                                    </div>
+                                    <p class="card-text " style="height:3em;overflow:hidden; font-size:.9rem">
+                                        @products.product_description
+
+                                    </p>
+
+                                    <div class="d-flex align-items-center">
+                                        <span class="m-1"><i class="bi bi-pencil-square bg-primary px-2 py-1 text-light rounded-circle"></i></span>
+                                        <span class="m-1"><i class="bi bi-trash3-fill bg-danger px-2 py-1 text-light rounded-circle"></i></span>
+                                        <span style="margin-left:auto"><i class="bi bi-arrow-right-circle-fill text-secondary float-end" style="font-size:2.3rem;"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade " id="modalForCategoryProductOperation" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content rounded-4 shadow">
+            <div class="modal-header border-bottom-0">
+                <h1 class="modal-title fs-5 text-danger fw-bold heading_text"></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-0 modal_body_content">
+                
+            </div>
+            <div class="modal-footer w-100 p-0 border-top-0">
+                <div class="d-flex flex-row w-100">
+                    <button type="button" class="btn btn-sm btn-info m-0 rounded-0 w-100" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-danger m-0 rounded-0 w-100 modalConform">Conform</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="conformationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 cm-head" id="exampleModalLabel"></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body cm-body">
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary cm-conform">Conform</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        $(function(){
+            $(".c_delete").click(function(){
+                let x = $(this).data("delete");
+                //alert(x);
+                $.ajax({
+                    url:"/Category/DeleteCategory",
+                    type:"post",
+                    data: {id:x},
+                    success:function(res){
+                        window.location.href = "/Category/CategoryList";
+                    }
+                })
+            })
+            $("#deleteCategoryAndProduct").click(function(){
+                let index = $(this).data("dcp");
+                let productCount = "@Model.ProductCount"
+                let html = `<p class="text-secondary">Avilable Products Under This Category : <span class="text-danger fw-bold" style="font-size:1.5em">${productCount}</span></p>
+                            <p class="text-secondary">Are You Sure To Delete This Category And All It's Products</p>`;
+                $(".modal_body_content").html(html);
+                $(".heading_text").text("Delete");
+                $("#modalForCategoryProductOperation").modal("show");
+                $(".modalConform").click(function () {
+                    $.ajax({
+                        url: "/Category/DeleteCategoryAndProducts",
+                        type:"Post",
+                        data: {id:index},
+                        success:function(res){
+                            if (res) {
+                                window.location.href = "/Category/categorylist";
+                            }
+                            else{
+                                alert("Something Went Wrong");
+                            }
+                        }
+                    })
+                })
+            })
+            $("#dropdown_container").show;
+
+            $("#recategorise").click(function(){
+                let previous_cid = $(this).data("rc");
+
+                $.ajax({
+                    url: "/Category/GetCategoryList",
+                    type: "get",
+                    // data: { previus_cid: index,new_cid: },
+                    success: function (res) {
+                        if (res != null) {
+                            let options=``
+                            $.each(res,function(index,value){
+                                if (value.category_id != previous_cid) {
+                                    options += `<option value="${value.category_id}">${value.category_name}</option>`
+                                }
+                            })
+                            let dropdown = `<select class="form-select" aria-label="Default select example" id="dropdown_c_name">
+                                                    <option selected disabled>Select Category</option>
+                                                    ${options}
+                                                    </select>`
+                            $("#dropdown_container").html(dropdown);
+                            $(".recategorise_form").show();
+                        }
+                        else {
+                            alert("Something Went Wrong");
+                        }
+                    }
+                })
+               
+            })
+
+            $(".recategorise_form_cancel").click(function () {
+                $(".recategorise_form").hide();
+            })
+
+            $(".recategorise_form_conform").click(function () {
+                let cat = $("#dropdown_c_name").val();
+                if (cat != null) {
+                    let previous_cid = $("#recategorise").data("rc");
+                    let new_cid = cat;
+
+                    html = "Are You Sure ?"
+                    $(".cm-body").html(html);
+                    $(".cm-head").html("Recategorise")
+                    $("#conformationModal").modal("show");
+                    $(".cm-conform").click(function () {
+                        $.ajax({
+                            url: "/Category/Recategorise",
+                            type:"post",
+                            data: { previousId: previous_cid, newId: new_cid },
+                            success:function(res){
+                                if (res) {
+                                    window.location.reload();
+                                }
+                                else{
+                                    alert("Failed");
+                                }
+                            }
+                        })
+                        console.log(previous_cid + " " + new_cid);
+                    })
+                }
+                else {
+                    alert("Select A Category To Continue");
+                }
+            })
+
+
+        })
+    </script>
+}

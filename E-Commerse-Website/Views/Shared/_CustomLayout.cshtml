@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - E_Commerse_Website</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/icon/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="~/icon/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/StyleSheet.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Topbar.css" asp-append-version="true" />
+    <link href="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-2.0.1/b-3.0.0/b-colvis-3.0.0/b-html5-3.0.0/b-print-3.0.0/date-1.5.2/sl-2.0.0/datatables.min.css" rel="stylesheet">
+
+    <link href="~/css/addcustomer.css" rel="stylesheet" />
+    @await RenderSectionAsync("Styles", required: false)
+
+</head>
+<body>
+    <div class="wrapper">
+        <div class="top-wrap">
+            <div class="topbar px-4 shadow-sm">
+            <div class="left">
+                <h4 class="m-0 text-secondary">Control Center</h4> 
+            </div>
+            <div class="right">                
+                <div class="m-2">
+                    <div class="btn-group">
+                        <button type="button" class="btn dropdown-toggle d-flex flex-row align-items-center" data-bs-toggle="dropdown"  aria-expanded="false">
+                            <div class="ag d-flex align-items-center justify-content-center me-2">
+                                <div class="ls me-1">
+                                    <div class="a_img_box" style="background-image:url('@Url.Content("~/AdminImages/" + ViewData["AdminImage"])')"></div>
+                                </div>
+                                <div class="rs d-flex flex-column align-items-start justify-content-center ms-1">
+                                    <span><a class="admin-name" asp-action="Admin_Details_Page" asp-controller="Admin">@ViewData["AdminName"]</a></span>
+                                    <span>@ViewData["Role"]</span>
+                                </div>
+                            </div>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-lg-end border border-success">
+                            <li><a class="dropdown-item adh1" type="button" asp-action="Admin_Details_Page" asp-controller="Admin">My Profile</a></li>
+                            <li><a class="dropdown-item adh" type="button" asp-action="Logout" asp-controller="Admin">Log Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="menu-wrap">
+            <div class="logo_section shadow-sm d-flex align-items-center">
+                <h3 class="m-0 text-secondary">Satya</h3>
+            </div>
+            <div class="menubar shadow-sm">
+            <ul>
+                <li class="@ViewData["index"]">
+                    <a href="@Url.Action("index","Admin")">
+                        <i class="bi bi-house-fill"></i> Home
+                    </a>
+                </li>
+                <li class="@ViewData["Admin_Details_Page"]">
+                    <a href="@Url.Action("Admin_Details_Page","Admin")">
+                        <i class="bi bi-person-circle"></i> Profile
+                    </a>
+                </li>
+                <li class="@ViewData["CustomerList"]">
+                    <a href="@Url.Action("CustomerList","Admin")">
+                        <i class="bi bi-people-fill"></i> Customers
+                    </a>
+                </li>
+                <li class="@ViewData["CategoryList"]">
+                    <a href="@Url.Action("CategoryList","Category")">
+                        <i class="bi bi-tags-fill"></i> Category
+                    </a>
+                </li>
+                <li class="@ViewData["ProductList"]">
+                    <a href="@Url.Action("ProductList","Category")">
+                        <i class="bi bi-people-fill"></i> Products
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+        </div>
+        <div class="content">
+            <div class="con shadow-sm">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @*------------------- DataTable  -------------------*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-2.0.1/b-3.0.0/b-colvis-3.0.0/b-html5-3.0.0/b-print-3.0.0/date-1.5.2/sl-2.0.0/datatables.min.js"></script>
+    @*------------------- Bootstrap  -------------------*@
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @*------------------- Jquery Validation  -------------------*@
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    @*------------------- Custom  -------------------*@
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

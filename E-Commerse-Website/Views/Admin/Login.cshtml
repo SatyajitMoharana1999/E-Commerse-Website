@@ -1,0 +1,162 @@
+﻿@{
+    Layout = null;
+    var ReturnedUrl = ViewBag.ReturnUrl as string;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            --color:rgb(220, 209, 255);
+            --color_fade:rgba(220, 209, 255, 0.703);
+            --color_maxfade:rgba(220, 209, 255, 0.333);
+        }
+        body{
+            background-color: black;
+        }
+        .m-container{
+            height: 100vh;
+            width: 100vw;
+            background: url('/loginpage/LoginBackground.jpg') no-repeat center black;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* background-image: url('loginpage\loginbackground.jpg'); */
+        }
+        .box{
+            padding: 5px;
+            height: 450px;
+            width: 400px;
+            backdrop-filter: blur(20px);
+            background: linear-gradient(135deg,rgba(140, 0, 255, 0.18),rgba(0, 0, 0, 0.728));
+            border-radius: 10px;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.897);
+            /* border: 1px solid rgba(142, 34, 225, 0.082); */
+            align-items: center;
+        }
+        .box form{
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            flex-direction: column;
+        }
+        .box h3{
+            color: var(--color_fade);
+            text-align: center;
+            /* margin: 3rem; */
+            text-transform: capitalize;
+            word-spacing: .5rem;
+            font-size: 1.5rem;
+        }
+        .box section{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .box input{
+            background: transparent;
+            margin: 1rem;
+            color: var(--color);
+            font-size: 1.1rem;
+            width: 250px;
+            outline: none;
+            border: none;
+            border-bottom: 1px solid var(--color_maxfade);
+        }
+        .box input:focus{
+            border-bottom: 1px solid var(--color_fade);
+        }
+        .box input::placeholder{
+            color: var(--color_maxfade);
+        }
+        .box input[type="submit"]{
+            color: rgb(220, 209, 255);
+            text-indent: 0px;
+            background: linear-gradient(225deg ,rgba(190, 104, 255, 0.909),rgb(112, 1, 196));
+            text-transform: uppercase;
+            font-size: 1rem;
+            outline: none;
+            width: fit-content;
+            margin: 0px;
+            padding: .5rem 3rem;
+        }
+        .box input[type="submit"]:hover{
+            cursor: pointer;
+        }
+        a{
+            text-decoration: none;
+            color: var(--color_maxfade);
+        }
+        a:hover{
+            color: var(--color_fade);
+        }
+        .link{
+            text-align: center;
+            color: var(--color_maxfade);
+        }
+        .a{
+            margin: 0rem 1rem;
+            text-align: right;
+        }
+        .ca{
+            display: inline-block;
+            color: deepskyblue;
+        }
+        .external{
+            cursor: default;
+        }
+        .external img{
+            height: 1.2rem;
+            margin: 1rem .8rem 0rem;
+        }
+        .external img:hover{
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="m-container">
+        <div class="box">
+            <form method="post" action="login?ReturnUrl=@System.Net.WebUtility.UrlEncode(ReturnedUrl)">
+                <h3>Wellcome back </h3>
+                <section>
+                    <div >
+                        <input type="text" placeholder="Email" name="adminEmail">
+                    </div>
+                    <div >
+                        <input type="password" placeholder="Password" name="adminPassword">
+                        <div class="a">
+                            <a href="#" class="fp">Forget Password</a>
+                        </div>
+                    </div>
+                </section>
+                <div class="b">
+                    <input type="submit" value="login">
+                </div>
+                <div class="link">
+                    <a href="#" class="ca">Create Account</a> or Signin with
+                    <div class="external">
+                        <img src="~/loginpage/google.svg" alt="">
+                        <img src="~/loginpage/facebook.svg" alt="">
+                        <img src="~/loginpage/twitter.svg" alt="">
+                        <img src="~/loginpage/instagram.svg" alt="">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+

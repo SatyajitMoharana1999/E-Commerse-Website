@@ -1,0 +1,249 @@
+﻿@model List<Customer>;
+@section Styles{
+    <link href="~/css/customerlist.css" rel="stylesheet" />
+}
+<div class="container ">
+    <div class="row p-3">
+        <div class="col-lg-6">
+            <h2 class="text-secondary">Customer List</h2>
+        </div>
+        <div class="col-lg-6 d-flex justify-content-end align-items-center ">
+            <button class="btn btn-danger mx-2" id="s_d_b">Delete Selected</button>
+            <a href="@Url.Action("Upsert","Admin")" class="btn btn-primary"><i class="bi bi-plus-circle me-2"></i>Add Customer</a>
+        </div>
+    </div>
+</div>
+<div class="container px-4">
+    <div class="shadow p-2 border ">
+        <table class="table table-bordered" id="AdminCustomerTable" style="width:100%">
+            <thead>
+                <tr class="">
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>City</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="admintbodydata">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 text-primary" id="exampleModalLabel">Are You Sure ?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex flex-column justify-content-center align-items-center ">
+                    <div class="c_img_box">
+                    </div>
+                    <ul class="list-group mt-3">
+                        <li class="list-group-item active" aria-current="true">
+                            <b>Name :- </b><span id="c_name"></span>
+                        </li>
+                    </ul>
+                    <div class="mt-3"> See The <span class="text-primary" id="c_d_f_d">Details</span> Before Delete</div>
+                </div>
+            </div>
+            <div class="modal-footer" >
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <div id="mf_container">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            var adminCustomerTable = $('#AdminCustomerTable').DataTable({
+                bProcessing: true,
+                bLengthChange: true,
+                lengthMenu: [[7, 15, 25, -1], [7, 15, 25, "All"]],
+                bFilter: true,
+                bSort: true,
+                bPaginate: true,
+                select: true,
+                pageLength: 7,
+                data: [], // Initialize with an empty dataset, data will be loaded later
+                columns: [
+                    {
+                        data: 'customer_name',
+                        render: function (data, type, row, meta) {
+                            return row.customer_name;
+                        },
+                    },
+                    {
+                        data: 'customer_phone',
+                        width: '15%',
+                        render: function (data, type, row, meta) {
+                            return row.customer_phone;
+                        },
+                    },
+                    {
+                        data: 'customer_email',
+                        width: '25%',
+                        render: function (data, type, row, meta) {
+                            return row.customer_email;
+                        },
+                    },
+                    {
+                        data: 'customer_gender',
+                        render: function (data, type, row, meta) {
+                            return row.customer_gender;
+                        },
+                    },
+                    {
+                        data: 'customer_city',
+                        width: '13%',
+                        render: function (data, type, row, meta) {
+                            return row.customer_city;
+                        },
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row, meta) {
+                            return `<button class="mt-1 btn shadow border text-secondary bg-light btn-sm details"  data-id="${row.customer_id}" title="Details"><i class="bi bi-info-circle-fill"></i></button>
+                                    <button class="mt-1 btn shadow border text-secondary bg-light btn-sm edit" data-id="${row.customer_id}" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+                                    <button class="mt-1 btn shadow border text-secondary bg-light btn-sm delete"  data-id="${row.customer_id}" title="Delete" ><i class="bi bi-trash3-fill"></i></button>`
+                        },
+                    },
+                ],
+            });
+
+            // Manually handle column visibility based on screen width
+            $(window).on('resize', function () {
+                var screenWidth = $(window).width();
+
+                if (screenWidth < 1200) {
+                    adminCustomerTable.column(4).visible(false);
+                } else {
+                    adminCustomerTable.column(4).visible(true);
+                }
+
+                if (screenWidth < 1080) {
+                    adminCustomerTable.column(3).visible(false);
+                } else {
+                    adminCustomerTable.column(3).visible(true);
+                }
+            }).resize(); // Trigger the resize event on page load
+
+            // Function to get customer data and update the table
+            function getCustomerData() {
+                $.ajax({
+                    url: "/Admin/GetCustomerList",
+                    type: "get",
+                    dataType: "json",
+                    success: function (res) {
+                        adminCustomerTable.clear().rows.add(res).draw();
+                    }
+                });
+            }
+
+            // Initial data load
+            getCustomerData();
+
+
+            // var customButton = {
+            //     text: 'Custom Button',
+            //     className: 'btn btn-success',
+            //     action: function (e, dt, node, config) {
+            //         alert('Custom Button clicked!');
+            //     }
+            // };
+            // adminCustomerTable.buttons().container().append(customButton);
+
+
+            $('#admintbodydata').on('click', '.delete', function (e) {
+                e.stopPropagation();
+                var x = $(this).data("id");
+                var table = adminCustomerTable;
+
+                // Get data from the table row
+                var rowData = table.row($(this).closest('tr')).data();
+                let cid = rowData.customer_id;
+                
+                //on click load the delete button
+                let deleteBTN = `<button class="btn btn-danger" id="c_delete_button" data-delete="${cid}")>Conform Delete</button>`
+                $("#mf_container").html(deleteBTN);
+                //set profile Image of Customer in the delete modal
+                let cimgPath = `url('/CustomerImages/${rowData.customer_image}')`;
+                console.log(rowData.customer_image);
+                console.log(cimgPath);
+                $(".c_img_box").css("background-image", cimgPath);
+                // set the customer name in the delete modal
+                $("#c_name").html(rowData.customer_name);
+                $("#deleteModal").modal("show", true);
+
+                //binding the customer id in the span to go to the details page
+                $("#c_d_f_d").attr("data-detail", cid);
+            });
+
+            //On click delete button in the modal
+            $('#mf_container').on("click", "#c_delete_button", function (e) {
+                let cid = $(this).data("delete");
+                $.ajax({
+                    url: "/admin/CustomerDelete/" + cid,
+                    type: "post",
+                    success: function (res) {
+                        if (res) {
+                            $("#deleteModal").modal("hide", true);
+                            getCustomerData();
+                            alert("successfully deleted");
+                        }
+                        else {
+                            alert("failed");
+                        }
+                    }
+                });
+            });
+
+            //On click details button in the modal
+            $("#c_d_f_d").click(function(){
+                let x = $("#c_d_f_d").data("detail");
+                window.location.href = "/admin/customerdetails/" + x;
+            })
+
+            $('#admintbodydata').on('click', '.edit', function () {
+                var x = $(this).data("id");
+                window.location.href = "/admin/Upsert/" + x;
+            });
+
+            $('#admintbodydata').on('click', '.details', function () {
+                var x = $(this).data("id");
+                window.location.href = "/admin/CustomerDetails/" + x;
+            });
+
+
+            // Select Delete Functions
+            $("#s_d_b").click(function(){
+                var rowData = adminCustomerTable.row().data();
+                var selectedRows = adminCustomerTable.rows({ selected: true }).data().toArray();
+                if (selectedRows.length === 0) {
+                    alert("Select Some Rows In The Table First By Control + click on the table rows")
+                }
+                else {
+                    var ids=selectedRows.map(function (row) {
+                        return row.customer_id;
+                    })
+                    // Construct the URL with IDs as query parameters
+                    var url = "/admin/CustomerDeleteRange?ids=" + encodeURIComponent(JSON.stringify(ids));
+
+                    // Redirect to the new view
+                    window.location.href = url;
+                }
+            })
+        });
+
+    </script>
+}
+

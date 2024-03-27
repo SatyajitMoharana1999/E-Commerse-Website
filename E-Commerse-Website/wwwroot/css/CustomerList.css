@@ -1,0 +1,18 @@
+﻿.c_img_box {
+    width: 60%;
+    max-width: 280px;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    position: relative;
+    border: 3px solid #0004;
+    border-radius: 10px;
+}
+#c_d_f_d{
+    cursor:pointer;
+}
+.copy{
+    background-color:red !important;
+}

@@ -1,0 +1,161 @@
+﻿
+@section Styles{
+    <style>
+        .c_img_box {
+            width: 60%;
+            max-width: 280px;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            position: relative;
+            border: 3px solid #0004;
+            border-radius: 10px;
+        }
+    </style>
+}
+<div class="container px-4">
+    <div class="row py-3">
+        <div class="col-lg-6">
+            <h3 class=" text-secondary">Product List</h3>
+        </div>
+        <div class="col-lg-6 d-flex justify-content-end align-items-center ">
+            <a href="@Url.Action("ProductUpsert","Category")" class="btn btn-primary fw-bold"><i class="bi bi-plus-circle me-2"></i>Add Product</a>
+        </div>
+    </div>
+    <div class="shadow p-2 border">
+        <table class="table table-bordered table-striped text-secondary " id="ProductTable" style="width:100%;background-color:#fff;">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 text-primary" id="exampleModalLabel">Are You Sure ?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex flex-column justify-content-center align-items-center ">
+                    <div class="c_img_box">
+                    </div>
+                    <div>
+                        <b>Name :- </b><span class="text-primary" id="p_name"></span>
+                    </div>
+                    <div class="mt-3"> See The <span class="text-primary" id="p_d_f_d">Details</span> Before Delete</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" id="productdelete">Delete</button>                
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        $(function(){
+            var ProductTable = $('#ProductTable').DataTable({
+                bProcessing: true,
+                bLengthChange: true,
+                lengthMenu: [[7, 15, 25, -1], [7, 15, 25, "All"]],
+                bFilter: true,
+                bSort: true,
+                bPaginate: true,
+                pageLength: 7,
+                data: [], // Initialize with an empty dataset, data will be loaded later
+                columns: [
+                    {
+                        data: 'Name',
+                        render: function (data, type, row, meta) {
+                            return row.product_name;
+                        },
+                    },
+                    {
+                        data: 'Price',
+                        width: '15%',
+                        render: function (data, type, row, meta) {
+                            return `<div class="text-success"> ${ row.product_price } </div>`;
+                        },
+                    },
+                    {
+                        data: 'Category',
+                        width: '25%',
+                        render: function (data, type, row, meta) {
+                            // console.log(row.category)
+                            return row.category.category_name;
+                        },
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row, meta) {
+                            return `<button class="mt-1 btn btn-secondary btn-sm details" data-id="${row.product_id}" title="Details"><i class="bi bi-info-circle-fill"></i></button>
+                                    <button class="mt-1 btn btn-secondary btn-sm edit" data-id="${row.product_id}" title="Edit"><i class="bi bi-pencil-square"></i></button>
+                                    <button class="mt-1 btn btn-secondary btn-sm delete" data-id="${row.product_id}" title="Delete" ><i class="bi bi-trash3-fill"></i></button>`
+                        },
+                    },
+                ],
+            });
+
+            getProductData();
+            function getProductData() {
+                $.ajax({
+                    url: "/Category/GetAllProducts",
+                    type: "get",
+                    dataType: "json",
+                    success: function (res) {
+                        //var parsedData = JSON.parse(res);
+                        // console.log(parsedData);
+                        ProductTable.clear().rows.add(res).draw();
+                    }
+                });
+            }
+            $("#ProductTable").on("click", ".details", function () {
+                var index = $(this).data("id");
+                window.location.href = "/Category/Productdetails/" + index;
+            })
+            $("#ProductTable").on("click", ".edit", function () {
+                var index = $(this).data("id");
+                window.location.href = "/Category/ProductUpsert/" + index;
+            })
+            $("#ProductTable").on("click", ".delete", function () {
+                var table = ProductTable;
+                // Get data from the table row
+                let rowData = table.row($(this).closest('tr')).data();
+                let pid = rowData.product_id;
+                let pname = rowData.product_name;
+                $("#p_name").text(pname);
+                $(".c_img_box").css("background-image", "url('" + @Url.Content("/ProductImages/")+rowData.product_image);
+                $("#productdelete").attr("data-delete", pid)
+                $("#deleteModal").modal("show");
+                $("#p_d_f_d").click(function(){
+                    window.location.href = "/category/productdetails/" + pid;
+                })
+            })
+            $("#productdelete").click(function () {
+                var index = $(this).data("delete");
+                $.ajax({
+                    url: "/category/ProductDelete",
+                    type: "post",
+                    data: { id: index },
+                    success: function (res) {
+                        if (res) {
+                            $("#deleteModal").modal("hide");
+                            getProductData();
+                        }
+                    }
+                })
+            })
+        })
+    </script>
+}

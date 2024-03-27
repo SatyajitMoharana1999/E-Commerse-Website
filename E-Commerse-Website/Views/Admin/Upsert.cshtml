@@ -1,0 +1,221 @@
+﻿@model Customer;
+@{
+    string customerImage = Model.customer_image ?? string.Empty;
+}
+<form class="container p-2 pe-3" id="cd_form">
+    <div class="row">
+        <div class="col-xl-8 col-lg-8">
+            <div class="container">
+                <div class="row g-3 " >
+                        <input type="hidden" class="form-control" id="inputId" name="inputId" asp-for="customer_id">
+                    <div class="col-xl-6 col-sm-12">
+                        <label for="inputName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="inputName" name="inputName" asp-for="customer_name">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="inputNumber" class="form-label">Phone Number</label>
+                        <input type="number" class="form-control" id="inputNumber" name="inputNumber" asp-for="customer_phone">
+                    </div>
+                    <div class="col-xl-6 col-sm-12">
+                        <label for="inputEmail4" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="inputEmail4" name="inputEmail4" asp-for="customer_email">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="inputPassword4" class="form-label">Password</label>
+                        <input type="text" class="form-control" id="inputPassword4" name="inputPassword4" asp-for="customer_password">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="inputCountry" class="form-label">Country</label>
+                        <input type="text" class="form-control" id="inputCountry" name="inputCountry" asp-for="customer_country">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="inputCity" class="form-label">City</label>
+                        <input type="text" class="form-control" id="inputCity" name="inputCity" asp-for="customer_city">
+                    </div>
+                    <div class="col-xl-8">
+                        <label for="inputAddress" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="inputAddress" name="inputAddress" placeholder=" 1234 Main St" asp-for="customer_address">
+                    </div>
+                    <div class="col-xl-4">
+                        <label for="inputGender" class="form-label">Gender</label>
+                        <select id="inputGender" class="form-control" name="inputGender" asp-for="customer_gender">
+                            <option disabled selected >Select</option>
+                            <option>Male</option>
+                            <option>Female</option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-xl-4 col-lg-4">
+            <div class="box ms-4 mt-4">
+                <i class="bi bi-person-bounding-box"></i>
+                <label for="c_img" class="for_c_img">Upload</label>
+                <input type="file" id="c_img" name="c_img" accept="image/*" />
+            </div>
+        </div>
+    </div>
+    <div class="col-12 mt-4 ms-4">
+        <button type="submit" class="btn btn-primary me-3" id="c_submit">Submit</button>
+        <a asp-action="CustomerList" asp-controller="Admin" class="btn btn-outline-secondary">Go To List</a>
+    </div>
+</form>
+
+
+@section scripts{
+    <script>
+        $(function(){
+            SetCustomerImageComesFromEdit();
+            function SetCustomerImageComesFromEdit() {
+                debugger;
+                var customerImageVariable = '@customerImage';
+                if (customerImageVariable != "" && customerImageVariable != null) {
+                    $(".box").css("background-image", "url('" + "@Url.Content("~/CustomerImages/")" + customerImageVariable + "')");
+                }
+            }
+            $("#c_img").change(function () {
+                // Function to display the selected image
+                displaySelectedImage(this);
+            });
+            function displaySelectedImage(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        // var html = `<img class="customer_image" src="${e.target.result}"/>`;
+                        // $(".box").html(html);
+                        // update the src attribute of the img element
+                        $(".box").css(`background-image`, `url('${e.target.result}')`);
+                    };
+
+                    // Read the selected image as data URL
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            $("#cd_form").validate({
+                rules: {
+                    inputName: {
+                        required: true
+                    },
+                    inputNumber: {
+                        required: true, 
+                        minlength: 10,
+                        maxlength: 10,
+                        digits: true
+                    },
+                    inputEmail4: {
+                        required: true,
+                        email: true
+                    },
+                    inputPassword4: {
+                        required: true,
+                        minlength: 8,
+                        strongPassword: true
+                    },
+                    inputCountry: {
+                        required: true,
+                    },
+                    inputCity: {
+                        required: true,
+                    },
+                    inputAddress: {
+                        required: true,
+                    },
+                    inputGender: {
+                        required: true,
+                    },
+                    c_img: {
+                        required: true,
+                    }
+                },
+                messages: {
+                    inputName: {
+                        required: "Please Fill This",
+                    },
+                    inputNumber: {
+                        required: "Please fill this",
+                        minlength: "Mobile number should be at least 10 digits",
+                        maxlength: "Mobile number should not exceed 12 digits",
+                        digits: "Please enter a valid mobile number"
+                    },
+                    inputEmail4: {
+                        required: "Enter your email here",
+                        email: "Please enter a valid email address"
+                    },
+                    inputPassword4: {
+                        required: "Please fill this",
+                        minlength: "Password should be at least 8 characters long"
+                    },
+                    inputCountry: {
+                        required: "Please fill this",
+                    },
+                    inputAddress: {
+                        required: "Please fill this",
+                    },
+                    inputCity: {
+                        required: "Please fill this",
+                    },
+                    inputGender: {
+                        required: "Male or Female",
+                    },
+                    c_img: {
+                        required: "Upload Your Picture",
+                    }
+                },
+
+                submitHandler: function (form) {
+                    SendCustomerData();
+                }
+            })
+            $.validator.addMethod("strongPassword", function(value, element) {
+            // Password should be at least 8 characters with at least one uppercase letter
+            // and at least one symbol or one number
+                var hasUppercase = /[A-Z]/.test(value);
+                var hasSymbolOrNumber = /[!@@#$%^&*()_+\-=[\]{};':"\\|,.<>/?0-9]/.test(value);
+
+                return this.optional(element) || (hasUppercase && hasSymbolOrNumber);
+            }, "Password must include at least one uppercase letter and one symbol or number.");
+
+            if ($("#inputId").val() != 0){
+                $('#c_img').rules('remove', 'required');
+            }
+
+            function SendCustomerData(){
+                let formData = new FormData();
+
+                // Add text data to FormData
+                formData.append("customer_id", $("#inputId").val());
+                formData.append("customer_name", $("#inputName").val());
+                formData.append("customer_phone", $("#inputNumber").val());
+                formData.append("customer_email", $("#inputEmail4").val());
+                formData.append("customer_password", $("#inputPassword4").val());
+                formData.append("customer_gender", $("#inputGender").val());
+                formData.append("customer_country", $("#inputCountry").val());
+                formData.append("customer_city", $("#inputCity").val());
+                formData.append("customer_address", $("#inputAddress").val());
+
+                let imageFile = $("#c_img")[0].files[0];
+                // Add image file to FormData
+                formData.append("imagedata", imageFile);
+
+                $.ajax({
+                    url: "/admin/upsert",
+                    type: "post",
+                    data: formData,
+                    contentType:false,
+                    processData:false,
+                    success:function(res){
+                        window.location.href = "/admin/CustomerList";
+                    }
+                })
+            }
+        })
+       
+        
+    </script>
+}
+
+

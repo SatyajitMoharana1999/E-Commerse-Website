@@ -1,0 +1,451 @@
+﻿@section Styles{
+    <style>
+        .p_img_wrap{
+            height:150px;
+            width:150px;
+            position:relative;
+            background-repeat:no-repeat;
+            background-position:center;
+            background-size: cover;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            position:relative;
+        }
+
+        #image_cancel_button{
+            position:absolute;
+            top:0px;
+            right:5px;
+            color:red;
+            font-size:1.2rem;
+        }
+
+        .p_img_wrap .inp_container i {
+            display:inline-block;
+            font-size:3rem;
+            opacity:60%;
+            
+        }
+        .inp_file{
+            width:150px;
+            position:absolute;
+            bottom: 0%;
+            left: 50%;
+            transform: translate(-50%,0%);
+            
+        }
+
+        .inp_wrapper{
+            overflow:hidden;
+        }
+        .inp_file #p_img-error{
+            position:absolute;
+            top: 35px;
+            width: 150px;
+        }
+        .inp_file input[type="file"]{
+            opacity:0;
+        }
+        #p_img{
+            z-index:-1;
+            overflow:hidden;
+        }
+
+        .inp_file .up_text{
+            position:absolute;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            z-index: 2;
+        }
+
+       
+    </style>
+}
+
+<div class="container p-4 ">
+    <div class="container d-flex justify-content-between align-items-center mb-3 ">
+       <h3>Category List</h3>
+        <button type="button" class="btn btn-primary" id="addButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <i class="bi bi-plus-circle me-2"></i>Add Category
+        </button>
+    </div>
+    <!-- Button trigger modal -->
+    
+    <table class="table shadow table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Category Name</th>
+                <th>Avilable Products</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody class="categoryTbody">
+        </tbody>
+    </table>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content overflow-hidden ">
+            <div class="modal-header ">
+                <h1 class="modal-title fs-5 text-danger" id="exampleModalLabel">Add A New Category</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body ">
+                <div class="">
+                    <form class="container" id="c_form">
+                        <div class="row">
+                            <div class="col-4">
+                                <label for="c_name" class="text text-primary">Category Name</label>
+                            </div>
+                            <div class="col-8">
+                                <input type="hidden" id="c_id" name="c_id" />
+                                <input type="text" class="form-control" id="c_name" name="c_name" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mx-2 p-1" id="p_list_container">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                       
+                    </form>
+                    <form class="container" id="p_form">
+                        <div class="row mt-4 ">
+                            <p>
+                                Do you Want to add a Products belongs to this category.
+                                <button class="btn btn-outline-success btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> Yes</button>
+                            </p>
+                        </div>
+                        <div class="accordion" id="accordionExample">
+                            <div class="accordion-item">
+                                
+                                <div id="collapseOne" class="accordion-collapse collapse hide" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body m-0 p-3">
+                                        <div class="container p-0 mb-1">
+                                            <div class="row px-4">
+                                                <h5 class="p-1 text-danger border-bottom border-danger">Add Product</h5>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-4">
+                                                    <div>
+                                                        <div class="d-flex flex-column justify-content-center align-items-center">
+                                                            <div class="p_img_wrap border border-success shadow">
+                                                               <i class="bi bi-x-square" id="image_cancel_button"></i>
+                                                                <div class="inp_container">
+                                                                    <label for="p_img">
+                                                                        <i class="bi bi-arrow-up-square text-success"></i>
+                                                                    </label>
+                                                                    <div  class="inp_file">
+                                                                        <div  class="up_text text-primary">
+                                                                            <label for="p_img" class="upload_text">Upload</label>
+                                                                        </div>
+                                                                        <div class="inp_wrapper">
+                                                                            <input type="file" id="p_img" accept="image/*" name="p_img" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-8">
+                                                    <div class="mb-3">
+                                                        <input type="hidden" id="p_id" name="p_id" />
+                                                        <label for="p_name" class="text-primary">Name</label>
+                                                        <input type="text" id="p_name" class="form-control" name="p_name"/>
+                                                    </div>
+                                                    <div>
+                                                        <label for="p_price" class="text-primary">Price</label>
+                                                        <input type="number" id="p_price" class="form-control" name="p_price"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row px-4">
+                                                <label for="p_description" class="text-primary">Description</label>
+                                                <textarea id="p_description" name="p_description" class="form-control" cols="50" rows="2" style="resize:none"></textarea>
+                                            </div>
+                                            <div class="row px-4 pt-3">
+                                                <div class="d-flex justify-content-end align-items-center">
+                                                    <button type="button" class="btn btn-danger mx-1" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Discard</button>
+                                                    <button type="button" class="btn btn-success mx-1" id="p_add_submit"><i class="bi bi-plus-circle"></i> Add</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+            <div class="modal-footer p-0">
+                <button type="button" class="btn btn-danger m-0 rounded-0 w-50" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary m-0 rounded-0 w-50" id="submit">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        $(function () {
+            GetCategoryList();
+
+            let products = [];
+            let productImages = [];
+            $("#p_add_submit").click(function () {
+                var isValid = $("#p_form").valid();
+
+                if (isValid) {
+                    let c = {
+                        product_id: $("#p_id").val(),
+                        product_name: $("#p_name").val(),
+                        product_price: $("#p_price").val(),
+                        product_description: $("#p_description").val()
+                    }
+
+                    if (products.length < 5) {
+                        products.push(c);
+                        let imageFile = $("#p_img")[0].files[0];
+                        productImages.push(imageFile);
+                        console.log(imageFile);
+                    }
+                    else{
+                        alert("cant add more than 5 products at a time. now you have to confirm below")
+                    }
+                    $("#collapseOne").collapse("hide");
+                    resetProductForm();
+                    showProductListInModal();
+                } 
+                else {
+                    // Show custom error messages along with default plugin messages
+                    $("#p_form").validate().showErrors();
+                }
+                console.log(productImages.length);
+            })
+
+            $("#image_cancel_button").hide();
+            $("#p_img").change(function () {
+                // Function to display the selected image
+                displaySelectedImage(this);
+            });
+
+            function displaySelectedImage(input) {
+                if (input.files && input.files[0]) {
+                    $("#image_cancel_button").show();
+                    $('label[for="p_img"]').hide();
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $(".p_img_wrap").css(`background-image`, `url('${e.target.result}')`);
+                        //currentImage = e.target.result;
+                        //console.log(currentImage);
+                        //$(".p_img_wrap").css(`background-image`, `url('${currentImage}')`);
+                    };
+
+                    // Read the selected image as data URL
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+            $("#image_cancel_button").click(function () {
+                $("#image_cancel_button").hide();
+                $('label[for="p_img"]').show();
+                $("#p_img").val(null);
+                $(".p_img_wrap").css(`background-image`, ``);
+            })
+
+            function showProductListInModal() {
+                if (products.length > 0) {
+                    let html = ``;
+                    $.each(products, function (index, value) {
+                        html += `<span class="btn btn-outline-success btn-sm mx-1">
+                                    ${value.product_name}
+                                    <i class="bi bi-x-circle ms-1 p_delete" data-index="${index}"></i>
+                                </span>`;
+                    })
+                    let fullhtml = `<p class="m-0"><span class="text-success">You Added</span> : ${html}</p>`
+                    $("#p_list_container").html(fullhtml);
+                }
+                else {
+                    $("#p_list_container").html("");
+                }
+            }
+
+            $("#p_list_container").on("click", ".p_delete",function(){
+                let index = $(this).data("index");
+                products.splice(index, 1);
+                productImages.splice(index, 1);
+                showProductListInModal();
+                console.log(productImages.length);
+            })
+
+
+            $("#submit").click(function () {
+                var isValid = $("#c_form").valid();
+                if (isValid) {
+                    let category = new FormData();
+                    category.append("category_id", $("#c_id").val());
+                    category.append("category_name", $("#c_name").val());
+                   $.each(products,function(index,value){
+                        category.append("Product[" + index + "].product_name", value.product_name);
+                        category.append("Product[" + index + "].product_price", value.product_price);
+                        category.append("Product[" + index + "].product_description", value.product_description);
+                        category.append("Product[" + index + "].product_img_data", productImages[index]);
+                   })
+                    $.ajax({
+                        url: "/Category/AddCategory",
+                        type:"Post",
+                        contentType: false,
+                        processData: false,
+                        data: category,
+                        success:function(res){
+                            $("#exampleModal").modal("hide");
+                            GetCategoryList();
+                            resetCategoryForm();
+                        }
+                    })
+                }
+                else {
+                    $("#p_form").validate().showErrors();
+                }
+            })
+
+
+            $("#p_form").validate({
+                rules: {
+                    p_name: {
+                        required: true
+                    },
+                    p_price: {
+                        required: true,
+                    },
+                    p_description: {
+                        required: true
+                    },
+                    p_img: {
+                        required: true
+                    }
+                },
+                messages: {
+                    p_name: {
+                        required: "Product Name is  Required"
+                    },
+                    p_price: {
+                        required: "Product Price is required",
+                    },
+                    p_description: {
+                        required: "You have to describe your Product"
+                    },
+                    p_img: {
+                        required: "Select a Image Here"
+                    }
+                },
+            })
+
+            $("#c_form").validate({
+                rules: {
+                    c_name: {
+                        required: true
+                    }
+                },
+                messages: {
+                    c_name: {
+                        required: "Provide a Category Name Here"
+                    }
+                }
+            })
+
+
+            function GetCategoryList() {
+                $.ajax({
+                    url: "/Category/GetCategoryList",
+                    type: "get",
+                    success: function (res) {
+                        if (res.length > 0) {
+                            let html = "";
+                            $.each(res, function (index, value) {
+                                html += `<tr>
+                                                <td>${index + 1}</td>
+                                                <td>${value.category_name}</td>
+                                                <td>${value.product_count}</td>
+                                                <td>
+                                                    <button class="mt-1 btn btn-secondary shadow btn-sm rounded-circle edit" data-edit="${value.category_id}" title="Edit"><i class="bi bi-pencil-square"></i></button>
+                                                    <button class="mt-1 btn btn-secondary shadow btn-sm rounded-circle action"  data-action="${value.category_id}" title="Take Action" ><i class="bi bi-lightning-charge-fill"></i></i></button>
+                                                </td>
+                                            </tr>`
+                            });
+                            $(".categoryTbody").html(html);
+                        }
+                    }
+                })
+            }
+
+            $(".categoryTbody").on("click", ".edit", function () {
+                resetCategoryForm();
+                let index = $(this).data("edit");
+                $.ajax({
+                    url: "/Category/GetCategoryById/" + index,
+                    type: "get",
+                    success: function (res) {
+                        if (res != null) {
+                            //console.log(res);
+                            $("#p_form").hide();
+                            $("#c_name").val(res.category_name);
+                            $("#c_id").val(res.category_id);
+                            $("#exampleModal").modal("show");
+                        }
+                    }
+                })
+            })
+            
+            $("#addButton").click(function () {
+                if($("#c_id").val()!=0){
+                    resetCategoryForm();
+                }
+                $("#p_form").show();
+            })
+
+            function resetProductForm() {
+                $("#p_name").val("");
+                $("#p_price").val("");
+                $("#p_description").val("");
+                $("#ImageSave").val(null);
+                $(".p_img_wrap").css(`background-image`, ``);
+                $("#image_cancel_button").hide();
+                $('label[for="p_img"]').show();
+            }
+
+            function resetCategoryForm() {
+                $("#c_id").val(0);
+                $("#c_name").val("");
+                products.length = 0;
+                productImages.length = 0;
+            }
+
+            $(".categoryTbody").on("click",".action",function(){
+                let index = $(this).data("action");
+                window.location.href = "/Category/CategoryAction/" + index;
+            })
+            $(document).on('keydown', '#exampleModal', function (event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                }
+            });
+        })
+
+    </script>
+}
