@@ -70,5 +70,7 @@ namespace E_Commerse_Website.Controllers
             ViewData["ProductList"] = "";
             ViewData[activeClass] = "active";
         }
+
+
     }
 }

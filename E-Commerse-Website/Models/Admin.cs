@@ -18,5 +18,6 @@ namespace E_Commerse_Website.Models
 
         public List<Product>? Product { get; set; }
         public int ProductCount => Product?.Count ?? 0;
+        public List<AdminHistory>? History { get; set; }
     }
 }

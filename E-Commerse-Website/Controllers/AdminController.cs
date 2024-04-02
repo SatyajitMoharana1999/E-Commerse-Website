@@ -216,7 +216,7 @@ namespace E_Commerse_Website.Controllers
                     if (obj.customer_id != 0)
                     {
                         //update(edit) customer
-
+                        //EditHistory(obj, obj);
                         if (imagedata != null && imagedata.Length > 0)
                         {
                             obj.customer_image = ImageSave(imagedata, "CustomerImages");
@@ -352,7 +352,17 @@ namespace E_Commerse_Website.Controllers
 
         
 
-        //__------------------------------------------------------- //  Extra Methods  // ---------------------------------------------------__
+        //__------------------------------------------------------- //  History Methods  // ---------------------------------------------------__
         
+        public async Task EditHistory<T>(T pre_obj, T new_obj,string title)
+        {
+            string className = typeof(T).Name;
+            string desc = "This action is performed by ";
+            var AH = new AdminHistory
+            {
+                AH_title="Admin Updated Himself",
+
+            };
+        }
     }
 }

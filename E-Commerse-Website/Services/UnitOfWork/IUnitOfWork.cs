@@ -1,6 +1,5 @@
 ﻿using E_Commerse_Website.Data;
 using E_Commerse_Website.Services.Implimentation;
-using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerse_Website.Services.UnitOfWork
 {
@@ -9,6 +8,7 @@ namespace E_Commerse_Website.Services.UnitOfWork
         ICustomerRepo Customer { get; }
         ICategoryRepo Category { get; }
         IProductRepo Product { get; }
+        IAdminHistoryRepo AdminHistory { get; }
         Task SaveAsync();
 
     }
@@ -18,6 +18,7 @@ namespace E_Commerse_Website.Services.UnitOfWork
         public ICustomerRepo Customer { get; private set; }
         public ICategoryRepo Category { get; private set; }
         public IProductRepo Product { get; private set; }
+        public IAdminHistoryRepo AdminHistory { get; private set; }
 
         public UnitOfWork(myContext dbContext)
         {
@@ -25,6 +26,7 @@ namespace E_Commerse_Website.Services.UnitOfWork
             Customer = new CustomerRepo(this.dbContext);
             Category = new CatyegoryRepo(this.dbContext);
             Product = new ProductRepo(this.dbContext);
+            AdminHistory = new AdminHistoryRepo(this.dbContext);
         }
         public async Task SaveAsync()
         {

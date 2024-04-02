@@ -39,6 +39,6 @@ app.UseAuthorization();
 app.UseCookiePolicy();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=home}/{action=Index}/{id?}");
+    pattern: "{controller=customer}/{action=Index}/{id?}");
 
 app.Run();
