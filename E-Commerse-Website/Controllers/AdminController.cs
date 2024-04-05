@@ -216,12 +216,13 @@ namespace E_Commerse_Website.Controllers
                     if (obj.customer_id != 0)
                     {
                         //update(edit) customer
-                        //EditHistory(obj, obj);
+                        var preObj = await _unit.Customer.GetAsync(o=>o.customer_id==obj.customer_id);
                         if (imagedata != null && imagedata.Length > 0)
                         {
                             obj.customer_image = ImageSave(imagedata, "CustomerImages");
                         }
                         await _unit.Customer.Update(obj);
+                        await EditHistory(preObj, new_obj:obj,"Customer Updated");
                         await _unit.SaveAsync();
                         return Json(new { message = "Customer Updated successfully" });
                     }
@@ -234,6 +235,7 @@ namespace E_Commerse_Website.Controllers
                         }
                         await _unit.Customer.AddAsync(obj);
                         await _unit.SaveAsync();
+                        await AddHistory(obj, "Customer Added");
                         return Json(new { message = "Customer Added successfully" });
                     }
                 }
@@ -270,12 +272,12 @@ namespace E_Commerse_Website.Controllers
                 if (id == 0) { return Json(false); }
                 var obj = await _customerRepo.GetAsync(x => x.customer_id == id);
                 await _unit.Customer.RemoveAsync(obj);
+                await DeleteHistory(obj, "Customer Deleted");
                 await _unit.SaveAsync();
                 return Json(true);
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -348,21 +350,6 @@ namespace E_Commerse_Website.Controllers
         public IActionResult EntityNotExist()
         {
             return View();
-        }
-
-        
-
-        //__------------------------------------------------------- //  History Methods  // ---------------------------------------------------__
-        
-        public async Task EditHistory<T>(T pre_obj, T new_obj,string title)
-        {
-            string className = typeof(T).Name;
-            string desc = "This action is performed by ";
-            var AH = new AdminHistory
-            {
-                AH_title="Admin Updated Himself",
-
-            };
         }
     }
 }

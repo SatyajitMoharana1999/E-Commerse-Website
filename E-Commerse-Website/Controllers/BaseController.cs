@@ -1,8 +1,11 @@
 ﻿using E_Commerse_Website.Data;
+using E_Commerse_Website.Models;
 using E_Commerse_Website.Services.Implimentation;
 using E_Commerse_Website.Services.UnitOfWork;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Security.Claims;
 
 namespace E_Commerse_Website.Controllers
@@ -72,5 +75,80 @@ namespace E_Commerse_Website.Controllers
         }
 
 
+        //__------------------------------------------------------- //  History Methods  // ---------------------------------------------------__
+        [Authorize]
+        public async Task AddHistory<T>(T obj, string title)
+        {
+            string className = typeof(T).Name;
+            string actionDescription = "Added";
+            string newJson = JsonConvert.SerializeObject(obj);
+
+            Claim aId = User.FindFirst(ClaimTypes.NameIdentifier);
+            int adminId = int.Parse(aId.Value);
+            var adminName = await _context.tbl_admin.FirstOrDefaultAsync(o => o.admin_id == adminId);
+            title = title + " by " + adminName.admin_name;
+
+            var AH = new AdminHistory
+            {
+                AH_time = DateTime.Now,
+                AH_title = title,
+                AH_description = $"{actionDescription}. New {className}: {newJson}",
+                AH_deleted = false,
+                admin_id = adminId
+            };
+
+            await _context.tbl_adminHistory.AddAsync(AH);
+            await _context.SaveChangesAsync();
+        }
+
+        [Authorize]
+        public async Task EditHistory<T>(T pre_obj, T new_obj, string title)
+        {
+            string className = typeof(T).Name;
+            string actionDescription = "Updated";
+            string preJson = JsonConvert.SerializeObject(pre_obj);
+            string newJson = JsonConvert.SerializeObject(new_obj);
+
+            Claim aId = User.FindFirst(ClaimTypes.NameIdentifier);
+            int adminId = int.Parse(aId.Value);
+            var adminName = await _context.tbl_admin.FirstOrDefaultAsync(o => o.admin_id == adminId);
+            title = title + " by " + adminName.admin_name;
+
+            var AH = new AdminHistory
+            {
+                AH_time = DateTime.Now,
+                AH_title = title,
+                AH_description = $"{actionDescription}. Previous {className}: {preJson}. New {className}: {newJson}",
+                AH_deleted = false,
+                admin_id = adminId
+            };
+
+            await _context.tbl_adminHistory.AddAsync(AH);
+            //await _unit.SaveAsync();
+        }
+
+        [Authorize]
+        public async Task DeleteHistory<T>(T obj, string title)
+        {
+            string className = typeof(T).Name;
+            string actionDescription = "Deleted";
+            string objJson = JsonConvert.SerializeObject(obj);
+
+            Claim aId = User.FindFirst(ClaimTypes.NameIdentifier);
+            int adminId = int.Parse(aId.Value);
+            var adminName = await _context.tbl_admin.FirstOrDefaultAsync(o => o.admin_id == adminId);
+            title = title + " by " + adminName.admin_name;
+
+            var AH = new AdminHistory
+            {
+                AH_time = DateTime.Now,
+                AH_title = title,
+                AH_description = $"{actionDescription}. {className}: {objJson}",
+                AH_deleted = false,
+                admin_id = adminId
+            };
+
+            await _context.tbl_adminHistory.AddAsync(AH);
+        }
     }
 }
