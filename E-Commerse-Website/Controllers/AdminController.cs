@@ -132,14 +132,16 @@ namespace E_Commerse_Website.Controllers
             }
             if (ModelState.IsValid)
             {
+                var previousData = await _context.tbl_admin.FirstOrDefaultAsync(u => u.admin_id == obj.admin_id);
                 data.admin_name = obj.admin_name;
                 data.admin_email = obj.admin_email;
                 data.admin_password = obj.admin_password;
                 _context.tbl_admin.Update(data);
+                await EditHistory(previousData,data, "Admin Updated");
                 await _context.SaveChangesAsync();
                 if(img != null && img.Length > 0)
                 {
-                    UpdateImageClaims(data.admin_image);
+                    await UpdateImageClaims(data.admin_image);
                 }
                 return RedirectToAction("Admin_details_page");
             }
@@ -345,6 +347,16 @@ namespace E_Commerse_Website.Controllers
                 throw;
             }
             
+        }
+        //--------------------------------------------- Extra Methods
+
+       
+
+        
+
+        public IActionResult SomethingWentWrong()
+        {
+            return View();
         }
 
         public IActionResult EntityNotExist()

@@ -7,8 +7,8 @@
         <form class="pro_con shadow" id="myform" method="post" enctype="multipart/form-data" action="/Admin/Admin_Details_Page">
             <div class="image_wrapper" style="background-image: url('../AdminImages/@Model.admin_image');">
                 @* <div id="iw_text">
-                    <input type="file" id="ci" class="change_image" name="imageFile"/>
-                    <label for="ci" class="cil">Change Image</label>
+                <input type="file" id="ci" class="change_image" name="imageFile"/>
+                <label for="ci" class="cil">Change Image</label>
                 </div> *@
                 <div id="iw_text_upl">
                     <input type="file" id="ci2" class="change_image" name="img" />
@@ -23,7 +23,7 @@
                 <ul>
                     <li>
                         <input type="hidden" id="aid" asp-for="admin_id" />
-                        <strong>Name :</strong> 
+                        <strong>Name :</strong>
                         <span id="name">@Model.admin_name</span>
                         <i class="bi bi-pen-fill" id="in"></i>
                         <div class="inpwr">
@@ -38,7 +38,7 @@
                         </div>
                     </li>
                     <li>
-                        <strong>Password :</strong> 
+                        <strong>Password :</strong>
                         <span id="password"><em>Hidden</em></span>
                         <i class="bi bi-pen-fill" id="ip"></i>
                         <div class="inpwr">
@@ -51,10 +51,14 @@
                     <button type="button" class="btn btn-danger btn-sm" id="A_cancel"><i class="bi bi-pencil-square"></i> Cancel</button>
                     <button type="submit" class="btn btn-success btn-sm" id="A_conform"><i class="bi bi-pencil-square"></i> Conform</button>
                 </div>
-                </div>
+            </div>
         </form>
         <div class="pro_table">
-            satya
+            <div class="container">
+                <div class="history_content">
+
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -62,6 +66,7 @@
 @section Scripts {
     <script>
         $(function(){
+            getAllHistory()
             hidefun();
             $("#myform").validate({
                 rules: {
@@ -156,6 +161,31 @@
             $("#selectedImagePreview").hide();
             $("#toShowUploadImage").hide();
         }
+
+
+        //------------------------------------------------------- History Table ------------------------------------------------------//
+        function getAllHistory() {
+            $.ajax({
+                url: "/History/MyActivity",
+                type: "Get",
+                success: function (res) {
+                    let html = `<p class="text-secondary text-center">No History Till Now</p>`;
+                    if (res.length != 0) {
+                        res.sort((a, b) => b.aH_id - a.aH_id);
+                        html = ``;
+                        console.log(res);
+                        $.each(res, function (index, value) {
+                            html += `<div class="mb-1 p-2 text-secondary bg-secondary bg-opacity-10  border-info border-start-0 rounded-end d-flex justify-content-between">
+                                                        <span class=" text-dark">${value.aH_title}</span>
+                                                        <span class="text-secondary fst-italic">${value.aH_title.split(' ')[0]}</span>
+                                                    </div>`
+                        })
+                    }
+                    $(".history_content").html(html);
+                }
+            })
+        }
+
     </script>
 }
 @section styles{

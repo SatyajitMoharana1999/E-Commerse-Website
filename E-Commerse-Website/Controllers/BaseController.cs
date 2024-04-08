@@ -71,6 +71,7 @@ namespace E_Commerse_Website.Controllers
             ViewData["Upsert"] = "";
             ViewData["CategoryList"] = "";
             ViewData["ProductList"] = "";
+            ViewData["ActivityHistory"] = "";
             ViewData[activeClass] = "active";
         }
 
@@ -81,7 +82,11 @@ namespace E_Commerse_Website.Controllers
         {
             string className = typeof(T).Name;
             string actionDescription = "Added";
-            string newJson = JsonConvert.SerializeObject(obj);
+            var settings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            string newJson = JsonConvert.SerializeObject(obj,settings);
 
             Claim aId = User.FindFirst(ClaimTypes.NameIdentifier);
             int adminId = int.Parse(aId.Value);
@@ -106,8 +111,12 @@ namespace E_Commerse_Website.Controllers
         {
             string className = typeof(T).Name;
             string actionDescription = "Updated";
-            string preJson = JsonConvert.SerializeObject(pre_obj);
-            string newJson = JsonConvert.SerializeObject(new_obj);
+            var settings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            string preJson = JsonConvert.SerializeObject(pre_obj, settings);
+            string newJson = JsonConvert.SerializeObject(new_obj, settings);
 
             Claim aId = User.FindFirst(ClaimTypes.NameIdentifier);
             int adminId = int.Parse(aId.Value);
@@ -132,7 +141,11 @@ namespace E_Commerse_Website.Controllers
         {
             string className = typeof(T).Name;
             string actionDescription = "Deleted";
-            string objJson = JsonConvert.SerializeObject(obj);
+            var settings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            string objJson = JsonConvert.SerializeObject(obj, settings);
 
             Claim aId = User.FindFirst(ClaimTypes.NameIdentifier);
             int adminId = int.Parse(aId.Value);

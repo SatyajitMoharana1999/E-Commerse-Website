@@ -9,6 +9,6 @@ namespace E_Commerse_Website.Models
         public string? category_name { get; set; }
         public bool category_deleted { get; set; }
         public List<Product>? Product { get; set; }
-        public int ProductCount => Product?.Count ?? 0;
+        public int ProductCount => Product?.Count(p=>!p.product_deleted) ?? 0;
     }
 }

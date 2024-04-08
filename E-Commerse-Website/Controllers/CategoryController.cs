@@ -5,6 +5,8 @@ using E_Commerse_Website.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Security.Claims;
 
 namespace E_Commerse_Website.Controllers
@@ -59,7 +61,9 @@ namespace E_Commerse_Website.Controllers
             {
                 if (category.category_id != 0)
                 {
+                    var preObj = await _unit.Category.GetAsync(o => o.category_id == category.category_id);
                     await _unit.Category.Update(category);
+                    await EditHistory(preObj, category, "Category Updated");
                     await _unit.SaveAsync();
                     return Json(true);
                 }
@@ -77,6 +81,37 @@ namespace E_Commerse_Website.Controllers
                         }
                     }
                     await _unit.SaveAsync();
+
+                    // ----------------- Code For Save History
+                    if (category.Product != null)
+                    {
+                        var obj = new Category
+                        {
+                            category_id = category.category_id,
+                            category_name = category.category_name,
+                            category_deleted = false,
+                            Product = new List<Product>(),
+                        };
+                        foreach (var p in category.Product)
+                        {
+                            obj.Product.Add(new Product
+                            {
+                                product_id = p.product_id,
+                                product_name = p.product_name,
+                                product_price = p.product_price,
+                                product_deleted = p.product_deleted,
+                                product_description = p.product_description,
+                                product_image = p.product_image,
+                                adm_id = p.adm_id,
+                                cat_id = p.cat_id
+                            });
+                        }
+                        await AddHistory(category, "Category Added Along With " +category.Product.Count+ " new Products");
+                    }
+                    else
+                    {
+                        await AddHistory(category, "Category Added");
+                    }
                     return Json(true);
                 }
             }
@@ -117,13 +152,14 @@ namespace E_Commerse_Website.Controllers
             if (id != 0)
             {
                 var data = await _unit.Category.GetWithIncludeAsync(c => c.category_id == id && !c.category_deleted, c => c.Product);
+                var x = data.Product.Where(p => !p.product_deleted).ToList();
+                data.Product = x;
                 return View(data);
             }
             return NotFound();
         }
 
         [HttpPost]
-        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> DeleteCategory(int id)
         {
@@ -131,7 +167,9 @@ namespace E_Commerse_Website.Controllers
             {
                 if (id != 0)
                 {
+                    var cat = await _unit.Category.GetAsync(o => o.category_id == id);
                     await _unit.Category.SoftDelete(id);
+                    await DeleteHistory(cat,"Category Deleted");
                     await _unit.SaveAsync();
                     return Json(true);
                 }
@@ -151,13 +189,33 @@ namespace E_Commerse_Website.Controllers
             try
             {
                 var data = await _unit.Category.GetWithIncludeAsync(c => c.category_id == id, c => c.Product);
+                
                 if (id != 0)
                 {
-                    foreach (var products in data.Product)
+                    var products = data.Product.Where(p => !p.product_deleted).ToList();
+                    foreach (var product in products)
                     {
-                        await _unit.Product.SoftDelete(products.product_id);
+                        await _unit.Product.SoftDelete(product.product_id);
+
                     }
                     await _unit.Category.SoftDelete(id);
+
+                    //------------------------------- code to save history
+                    var productIds = products.Select(p => p.product_id).ToList();
+                    string objJson = JsonConvert.SerializeObject(productIds);
+                    Claim aId = User.FindFirst(ClaimTypes.NameIdentifier);
+                    int adminId = int.Parse(aId.Value);
+                    var adminName = await _unit.Admin.GetAsync(o => o.admin_id == adminId);
+                    var AH = new AdminHistory
+                    {
+                        AH_time = DateTime.Now,
+                        AH_title = "Category Deleted Along With All It's Products By " + adminName.admin_name,
+                        AH_description = $"Deleted. Category And Product Under This Category. Category: {data.category_name}. Product Ids {objJson}",
+                        AH_deleted = false,
+                        admin_id = adminId
+                    };
+                    await _unit.AdminHistory.AddAsync(AH);
+
                     await _unit.SaveAsync();
                     return Json(true);
                 }
@@ -168,21 +226,38 @@ namespace E_Commerse_Website.Controllers
                 return Json(false);
             }
         }
+
         [HttpPost]
-        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Recategorise(int previousId, int newId)
         {
             try
             {
                 var data = await _unit.Category.GetWithIncludeAsync(c => c.category_id == previousId, c => c.Product);
+                var newCategory = await _unit.Category.GetAsync(o => o.category_id==newId);
                 if (previousId != 0 && newId != 0 && previousId != newId)
                 {
-                    foreach (var products in data.Product)
+                    var products = data.Product.Where(p=>!p.product_deleted).ToList();
+                    foreach (var product in products)
                     {
-                        products.cat_id = newId;
+                        product.cat_id = newId;
                     }
 
+                    //------------------------------- code to save history
+                    var productIds = products.Select(p => p.product_id).ToList();
+                    string objJson = JsonConvert.SerializeObject(productIds);
+                    Claim aId = User.FindFirst(ClaimTypes.NameIdentifier);
+                    int adminId = int.Parse(aId.Value);
+                    var adminName = await _unit.Admin.GetAsync(o => o.admin_id == adminId);
+                    var AH = new AdminHistory
+                    {
+                        AH_time = DateTime.Now,
+                        AH_title = "Products Recategorised By " + adminName.admin_name,
+                        AH_description = $"Recategorised. All The Products Recategorised. Previous Category: {data.category_name}. New Category: {newCategory.category_name}. Product Ids {objJson}",
+                        AH_deleted = false,
+                        admin_id = adminId
+                    };
+                    await _unit.AdminHistory.AddAsync(AH);
                     await _unit.SaveAsync();
                     return Json(true);
                 }
@@ -316,14 +391,19 @@ namespace E_Commerse_Website.Controllers
                 }
                 if (pvm.product.product_id != 0)
                 {
+                    var preProduct = await _unit.Product.GetAsync(p => p.product_id == pvm.product.product_id);
+                    await EditHistory(preProduct, pvm.product, "Product Updated");
                     await _unit.Product.Update(pvm.product);
                     await _unit.SaveAsync();
                     return Json(true);
                 }
                 else
                 {
+                    var admin = User.FindFirst(ClaimTypes.NameIdentifier);
+                    pvm.product.adm_id = int.Parse(admin.Value);
                     await _unit.Product.AddAsync(pvm.product);
                     await _unit.SaveAsync();
+                    await AddHistory(pvm.product, "Product Added");
                     return Json(true);
                 }
             }
@@ -338,7 +418,10 @@ namespace E_Commerse_Website.Controllers
         {
             try
             {
+                var prod = await _unit.Product.GetAsync(p => p.product_id == id);
                 await _unit.Product.SoftDelete(id);
+                
+                await DeleteHistory(prod, "Producte Deleted");
                 await _unit.SaveAsync();
                 return Json(true);  
             }
