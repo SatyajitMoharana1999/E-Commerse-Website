@@ -48,6 +48,7 @@ namespace E_Commerse_Website.Controllers
                 var adm_id = User.FindFirst(ClaimTypes.NameIdentifier);
                 if (adm_id.Value == null) { return RedirectToAction("EntityNotExist", "admin"); }
                 var AH = await _unit.AdminHistory.GetAsyncRange(a => a.admin_id == int.Parse(adm_id.Value));
+                AH = AH.OrderByDescending(o => o.AH_id).Take(20);
                 var titles = AH.Select(h => new
                 {
                     AH_id = h.AH_id,
@@ -58,6 +59,28 @@ namespace E_Commerse_Website.Controllers
             catch (Exception)
             {
                 return RedirectToAction("SomethingWentWrong");
+                throw;
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        [Route("History/ActivityDetails/{id}")]
+        public async Task<IActionResult> ActivityDetails(int id)
+        {
+            try
+            {
+                RequireCall("ActivityHistory");
+                var AHD = await _unit.AdminHistory.GetWithIncludeAsync(u => u.AH_id == id,u=>u.Admin);
+                if (AHD == null)
+                {
+                    return NotFound();
+                }
+                return View(AHD);
+            }
+            catch (Exception)
+            {
+                return NotFound();
                 throw;
             }
         }

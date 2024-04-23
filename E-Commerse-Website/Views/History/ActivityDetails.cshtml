@@ -1,0 +1,307 @@
+﻿@using Newtonsoft.Json
+@using System.Text.RegularExpressions
+@model AdminHistory
+@section Styles{
+    <style>
+        .o_dot{
+            display: inline-block;
+            width: 200px;
+            white-space: nowrap;
+            overflow: hidden !important;
+            text-overflow: ellipsis;
+        }
+
+    </style>
+}
+@{
+    // Get the JSON string from the AH_description property
+    string customerInfo = Model.AH_description;
+    string title = Model.AH_title;
+    string[] words = customerInfo.Split(new string[] { ". ",": ", "\t", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
+    string[] tWords = title.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+
+}
+@if (words[0]=="Updated")
+{
+    // Find the start and end positions of the first object within the string
+    int firstStartIndex = customerInfo.IndexOf("{");
+    int firstEndIndex = customerInfo.IndexOf("}", firstStartIndex) + 1;
+
+    // Extract the substring containing the first object
+    string firstCustomerJson = customerInfo.Substring(firstStartIndex, firstEndIndex - firstStartIndex);
+
+    // Find the start and end positions of the second object within the string
+    int secondStartIndex = customerInfo.LastIndexOf("{");
+    int secondEndIndex = customerInfo.LastIndexOf("}") + 1;
+
+    // Extract the substring containing the second object
+    string secondCustomerJson = customerInfo.Substring(secondStartIndex, secondEndIndex - secondStartIndex);
+
+    string[] firstWords = firstCustomerJson.Split(new string[] { "{","}",":","\"","," }, StringSplitOptions.RemoveEmptyEntries);
+    string[] secondWords = secondCustomerJson.Split(new string[] { "{", "}", ":", "\"", "," }, StringSplitOptions.RemoveEmptyEntries);
+
+    
+    <div class="container p-4">
+        <h4 class="mb-3">@Model.AH_title</h4>
+        <div>
+            <p class="text-secondary">
+                This action is performed by 
+                <span class="fst-italic fw-semibold">@Model.Admin.admin_name</span> 
+                at time: <span class="fst-italic">@Model.AH_time.</span>
+                <br />Here you can see the details below and you can undo this action in one day if this action is performed by You.
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <span class="ms-2 fw-semibold text-secondary">Previous</span>
+                <ul class="list-group">
+                    @for (int i = 0; i < firstWords.Length; i = i + 2)
+                    {
+                        string ch = secondWords[i];
+                        bool bch = (ch=="cat_id" || ch == "customer_id" || ch == "adm_id" || ch == "Admin" || ch == "product_img_data" || ch == "admin_id" || ch == "Product" || ch == "ProductCount" || ch == "History");
+                        if (bch)
+                        {
+                            continue;
+                        }
+                        string cls = (firstWords[i + 1] != secondWords[i + 1]) ? "text-danger fst-italic" : "";
+                        <li class="list-group-item">
+                            <span class="d-inline-block" style="width:10rem;">@firstWords[i]</span>
+                            <span class="@cls o_dot fw-semibold">@firstWords[i + 1]</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="col-lg-6">
+                <span class="ms-2 fw-semibold text-secondary">New</span>
+                <ul class="list-group">
+                    @for (int i = 0; i < secondWords.Length; i = i + 2)
+                    {
+                        string ch = secondWords[i];
+                        bool bch = (ch == "cat_id" || ch == "customer_id" || ch == "adm_id" || ch == "Admin" || ch == "product_img_data" || ch == "admin_id" || ch == "Product" || ch == "ProductCount" || ch == "History");
+                        if (bch)
+                        {
+                            continue;
+                        }
+                        string cls = (firstWords[i + 1] != secondWords[i + 1]) ? "text-primary fst-italic" : "";
+                        <li class="list-group-item">
+                            <span class="d-inline-block" style="width:10rem;">@firstWords[i]</span>
+                            <span class="@cls o_dot fw-semibold">@secondWords[i + 1]</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    @if (tWords[0] == "Product")
+    {
+        int index1 = Array.IndexOf(firstWords, "Category");
+        int index2 = Array.IndexOf(secondWords, "Category");
+        // int index = Array.FindIndex(firstWords, word => word.Equals("Category", StringComparison.OrdinalIgnoreCase)); // for case sencitivity (if youu dont know the original case of the string)
+        string pe1 = firstWords[index1 - 1];
+        string pe2 = secondWords[index2 - 1];
+
+        @section Scripts{
+            <script>
+                $(function(){
+                    getCategoryName();
+                })
+                function getCategoryName(){
+                    let c_span = $("span:contains('Category')");
+                    let c_val = c_span.next("span");
+
+                    //let i_span = $("span:contains('cat_id')");
+                    let cid1 = "@(pe1)";
+                    let cid2 = "@(pe2)";
+                    console.log(cid1, cid2);
+                    if (cid1 != cid2) {
+                        c_span.eq(0).next("span").addClass("text-danger fst-italic fw-semibold");
+                        c_span.eq(1).next("span").addClass("text-primary fst-italic fw-semibold");
+                    }
+                    $.ajax({
+                        url:"/Category/GetCategoryById/"+cid1,
+                        type:"get",
+                        success: function (res) {
+                            let categoryName = res.category_name;
+                            c_span.eq(0).next("span").text(categoryName);
+                        }
+                    })
+                    $.ajax({
+                        url:"/Category/GetCategoryById/"+cid2,
+                        type:"get",
+                        success: function (res) {
+                           let categoryName = res.category_name;
+                            c_span.eq(1).next("span").text(categoryName);
+                        }
+                    })
+                }
+            </script>
+        }
+    }
+}
+@if (words[0] == "Deleted")
+{
+    int firstStartIndex = customerInfo.IndexOf("{");
+    int firstEndIndex = customerInfo.IndexOf("}", firstStartIndex) + 1;
+    string CustomerJson = customerInfo.Substring(firstStartIndex, firstEndIndex - firstStartIndex);
+    string[] Words = CustomerJson.Split(new string[] { "{", "}", ":", "\"", "," }, StringSplitOptions.RemoveEmptyEntries);
+    <div class="container p-4">
+        <h4 class="mb-3 text-danger">@Model.AH_title</h4>
+        <div>
+            <p class="text-secondary">
+                This action is performed by
+                <span class="fst-italic fw-semibold">@Model.Admin.admin_name</span>
+                at time: <span class="fst-italic">@Model.AH_time.</span>
+                <br />Here you can see the details below and you can undo this action in one day if this action is performed by You.
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-lg-10">
+                <span class="ms-2 fw-semibold text-secondary">Details</span>
+                <ul class="list-group">
+                    @for (int i = 0; i < Words.Length; i = i + 2)
+                    {
+                        string ch = Words[i];
+                        bool bch = (ch == "cat_id" || ch.Contains("id") || ch == "adm_id" || ch == "Admin" || ch == "product_img_data" || ch == "admin_id" || ch == "Product" || ch == "ProductCount" || ch == "History" || ch.Contains("deleted"));
+                        if (bch)
+                        {
+                            continue;
+                        }
+                        <li class="list-group-item">
+                            <span class="d-inline-block" style="width:10rem;">@Words[i]</span>
+                            <span class="o_dot fw-semibold">@Words[i + 1]</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    @if (tWords[0] == "Product")
+    {
+        int index = Array.IndexOf(Words, "Category");
+        string pe = Words[index - 1];
+        @section Scripts {
+        <script>
+            $(function () {
+                getCategoryName();
+            })
+            function getCategoryName() {
+                let c_span = $("span:contains('Category')");
+                let c_val = c_span.next("span");
+
+                //let i_span = $("span:contains('cat_id')");
+                let cid1 = "@(pe)";
+                console.log(cid1);
+                $.ajax({
+                    url: "/Category/GetCategoryById/" + cid1,
+                    type: "get",
+                    success: function (res) {
+                        let categoryName = res.category_name;
+                        c_span.eq(0).next("span").text(categoryName);
+                    }
+                })
+            }
+        </script>
+        }
+    }
+}
+@if (words[0] == "Added")
+{
+    int firstStartIndex = customerInfo.IndexOf("{");
+    int firstEndIndex = customerInfo.IndexOf("}", firstStartIndex) + 1;
+    @if (title.Contains("Products") && title.Contains("Category"))
+    {
+        firstEndIndex = customerInfo.IndexOf("Product", firstStartIndex);
+
+    }
+    string CustomerJson = customerInfo.Substring(firstStartIndex, firstEndIndex - firstStartIndex);
+    string[] Words = CustomerJson.Split(new string[] { "{", "}", ":", "\"", "," }, StringSplitOptions.RemoveEmptyEntries);
+    @customerInfo
+    <div>----------------------------------------------------------------</div>
+    @CustomerJson
+    <div class="container p-4">
+        <h4 class="mb-3 text-success">@Model.AH_title</h4>
+        <div>
+            <p class="text-secondary">
+                This action is performed by
+                <span class="fst-italic fw-semibold">@Model.Admin.admin_name</span>
+                at time: <span class="fst-italic">@Model.AH_time.</span>
+                <br />Here you can see the details below and you can undo this action in one day if this action is performed by You.
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-lg-10">
+                <span class="ms-2 fw-semibold text-secondary">Details</span>
+                <ul class="list-group">
+                    @for (int i = 0; i < Words.Length; i = i + 2)
+                    {
+                        string ch = Words[i];
+                        bool bch = (ch == "cat_id" || ch.Contains("id") || ch == "adm_id" || ch == "Admin" || ch == "product_img_data" || ch == "admin_id" || ch == "Product" || ch == "ProductCount" || ch == "History" || ch.Contains("deleted"));
+                        if (bch)
+                        {
+                            continue;
+                        }
+                        <li class="list-group-item">
+                            <span class="d-inline-block" style="width:10rem;">@Words[i]</span>
+                            <span class="o_dot fw-semibold">@Words[i + 1]</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+   
+    @if (tWords[0] == "Product")
+    {
+        int index = Array.IndexOf(Words, "Category");
+        string pe = Words[index - 1];
+        @section Scripts {
+        <script>
+            $(function () {
+                getCategoryName();
+            })
+            function getCategoryName() {
+                let c_span = $("span:contains('Category')");
+                let c_val = c_span.next("span");
+
+                //let i_span = $("span:contains('cat_id')");
+                let cid1 = "@(pe)";
+                console.log(cid1);
+                $.ajax({
+                    url: "/Category/GetCategoryById/" + cid1,
+                    type: "get",
+                    success: function (res) {
+                        let categoryName = res.category_name;
+                        c_span.eq(0).next("span").text(categoryName);
+                    }
+                })
+            }
+        </script>
+        }
+    }
+
+    @if (title.Contains("Products") && title.Contains("Category"))
+    {
+        string pattern = @"\{[^{}]+\}(?=,|\])";
+        MatchCollection matches = Regex.Matches(customerInfo, pattern);
+        @section Scripts{
+        <script>
+            var matchObjects = [];
+            @foreach (Match match in matches)
+            {
+                <text>
+                    var matchValue = '@Html.Raw(match.Value)';
+                    var matchObject = JSON.parse(matchValue);
+                    matchObjects.push(matchObject);
+                </text>
+            }
+            console.log(matchObjects[0]);
+            console.log(matchObjects[1]);
+        </script>
+        }
+    }
+}
+@if (words[0] == "Recategorised")
+{
+    <div>Recategorised</div>
+}

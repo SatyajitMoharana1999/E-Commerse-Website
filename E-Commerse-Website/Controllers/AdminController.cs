@@ -133,11 +133,19 @@ namespace E_Commerse_Website.Controllers
             if (ModelState.IsValid)
             {
                 var previousData = await _context.tbl_admin.FirstOrDefaultAsync(u => u.admin_id == obj.admin_id);
+                var copy = new Admin
+                {
+                    admin_id = previousData.admin_id,
+                    admin_name = previousData.admin_name,
+                    admin_email = previousData.admin_email,
+                    admin_password = previousData.admin_password,
+                    admin_image = previousData.admin_image,
+                };
                 data.admin_name = obj.admin_name;
                 data.admin_email = obj.admin_email;
                 data.admin_password = obj.admin_password;
                 _context.tbl_admin.Update(data);
-                await EditHistory(previousData,data, "Admin Updated");
+                await EditHistory(copy, obj, "Admin Updated");
                 await _context.SaveChangesAsync();
                 if(img != null && img.Length > 0)
                 {
@@ -219,12 +227,25 @@ namespace E_Commerse_Website.Controllers
                     {
                         //update(edit) customer
                         var preObj = await _unit.Customer.GetAsync(o=>o.customer_id==obj.customer_id);
+                        var copy = new Customer
+                        {
+                            customer_id = preObj.customer_id,
+                            customer_name = preObj.customer_name,
+                            customer_phone = preObj.customer_phone,
+                            customer_email = preObj.customer_email,
+                            customer_password = preObj.customer_password,
+                            customer_gender = preObj.customer_gender,
+                            customer_country = preObj.customer_country,
+                            customer_city = preObj.customer_city,
+                            customer_address = preObj.customer_address,
+                            customer_image = preObj.customer_image,
+                        };
                         if (imagedata != null && imagedata.Length > 0)
                         {
                             obj.customer_image = ImageSave(imagedata, "CustomerImages");
                         }
                         await _unit.Customer.Update(obj);
-                        await EditHistory(preObj, new_obj:obj,"Customer Updated");
+                        await EditHistory(copy, new_obj:obj,"Customer Updated");
                         await _unit.SaveAsync();
                         return Json(new { message = "Customer Updated successfully" });
                     }

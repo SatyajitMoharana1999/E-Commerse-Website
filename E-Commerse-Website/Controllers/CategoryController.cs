@@ -62,8 +62,14 @@ namespace E_Commerse_Website.Controllers
                 if (category.category_id != 0)
                 {
                     var preObj = await _unit.Category.GetAsync(o => o.category_id == category.category_id);
+                    var copy = new Category
+                    {
+                        category_id = preObj.category_id,
+                        category_name = preObj.category_name,
+                        category_deleted = preObj.category_deleted
+                    };
                     await _unit.Category.Update(category);
-                    await EditHistory(preObj, category, "Category Updated");
+                    await EditHistory(copy, category, "Category Updated");
                     await _unit.SaveAsync();
                     return Json(true);
                 }
@@ -106,7 +112,7 @@ namespace E_Commerse_Website.Controllers
                                 cat_id = p.cat_id
                             });
                         }
-                        await AddHistory(category, "Category Added Along With " +category.Product.Count+ " new Products");
+                        await AddHistory(obj, "Category Added Along With " +category.Product.Count+ " new Products");
                     }
                     else
                     {
@@ -392,8 +398,19 @@ namespace E_Commerse_Website.Controllers
                 if (pvm.product.product_id != 0)
                 {
                     var preProduct = await _unit.Product.GetAsync(p => p.product_id == pvm.product.product_id);
-                    await EditHistory(preProduct, pvm.product, "Product Updated");
+                    var copy = new Product
+                    {
+                        product_id = preProduct.product_id,
+                        product_name = preProduct.product_name,
+                        product_description = preProduct.product_description,
+                        product_price = preProduct.product_price,
+                        product_image = preProduct.product_image,
+                        product_deleted = preProduct.product_deleted,
+                        cat_id = preProduct.cat_id,
+                        adm_id = preProduct.adm_id,
+                    };
                     await _unit.Product.Update(pvm.product);
+                    await EditHistory(copy, preProduct, "Product Updated");
                     await _unit.SaveAsync();
                     return Json(true);
                 }
@@ -421,7 +438,7 @@ namespace E_Commerse_Website.Controllers
                 var prod = await _unit.Product.GetAsync(p => p.product_id == id);
                 await _unit.Product.SoftDelete(id);
                 
-                await DeleteHistory(prod, "Producte Deleted");
+                await DeleteHistory(prod, "Product Deleted");
                 await _unit.SaveAsync();
                 return Json(true);  
             }

@@ -4,7 +4,7 @@
 
 <div class="container">
     <div class="main_wrap">
-        <form class="pro_con shadow" id="myform" method="post" enctype="multipart/form-data" action="/Admin/Admin_Details_Page">
+        <form class="pro_con shadow-sm" id="myform" method="post" enctype="multipart/form-data" action="/Admin/Admin_Details_Page">
             <div class="image_wrapper" style="background-image: url('../AdminImages/@Model.admin_image');">
                 @* <div id="iw_text">
                 <input type="file" id="ci" class="change_image" name="imageFile"/>
@@ -54,7 +54,7 @@
             </div>
         </form>
         <div class="pro_table">
-            <div class="container">
+            <div class="pt-con">
                 <div class="history_content">
 
                 </div>
@@ -163,7 +163,7 @@
         }
 
 
-        //------------------------------------------------------- History Table ------------------------------------------------------//
+        //------------------------------------------------------- History Content ------------------------------------------------------//
         function getAllHistory() {
             $.ajax({
                 url: "/History/MyActivity",
@@ -175,11 +175,14 @@
                         html = ``;
                         console.log(res);
                         $.each(res, function (index, value) {
-                            html += `<div class="mb-1 p-2 text-secondary bg-secondary bg-opacity-10  border-info border-start-0 rounded-end d-flex justify-content-between">
+                            html += `<div class="mb-1 p-2 text-secondary bg-secondary bg-opacity-10  border-start-0 rounded-end d-flex justify-content-between">
                                                         <span class=" text-dark">${value.aH_title}</span>
                                                         <span class="text-secondary fst-italic">${value.aH_title.split(' ')[0]}</span>
                                                     </div>`
                         })
+                        html+=`<div class="mb-1 p-2 text-secondary bg-secondary bg-opacity-10  border-start-0 rounded-end d-flex justify-content-center">
+                                   <a class="btn btn-secondary btn-sm px-4">See All<a>
+                                </div>`
                     }
                     $(".history_content").html(html);
                 }
