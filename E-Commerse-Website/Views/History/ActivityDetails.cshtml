@@ -1,5 +1,7 @@
 ﻿@using Newtonsoft.Json
 @using System.Text.RegularExpressions
+@using System.Security.Claims
+
 @model AdminHistory
 @section Styles{
     <style>
@@ -11,31 +13,37 @@
             text-overflow: ellipsis;
         }
 
+        @@media(max-width:1180px) and (min-width:990px){
+            .o_dot {
+                width: 100px;
+            }
+        }
+
     </style>
 }
 @{
     // Get the JSON string from the AH_description property
-    string customerInfo = Model.AH_description;
+    string dec_info = Model.AH_description;
     string title = Model.AH_title;
-    string[] words = customerInfo.Split(new string[] { ". ",": ", "\t", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
+    string[] words = dec_info.Split(new string[] { ". ",": ", "\t", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
     string[] tWords = title.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
 
 }
 @if (words[0]=="Updated")
 {
     // Find the start and end positions of the first object within the string
-    int firstStartIndex = customerInfo.IndexOf("{");
-    int firstEndIndex = customerInfo.IndexOf("}", firstStartIndex) + 1;
+    int firstStartIndex = dec_info.IndexOf("{");
+    int firstEndIndex = dec_info.IndexOf("}", firstStartIndex) + 1;
 
     // Extract the substring containing the first object
-    string firstCustomerJson = customerInfo.Substring(firstStartIndex, firstEndIndex - firstStartIndex);
+    string firstCustomerJson = dec_info.Substring(firstStartIndex, firstEndIndex - firstStartIndex);
 
     // Find the start and end positions of the second object within the string
-    int secondStartIndex = customerInfo.LastIndexOf("{");
-    int secondEndIndex = customerInfo.LastIndexOf("}") + 1;
+    int secondStartIndex = dec_info.LastIndexOf("{");
+    int secondEndIndex = dec_info.LastIndexOf("}") + 1;
 
     // Extract the substring containing the second object
-    string secondCustomerJson = customerInfo.Substring(secondStartIndex, secondEndIndex - secondStartIndex);
+    string secondCustomerJson = dec_info.Substring(secondStartIndex, secondEndIndex - secondStartIndex);
 
     string[] firstWords = firstCustomerJson.Split(new string[] { "{","}",":","\"","," }, StringSplitOptions.RemoveEmptyEntries);
     string[] secondWords = secondCustomerJson.Split(new string[] { "{", "}", ":", "\"", "," }, StringSplitOptions.RemoveEmptyEntries);
@@ -58,7 +66,7 @@
                     @for (int i = 0; i < firstWords.Length; i = i + 2)
                     {
                         string ch = secondWords[i];
-                        bool bch = (ch=="cat_id" || ch == "customer_id" || ch == "adm_id" || ch == "Admin" || ch == "product_img_data" || ch == "admin_id" || ch == "Product" || ch == "ProductCount" || ch == "History");
+                        bool bch = (ch == "cat_id" || ch == "customer_id" || ch == "adm_id" || ch == "Admin" || ch == "product_img_data" || ch == "admin_id" || ch == "Product" || ch == "product_id" || ch == "product_deleted" || ch == "ProductCount" || ch == "History");
                         if (bch)
                         {
                             continue;
@@ -77,7 +85,7 @@
                     @for (int i = 0; i < secondWords.Length; i = i + 2)
                     {
                         string ch = secondWords[i];
-                        bool bch = (ch == "cat_id" || ch == "customer_id" || ch == "adm_id" || ch == "Admin" || ch == "product_img_data" || ch == "admin_id" || ch == "Product" || ch == "ProductCount" || ch == "History");
+                        bool bch = (ch == "cat_id" || ch == "customer_id" || ch == "adm_id" || ch == "Admin" || ch == "product_id" || ch == "product_deleted" || ch == "product_img_data" || ch == "admin_id" || ch == "Product" || ch == "ProductCount" || ch == "History");
                         if (bch)
                         {
                             continue;
@@ -141,9 +149,9 @@
 }
 @if (words[0] == "Deleted")
 {
-    int firstStartIndex = customerInfo.IndexOf("{");
-    int firstEndIndex = customerInfo.IndexOf("}", firstStartIndex) + 1;
-    string CustomerJson = customerInfo.Substring(firstStartIndex, firstEndIndex - firstStartIndex);
+    int firstStartIndex = dec_info.IndexOf("{");
+    int firstEndIndex = dec_info.IndexOf("}", firstStartIndex) + 1;
+    string CustomerJson = dec_info.Substring(firstStartIndex, firstEndIndex - firstStartIndex);
     string[] Words = CustomerJson.Split(new string[] { "{", "}", ":", "\"", "," }, StringSplitOptions.RemoveEmptyEntries);
     <div class="container p-4">
         <h4 class="mb-3 text-danger">@Model.AH_title</h4>
@@ -207,18 +215,18 @@
 }
 @if (words[0] == "Added")
 {
-    int firstStartIndex = customerInfo.IndexOf("{");
-    int firstEndIndex = customerInfo.IndexOf("}", firstStartIndex) + 1;
+    int firstStartIndex = dec_info.IndexOf("{");
+    int firstEndIndex = dec_info.IndexOf("}", firstStartIndex) + 1;
     @if (title.Contains("Products") && title.Contains("Category"))
     {
-        firstEndIndex = customerInfo.IndexOf("Product", firstStartIndex);
+        firstEndIndex = dec_info.IndexOf("Product", firstStartIndex);
 
     }
-    string CustomerJson = customerInfo.Substring(firstStartIndex, firstEndIndex - firstStartIndex);
+    string CustomerJson = dec_info.Substring(firstStartIndex, firstEndIndex - firstStartIndex);
     string[] Words = CustomerJson.Split(new string[] { "{", "}", ":", "\"", "," }, StringSplitOptions.RemoveEmptyEntries);
-    @customerInfo
+    @* @dec_info
     <div>----------------------------------------------------------------</div>
-    @CustomerJson
+    @CustomerJson *@
     <div class="container p-4">
         <h4 class="mb-3 text-success">@Model.AH_title</h4>
         <div>
@@ -230,7 +238,7 @@
             </p>
         </div>
         <div class="row">
-            <div class="col-lg-10">
+            <div class="col-lg-12">
                 <span class="ms-2 fw-semibold text-secondary">Details</span>
                 <ul class="list-group">
                     @for (int i = 0; i < Words.Length; i = i + 2)
@@ -248,6 +256,9 @@
                     }
                 </ul>
             </div>
+        </div>
+        <div class="row ProductContainer pt-3">
+
         </div>
     </div>
    
@@ -283,7 +294,7 @@
     @if (title.Contains("Products") && title.Contains("Category"))
     {
         string pattern = @"\{[^{}]+\}(?=,|\])";
-        MatchCollection matches = Regex.Matches(customerInfo, pattern);
+        MatchCollection matches = Regex.Matches(dec_info, pattern);
         @section Scripts{
         <script>
             var matchObjects = [];
@@ -295,13 +306,91 @@
                     matchObjects.push(matchObject);
                 </text>
             }
-            console.log(matchObjects[0]);
-            console.log(matchObjects[1]);
+            // console.log(matchObjects[0]);
+            // console.log(matchObjects[1]);
+            if (matchObjects != null) {
+                let html=``
+                for (let i = 0; i < matchObjects.length;i++){
+                    let p_html=``
+                    //console.log(matchObjects[i]);
+                    for(let p in matchObjects[i]){
+                        console.log(p);
+                        if (p == "product_id" || p=="product_deleted" || p=="cat_id" || p=="adm_id" || p=="Admin" || p=="Category" || p=="product_img_data" ) {
+                            continue;
+                        }
+                        //console.log(`${p}: ${matchObjects[i][p]}`)
+                        p_html+=`<li class="list-group-item">
+                            <span class="d-inline-block" style = "width:10rem;" > ${ p } </span>
+                                <span class="o_dot fw-semibold ${(p=="product_name")?"text-primary":""}">${matchObjects[i][p]}</span>
+                            </li>`
+                    }
+                    html+=`<div class="col-lg-6 p-2"><ul class="list-group">${p_html}</ul></div>`
+                }
+                $(".ProductContainer").html(html);
+
+            }
         </script>
         }
     }
 }
 @if (words[0] == "Recategorised")
 {
-    <div>Recategorised</div>
+    string[] d_words = dec_info.Split(new string[] { ". " }, StringSplitOptions.RemoveEmptyEntries);
+    //A regular expression pattern to match the IDs inside square brackets
+    string pattern = @"\[([^[\]]+)]";
+
+    Match match = Regex.Match(Model.AH_description, pattern);
+    string idString = match.Groups[0].Value;      
+    <div class="container p-4">
+        <h4 class="mb-3 text-secondary">@Model.AH_title</h4>
+        <div>
+            <p class="text-secondary">
+                This action is performed by
+                <span class="fst-italic fw-semibold">@Model.Admin.admin_name</span>
+                at time: <span class="fst-italic">@Model.AH_time.</span>
+                <br />Here you can see the details below and you can undo this action in one day if this action is performed by You.
+            </p>
+            <p>@d_words[1]. <span class="mx-2">@d_words[2]</span> <span class="mx-2 bg-info-subtle">@d_words[3]</span></p>
+        </div>
+        <div class="row p_container">
+            
+        </div>
+    </div>
+
+    @section Scripts{
+    <script>
+        $(function () {
+            let idString = @Html.Raw(Json.Serialize(idString ?? ""));
+            let idsArr = JSON.parse(idString);
+            console.log(idsArr);
+            if (idsArr.length != 0) {
+                getRowsByIds(idsArr);
+            }
+            function getRowsByIds(ids) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Category/GetRowsByIds",
+                    data: { ids:ids },
+                    success: function (response) {
+                        // Handle the response data here
+                        console.log(response);
+                        let html = ``;
+                        for (i in response) {
+                            let p_html = ``;
+                            for(p in response[i]){
+                                p_html += `<li class="list-group-item">
+                                    <span class="d-inline-block" style = "width:10rem;" > ${p} </span>
+                                        <span class="o_dot fw-semibold ${(p == "product_name") ? "text-primary" : ""}">${response[i][p]}</span>
+                                    </li>`
+                            }
+                            html += `<div class="col-lg-6 p-2"><ul class="list-group">${p_html}</ul></div>`
+                        }
+                        $(".p_container").html(html);
+                    }
+                });
+            }
+        })
+       
+    </script>
+    }
 }

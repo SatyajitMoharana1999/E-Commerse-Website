@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Linq.Expressions;
 using System.Security.Claims;
 
 namespace E_Commerse_Website.Controllers
@@ -315,6 +316,38 @@ namespace E_Commerse_Website.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GetRowsByIds(int[] ids)
+        {
+            if (ids == null || ids.Length == 0)
+            {
+                return BadRequest("No IDs provided");
+            }
+            //  logic to retrieve rows from the database based on the IDs
+            //  demonstration purposes, let's assume you have a service to handle this
+            try
+            {
+                // Constructing an expression to filter by IDs
+                // Call your GetAsyncRange method passing the filter expression
+                var rows = await _unit.Product.GetAsyncRange(x=>ids.Contains(x.product_id)); // Or we can use the below 2 line insted of this line  
+                //Expression<Func<Product, bool>> filterByIds = x => ids.Contains(x.product_id);
+                //var rows = await _unit.Product.GetAsyncRange(filterByIds);
+                var p_list = rows.Select(p => new
+                {
+                    product_name = p.product_name,
+                    product_price = p.product_price,
+                    product_description = p.product_description,
+                    product_image = p.product_image,
+                });
+                return Json(p_list);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
         //public async Task<IActionResult> GetAllProducts()   //----------------------  same as the above function but in return type - Content
         //{
         //    try
@@ -357,7 +390,7 @@ namespace E_Commerse_Website.Controllers
 
 
         //---------------------------------------------    //  Upsert  (update & insert)
-        
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> ProductUpsert(int id)
         {

@@ -50,7 +50,7 @@
 
         </div>
         <div class="col-xl-4 col-lg-4">
-            <div class="box ms-4 mt-4">
+            <div class="box">
                 <i class="bi bi-person-bounding-box"></i>
                 <label for="c_img" class="for_c_img">Upload</label>
                 <input type="file" id="c_img" name="c_img" accept="image/*" />
@@ -69,7 +69,6 @@
         $(function(){
             SetCustomerImageComesFromEdit();
             function SetCustomerImageComesFromEdit() {
-                debugger;
                 var customerImageVariable = '@customerImage';
                 if (customerImageVariable != "" && customerImageVariable != null) {
                     $(".box").css("background-image", "url('" + "@Url.Content("~/CustomerImages/")" + customerImageVariable + "')");
@@ -138,7 +137,7 @@
                     inputNumber: {
                         required: "Please fill this",
                         minlength: "Mobile number should be at least 10 digits",
-                        maxlength: "Mobile number should not exceed 12 digits",
+                        maxlength: "Mobile number should not exceed 10 digits",
                         digits: "Please enter a valid mobile number"
                     },
                     inputEmail4: {

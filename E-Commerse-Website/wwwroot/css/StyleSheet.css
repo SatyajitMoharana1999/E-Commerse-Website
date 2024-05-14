@@ -80,6 +80,11 @@
     border:1px solid #ddd;
     border-radius:10px;
     padding-bottom:1rem;
+   
+}
+
+.con form{
+    scale:.99;
 }
 
 .adh {

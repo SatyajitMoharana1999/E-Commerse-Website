@@ -175,13 +175,13 @@
                         html = ``;
                         console.log(res);
                         $.each(res, function (index, value) {
-                            html += `<div class="mb-1 p-2 text-secondary bg-secondary bg-opacity-10  border-start-0 rounded-end d-flex justify-content-between">
+                            html += `<div class="mb-1 p-2 text-secondary bg-secondary bg-opacity-10  border-start-0 rounded-end d-flex justify-content-between h-content" data-hc="${value.aH_id}">
                                                         <span class=" text-dark">${value.aH_title}</span>
                                                         <span class="text-secondary fst-italic">${value.aH_title.split(' ')[0]}</span>
                                                     </div>`
                         })
-                        html+=`<div class="mb-1 p-2 text-secondary bg-secondary bg-opacity-10  border-start-0 rounded-end d-flex justify-content-center">
-                                   <a class="btn btn-secondary btn-sm px-4">See All<a>
+                        html += `<div class="mb-1 p-2 text-secondary bg-secondary bg-opacity-10  border-start-0 rounded-end d-flex justify-content-center h-content">
+                                   <a class="btn btn-secondary btn-sm px-4">See All My Activities<a>
                                 </div>`
                     }
                     $(".history_content").html(html);
@@ -189,8 +189,21 @@
             })
         }
 
+        $(".history_content").on("click", ".h-content", function () {
+            let index = $(this).data("hc");
+            window.location.href = "/History/ActivityDetails/" + index;
+        })
+
     </script>
 }
 @section styles{
     <link href="~/css/adp.css" rel="stylesheet" asp-append-version="true"/>
+    <style>
+        .h-content{
+            cursor: pointer;
+        }
+        .h-content:hover span{
+            color:#9c5fffff !important;
+        }
+    </style>
 }

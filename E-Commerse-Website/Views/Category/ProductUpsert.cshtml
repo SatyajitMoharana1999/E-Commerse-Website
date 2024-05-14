@@ -130,6 +130,19 @@
                     <button type="button" class="btn btn-success mx-1" id="p_add_submit"><i class="bi bi-plus-circle"></i> Submit</button>
                 </div>
             </div>
+           @*  <div class="row px-4 pt-3">
+                <h2 class="">Image Cropper</h2>
+                <input type="file" id="imageInput" class="mb-4" />
+                <div>
+                    <img src="" id="croppedImage" class="d-none" />
+                </div>
+                <div>
+                    <button id="cropButton" class="d-none btn btn-primary">Crop Image</button>
+                </div>
+                <div>
+                    <button id="downloadButton" class="d-none btn btn-primary" >Download Crop Image</button>
+                </div>
+            </div> *@
         </div>
     </form>
 </div>
@@ -138,6 +151,41 @@
 @section Scripts{
     <script>
         $(function(){
+            // const imageInput = $('#imageInput');
+            // const croppedImage = $('#croppedImage');
+            // const cropButton = $('#cropButton');
+            // const downloadButton = $('#downloadButton');
+
+            // // Wait for the imageInput change event
+            // imageInput.on('change', function (e) {
+            //     const file = e.target.files[0];
+
+            //     if (file) {
+            //         const reader = new FileReader();
+            //         reader.onload = function (e) {
+            //             croppedImage.attr('src', e.target.result);
+            //             croppedImage.removeClass('d-none');
+            //             cropButton.removeClass('d-none');
+            //         };
+            //         reader.readAsDataURL(file);
+            //     }
+            // });
+
+            // // Wait for Cropper.js to be loaded and initialize the Cropper instance
+            // const cropperInitInterval = setInterval(function () {
+            //     if (typeof Cropper !== 'undefined') {
+            //         clearInterval(cropperInitInterval);
+            //         const cropper = new Cropper('#image', {
+            //             // Cropper options can be configured here
+            //         });
+            //     }
+            // }, 100); // Check every 100 milliseconds for Cropper.js to be loaded
+
+
+
+
+            // -------------------------------
+
             $("#image_cancel_button").hide();
             SetProductImageComesFromEdit();
             function SetProductImageComesFromEdit() {
@@ -265,6 +313,7 @@
                 
             })
             
+           
         })
     </script>
 }
