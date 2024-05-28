@@ -69,6 +69,24 @@
         z-index: 2;
     }
 
+     /* Cropper Js */
+    #cropper_modal .img-container {
+        width: 100%;
+        max-height: 300px; /* Adjust this value as needed */
+        overflow: hidden;
+        margin: auto;
+    }
+
+     #cropper_modal .img-container img {
+         width: 100%; /* This ensures the image scales to fit the container */
+         height: auto;
+     }
+
+    .crop_wrap{
+        width:100%;
+        
+        background-color:red;
+    }
 </style>
 <div class="container p-3 px-4">
     <h4 class="text-secondary">@(Model.product.product_id != 0 ? "Update Product" : "Add Product")</h4>
@@ -130,61 +148,35 @@
                     <button type="button" class="btn btn-success mx-1" id="p_add_submit"><i class="bi bi-plus-circle"></i> Submit</button>
                 </div>
             </div>
-           @*  <div class="row px-4 pt-3">
-                <h2 class="">Image Cropper</h2>
-                <input type="file" id="imageInput" class="mb-4" />
-                <div>
-                    <img src="" id="croppedImage" class="d-none" />
-                </div>
-                <div>
-                    <button id="cropButton" class="d-none btn btn-primary">Crop Image</button>
-                </div>
-                <div>
-                    <button id="downloadButton" class="d-none btn btn-primary" >Download Crop Image</button>
-                </div>
-            </div> *@
+
         </div>
     </form>
 </div>
 
+<div class="modal fade" id="cropper_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="crop_wrap">
+                    <div class="img-container">
+                        <img id="image" style="display: none;">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cropButton" class="btn btn-success" style="display: none;">Crop</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts{
     <script>
         $(function(){
-            // const imageInput = $('#imageInput');
-            // const croppedImage = $('#croppedImage');
-            // const cropButton = $('#cropButton');
-            // const downloadButton = $('#downloadButton');
-
-            // // Wait for the imageInput change event
-            // imageInput.on('change', function (e) {
-            //     const file = e.target.files[0];
-
-            //     if (file) {
-            //         const reader = new FileReader();
-            //         reader.onload = function (e) {
-            //             croppedImage.attr('src', e.target.result);
-            //             croppedImage.removeClass('d-none');
-            //             cropButton.removeClass('d-none');
-            //         };
-            //         reader.readAsDataURL(file);
-            //     }
-            // });
-
-            // // Wait for Cropper.js to be loaded and initialize the Cropper instance
-            // const cropperInitInterval = setInterval(function () {
-            //     if (typeof Cropper !== 'undefined') {
-            //         clearInterval(cropperInitInterval);
-            //         const cropper = new Cropper('#image', {
-            //             // Cropper options can be configured here
-            //         });
-            //     }
-            // }, 100); // Check every 100 milliseconds for Cropper.js to be loaded
-
-
-
-
-            // -------------------------------
 
             $("#image_cancel_button").hide();
             SetProductImageComesFromEdit();
@@ -232,27 +224,73 @@
                     }
                 },
             });
-            $("#p_img").change(function () {
+
+            var croppedImageBlob;
+            var cropper;
+            var image = $('#image')[0];
+            var cropButton = $('#cropButton')[0];
+
+            $("#p_img").change(function (event) {
                 // Function to display the selected image
-                displaySelectedImage(this);
+                //displaySelectedImage(this);
+                if ($("#p_img").val()!=""){
+                    $("#cropper_modal").modal("show");
+                    var files = event.target.files;
+                    var done = function (url) {
+                        image.src = url;
+                        image.style.display = 'block';
+                        cropButton.style.display = 'block';
+                        if (cropper) {
+                            cropper.destroy();
+                        }
+                        cropper = new Cropper(image, {
+                            aspectRatio: 1,
+                            viewMode: 1,
+                            responsive: true,
+                        });
+                    };
+                    var reader;
+                    var file;
+                    var url;
+
+                    if (files && files.length > 0) {
+                        file = files[0];
+
+                        if (URL) {
+                            done(URL.createObjectURL(file));
+                        } else if (FileReader) {
+                            reader = new FileReader();
+                            reader.onload = function (e) {
+                                done(reader.result);
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    }
+                }
             });
-            function displaySelectedImage(input) {
-                if (input.files && input.files[0]) {
+
+            $("#cropButton").click(function () {
+                if (!cropper) {
+                    return;
+                }
+
+                var canvas = cropper.getCroppedCanvas({
+                    width: 600,
+                    height: 600,
+                });
+
+                canvas.toBlob(function (blob) {
+                    croppedImageBlob = blob;
+                    var url = URL.createObjectURL(blob);
+                    $(".p_img_wrap").css('background-image', `url('${url}')`);
+                    $("#cropper_modal").modal("hide");
                     $("#image_cancel_button").show();
                     $('label[for="p_img"]').hide();
-                    var reader = new FileReader();
+                    cropper.destroy();
+                }, 'image/jpeg');
+            });
 
-                    reader.onload = function (e) {
-                        $(".p_img_wrap").css(`background-image`, `url('${e.target.result}')`);
-                        //currentImage = e.target.result;
-                        //console.log(currentImage);
-                        //$(".p_img_wrap").css(`background-image`, `url('${currentImage}')`);
-                    };
-
-                    // Read the selected image as data URL
-                    reader.readAsDataURL(input.files[0]);
-                }
-            }
+            
             $("#image_cancel_button").click(function () {
                 $("#image_cancel_button").hide();
                 $('label[for="p_img"]').show();
@@ -284,14 +322,15 @@
                         cat_id: $("#p_category").val(),
                         product_description: $("#p_description").val(),
                     }
-                    console.log(obj);
-                    let imagefile = $("#p_img")[0].files[0];
+                    //console.log(obj);
+                    let imagefile = croppedImageBlob || $("#p_img")[0].files[0];
+                    let filename =  $("#p_img")[0].files[0].name;
 
                     let pvm = new FormData();
                     for (let p in obj) {
                         pvm.append(`product.${p}`, obj[p]);
                     }
-                    pvm.append(`imagefile`, imagefile);
+                    pvm.append(`imagefile`, imagefile, filename);
                     $.ajax({
                         url: "/Category/productupsert",
                         type: "post",
@@ -312,8 +351,23 @@
                 }
                 
             })
-            
-           
+
+            $('#cropper_modal').on('shown.bs.modal', function () {
+                setTimeout(function () {
+                    var $el = $('#cropper_modal');
+                    $el.css('display', 'none');
+                    $el.height(); // force reflow
+                    $el.css('display', 'block');
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+                    cropper = new Cropper(image, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        responsive: true,
+                    });
+                }, 100); // Adjust the delay if necessary
+            });
         })
     </script>
 }

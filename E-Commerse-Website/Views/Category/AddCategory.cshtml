@@ -1,0 +1,454 @@
+﻿@section Styles {
+    <style>
+        .p_img_wrap {
+            height: 150px;
+            width: 150px;
+            position: relative;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        #image_cancel_button {
+            position: absolute;
+            top: 0px;
+            right: 5px;
+            color: red;
+            font-size: 1.2rem;
+            cursor:pointer;
+        }
+
+        .p_img_wrap .inp_container i {
+            display: inline-block;
+            font-size: 3rem;
+            opacity: 60%;
+        }
+
+        .inp_file {
+            width: 150px;
+            position: absolute;
+            bottom: 0%;
+            left: 50%;
+            transform: translate(-50%,0%);
+        }
+
+        .inp_wrapper {
+            overflow: hidden;
+        }
+
+        .inp_file #p_img-error {
+            position: absolute;
+            top: 35px;
+            width: 150px;
+        }
+
+        .inp_file input[type="file"] {
+            opacity: 0;
+        }
+
+        #p_img {
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .inp_file .up_text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            z-index: 2;
+        }
+
+        /* Cropper Js */
+        #cropper_modal .img-container {
+            width: 100%;
+            max-height: 300px; /* Adjust this value as needed */
+            overflow: hidden;
+            margin: auto;
+        }
+
+        #cropper_modal .img-container img {
+            width: 100%; /* This ensures the image scales to fit the container */
+            height: auto;
+        }
+
+        .crop_wrap {
+            width: 100%;
+            background-color: red;
+        }
+    </style>
+}
+<div class="p-3 ps-4">
+    <h3 class="text-secondary mb-2">Add Category</h3>
+
+    <div class="">
+        <form class="container m-0 p-0" id="c_form">
+            <div class="row border ms-1 p-2">
+                <div class="col-4 d-flex align-items-center">
+                    <label for="c_name" class="text text-primary fw-semibold">Category Name</label>
+                </div>
+                <div class="col-8">
+                    <input type="hidden" id="c_id" name="c_id" />
+                    <input type="text" class="form-control" id="c_name" name="c_name" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 py-1">
+                    <div class="mx-2 p-1" id="p_list_container">
+                    </div>
+                </div>
+            </div>
+            <div class="pt-2 ps-1 d-flex justify-content-between align-items-center">
+                <p class="text-secondary">You can add products under this Category by filling the form below and click the add button</p>
+                <button type="submit" class="btn btn-primary m-0 rounded-0 w-25" id="submit">Confirm</button>
+            </div>
+        </form>
+        <form class="container m-0 mt-4 p-0" id="p_form">
+            <div class="d-flex justify-content-between align-items-center pb-2">
+                <div>
+                    <h5 class="p-1 text-secondary border-danger d-inline">Add Product</h5><span class="text-secondary"> (Optional)</span>
+                </div>
+                <button type="button" class="btn btn-outline-secondary btn-sm mx-1" id="p_add_submit"><i class="bi bi-plus-circle"></i> Click To Add</button>
+            </div>
+
+            <div class="container border p-3">
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <div>
+                            <div class="d-flex flex-column justify-content-center align-items-center">
+                                <div class="p_img_wrap border">
+                                    <i class="bi bi-x-square" id="image_cancel_button"></i>
+                                    <div class="inp_container">
+                                        <label for="p_img" style="cursor:pointer;">
+                                            <i class="bi bi-arrow-up-square text-secondary"></i>
+                                        </label>
+                                        <div class="inp_file">
+                                            <div class="up_text text-secondary">
+                                                <label for="p_img" class="upload_text" style="cursor:pointer;">Upload</label>
+                                            </div>
+                                            <div class="inp_wrapper">
+                                                <input type="file" id="p_img" accept="image/*" name="p_img" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="mb-3">
+                            <input type="hidden" id="p_id" name="p_id" />
+                            <label for="p_name" class="text-secondary">Name</label>
+                            <input type="text" id="p_name" class="form-control" name="p_name" />
+                        </div>
+                        <div>
+                            <label for="p_price" class="text-secondary">Price</label>
+                            <input type="number" id="p_price" class="form-control" name="p_price" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row px-4">
+                    <label for="p_description" class="text-secondary">Description</label>
+                    <textarea id="p_description" name="p_description" class="form-control" cols="50" rows="2" style="resize:none"></textarea>
+                </div>
+            </div>
+            
+        </form>
+        
+    </div>
+</div>
+
+<div class="modal fade" id="cropper_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Crop The Image Here Before Upload</h1>
+                @* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> *@
+            </div>
+            <div class="modal-body">
+                <div class="crop_wrap">
+                    <div class="img-container">
+                        <img id="image" style="display: none;">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cropButton" class="btn btn-success" style="display: none;">Crop</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+
+        let products = [];
+        let productImages = [];
+        let filenames = [];
+        $("#p_add_submit").click(function () {
+            var isValid = $("#p_form").valid();
+
+            if (isValid) {
+                let c = {
+                    product_id: $("#p_id").val(),
+                    product_name: $("#p_name").val(),
+                    product_price: $("#p_price").val(),
+                    product_description: $("#p_description").val()
+                }
+
+                if (products.length < 5) {
+                    products.push(c);
+                    let imageFile = croppedImageBlob || $("#p_img")[0].files[0];
+                    let filename = $("#p_img")[0].files[0].name;
+                    productImages.push(imageFile);
+                    filenames.push(filename);
+                    console.log(imageFile);
+                }
+                else {
+                    alert("cant add more than 5 products at a time. now you have to confirm below")
+                }
+                $("#collapseOne").collapse("hide");
+                resetProductForm();
+                showProductListInModal();
+            }
+            else {
+                // Show custom error messages along with default plugin messages
+                $("#p_form").validate().showErrors();
+            }
+            console.log(productImages.length);
+        })
+
+        $("#image_cancel_button").hide();
+        
+        $("#image_cancel_button").click(function () {
+            $("#image_cancel_button").hide();
+            $('label[for="p_img"]').show();
+            $("#p_img").val(null);
+            $(".p_img_wrap").css(`background-image`, ``);
+        })
+
+        function showProductListInModal() {
+            if (products.length > 0) {
+                let html = ``;
+                $.each(products, function (index, value) {
+                    html += `<span class="btn btn-outline-success btn-sm mx-1">
+                                            ${value.product_name}
+                                            <i class="bi bi-x-circle ms-1 p_delete" data-index="${index}"></i>
+                                        </span>`;
+                })
+                let fullhtml = `<p class="m-0"><span class="text-success">You Added</span> : ${html}</p>`
+                $("#p_list_container").html(fullhtml);
+            }
+            else {
+                $("#p_list_container").html("");
+            }
+        }
+
+        $("#p_list_container").on("click", ".p_delete", function () {
+            let index = $(this).data("index");
+            products.splice(index, 1);
+            productImages.splice(index, 1);
+            filenames.splice(index, 1);
+            showProductListInModal();
+            console.log(productImages.length);
+        })
+
+
+        $("#submit").click(function (event) {
+            event.preventDefault(); // Prevent default form submission
+            var isValid = $("#c_form").valid();
+            if (isValid) {
+                disableSubmitButton(true);
+                let category = new FormData();
+                category.append("category_id", $("#c_id").val());
+                category.append("category_name", $("#c_name").val());
+                $.each(products, function (index, value) {
+                    category.append("Product[" + index + "].product_name", value.product_name);
+                    category.append("Product[" + index + "].product_price", value.product_price);
+                    category.append("Product[" + index + "].product_description", value.product_description);
+                    category.append("Product[" + index + "].product_img_data", productImages[index], filenames[index]);
+                });
+                $.ajax({
+                    url: "/Category/AddCategory",
+                    type: "POST",
+                    contentType: false,
+                    processData: false,
+                    data: category,
+                    success: function (res) {
+                        disableSubmitButton(false);
+                        $("#exampleModal").modal("hide");
+                        GetCategoryList();
+                    },
+                    error: function (err) {
+                        disableSubmitButton(false);
+                        alert("Error: " + err.responseText);
+                    }
+                });
+            } else {
+                $("#c_form").validate().showErrors();
+            }
+        });
+
+        function disableSubmitButton(disable) {
+            $("#submit").prop("disabled", disable);
+            if (disable) {
+                $("#submit").text("Processing...");
+            } else {
+                $("#submit").text("Confirm");
+            }
+        }
+
+
+        $("#p_form").validate({
+            rules: {
+                p_name: {
+                    required: true
+                },
+                p_price: {
+                    required: true,
+                },
+                p_description: {
+                    required: true
+                },
+                p_img: {
+                    required: true
+                }
+            },
+            messages: {
+                p_name: {
+                    required: "Product Name is  Required"
+                },
+                p_price: {
+                    required: "Product Price is required",
+                },
+                p_description: {
+                    required: "You have to describe your Product"
+                },
+                p_img: {
+                    required: "Select a Image Here"
+                }
+            },
+        })
+
+        $("#c_form").validate({
+            rules: {
+                c_name: {
+                    required: true
+                }
+            },
+            messages: {
+                c_name: {
+                    required: "Provide a Category Name Here"
+                }
+            }
+        })
+
+        $("#addButton").click(function () {
+            if ($("#c_id").val() != 0) {
+                resetCategoryForm();
+            }
+            $("#p_form").show();
+        })
+
+        function resetProductForm() {
+            $("#p_name").val("");
+            $("#p_price").val("");
+            $("#p_description").val("");
+            $("#p_img").val(null);
+            $(".p_img_wrap").css(`background-image`, ``);
+            $("#image_cancel_button").hide();
+            $('label[for="p_img"]').show();
+        }
+
+
+
+        var croppedImageBlob;
+        var cropper;
+        var image = $('#image')[0];
+        var cropButton = $('#cropButton')[0];
+
+        $("#p_img").change(function (event) {
+            // Function to display the selected image
+            //displaySelectedImage(this);
+            if ($("#p_img").val() != "") {
+                $("#cropper_modal").modal("show");
+                var files = event.target.files;
+                var done = function (url) {
+                    image.src = url;
+                    image.style.display = 'block';
+                    cropButton.style.display = 'block';
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+                    cropper = new Cropper(image, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        responsive: true,
+                    });
+                };
+                var reader;
+                var file;
+                var url;
+
+                if (files && files.length > 0) {
+                    file = files[0];
+
+                    if (URL) {
+                        done(URL.createObjectURL(file));
+                    } else if (FileReader) {
+                        reader = new FileReader();
+                        reader.onload = function (e) {
+                            done(reader.result);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+            }
+        });
+
+        $("#cropButton").click(function () {
+            if (!cropper) {
+                return;
+            }
+
+            var canvas = cropper.getCroppedCanvas({
+                width: 600,
+                height: 600,
+            });
+
+            canvas.toBlob(function (blob) {
+                croppedImageBlob = blob;
+                var url = URL.createObjectURL(blob);
+                $(".p_img_wrap").css('background-image', `url('${url}')`);
+                $("#cropper_modal").modal("hide");
+                $("#image_cancel_button").show();
+                $('label[for="p_img"]').hide();
+                cropper.destroy();
+            }, 'image/jpeg');
+        });
+
+        $('#cropper_modal').on('shown.bs.modal', function () {
+            setTimeout(function () {
+                var $el = $('#cropper_modal');
+                $el.css('display', 'none');
+                $el.height(); // force reflow
+                $el.css('display', 'block');
+                if (cropper) {
+                    cropper.destroy();
+                }
+                cropper = new Cropper(image, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    responsive: true,
+                });
+            }, 100); // Adjust the delay if necessary
+        });
+    </script>
+}

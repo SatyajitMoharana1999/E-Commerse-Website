@@ -44,6 +44,7 @@ namespace E_Commerse_Website.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Login(string ReturnUrl)
         {
+
             if (User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index");
@@ -76,8 +77,13 @@ namespace E_Commerse_Website.Controllers
                 await HttpContext.SignInAsync("myCookie", CP, AP);
                 return Redirect(string.IsNullOrEmpty(ReturnUrl) ? "/home/index" : ReturnUrl);
             }
+            else
+            {
+                // Set error message for incorrect email/password
+                ViewBag.ErrorMessage = "Incorrect email or password";
+            }
             ViewBag.ReturnUrl = ReturnUrl;
-            return RedirectToAction("index");
+            return View();
         }
 
         //----------------------------------------------------------------------------------------- No View  -  Logout    ////

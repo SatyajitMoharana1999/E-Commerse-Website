@@ -70,9 +70,12 @@
 <div class="container p-4 ">
     <div class="container d-flex justify-content-between align-items-center mb-3 ">
        <h3>Category List</h3>
-        <button type="button" class="btn btn-primary" id="addButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <button type="button" class="btn btn-primary d-none" id="addButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <i class="bi bi-plus-circle me-2"></i>Add Category
         </button>
+        <a href="@Url.Action("AddCategory","Category")" class="btn btn-primary" id="add_button_2nd">
+            <i class="bi bi-plus-circle me-2"></i>Add Category
+        </a>
     </div>
     <!-- Button trigger modal -->
     

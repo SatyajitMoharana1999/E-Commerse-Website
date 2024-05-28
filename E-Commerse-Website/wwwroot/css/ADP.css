@@ -157,6 +157,16 @@ input#ci{
     height:100%;
     overflow-y: scroll;
 }
+
+.pt-con .h-heading{
+    position: sticky;
+    top: 0;
+    left:0;
+    background-color: white;
+    border-bottom: 1px solid gray;
+    font-weight:600;
+    font-size:.8rem;
+}
 .pt-con::-webkit-scrollbar {
     width: 7px;
 }

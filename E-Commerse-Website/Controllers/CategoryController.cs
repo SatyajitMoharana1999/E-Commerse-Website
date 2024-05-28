@@ -55,7 +55,6 @@ namespace E_Commerse_Website.Controllers
         }
 
         [HttpPost]
-        
         public async Task<IActionResult> AddCategory(Category category)
         {
             try
@@ -129,6 +128,12 @@ namespace E_Commerse_Website.Controllers
             }
         }
         
+        public IActionResult AddCategory()
+        {
+            RequireCall("CategoryList");
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> GetCategoryById(int id)
         {
