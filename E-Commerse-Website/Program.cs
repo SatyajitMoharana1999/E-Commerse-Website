@@ -12,6 +12,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<myContext>(o=>o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<ICustomerRepo, CustomerRepo>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IProductRepo, ProductRepo>();
 builder.Services.AddAuthentication("myCookie").AddCookie("myCookie",o =>
 {
     o.LoginPath = "/admin/login";

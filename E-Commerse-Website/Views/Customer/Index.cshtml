@@ -1,7 +1,14 @@
 ﻿@{
     Layout = "_Layout";
 }
-
+@section Styles{
+    <style>
+        .hero-area .hero-slider .single-slider{
+            background-size:50%;
+            background-position: center right;
+        }
+    </style>
+}
 
 
 <!-- Start Hero Area -->
@@ -712,3 +719,63 @@
     </div>
 </section>
 <!-- End Shipping Info -->
+
+
+
+
+@section Scripts{
+    <script>
+        $(function(){
+            getSliderProductList();
+
+            function initializeSlider() {
+                tns({
+                    container: '.hero-slider',
+                    slideBy: 'page',
+                    autoplay: true,
+                    autoplayButtonOutput: false,
+                    mouseDrag: true,
+                    gutter: 0,
+                    items: 1,
+                    nav: false,
+                    controls: true,
+                    controlsText: ['<i class="lni lni-chevron-left"></i>', '<i class="lni lni-chevron-right"></i>'],
+                });
+            }
+
+            let img_location = `@Url.Content("~/ProductImages/")` || "";
+            console.log(img_location);
+            function getSliderProductList(){
+                $.ajax({
+                    url: "/customer/getSliderProductList",
+                    type:"Get",
+                    success: function(response){
+                        console.log(response);
+                        let html = ``
+                        for (i = 0; i < response.length; i++) {
+                            html += `<div class="single-slider"
+                                            style="background-image: url(${img_location}${response[i].product_image});">
+                                           <div class="content">
+                                               <h2>
+                                                   <span>No restocking fee ($35 savings)</span>
+                                                   ${response[i].product_name}
+                                               </h2>
+                                               <p>
+                                                   ${response[i].product_description}
+                                               </p>
+                                               <h3><span>Now Only</span> ₹${response[i].product_price}</h3>
+                                               <div class="button">
+                                                   <a href="product-grids.html" class="btn">Shop Now</a>
+                                               </div>
+                                           </div>
+                                       </div>`
+                        }
+                        $(".hero-slider").html(html);
+                        initializeSlider();
+                    }
+                })
+            }
+        })
+
+    </script>
+}
