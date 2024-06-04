@@ -1,6 +1,6 @@
 ﻿using E_Commerse_Website.Data;
+using E_Commerse_Website.Models;
 using E_Commerse_Website.Services.Implimentation;
-using E_Commerse_Website.Services.UnitOfWork;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerse_Website.Controllers
@@ -22,8 +22,8 @@ namespace E_Commerse_Website.Controllers
         {
             try
             {
-                var p_list = await _repo.GetAllAsync();
-                var top3product = p_list.Take(2).Select(p => new
+                var p_list = await _repo.GetAsyncRange(u => !u.product_deleted);
+                var top3product = p_list.OrderByDescending(p => p.product_id).Take(3).Select(p => new
                 {
                     product_id = p.product_id,
                     product_name = p.product_name,
@@ -36,6 +36,153 @@ namespace E_Commerse_Website.Controllers
             catch (Exception)
             {
                 throw;
+            }
+        }
+        public async Task<IActionResult> getSmallBannerProduct()
+        {
+            try
+            {
+                var p_list = await _repo.GetAsyncRange(u => u.cat_id == 3 && !u.product_deleted);
+                var mostRecentProduct = p_list.OrderByDescending(p => p.product_id).FirstOrDefault();
+                var pro = new
+                {
+                    product_id = mostRecentProduct.product_id,
+                    product_name = mostRecentProduct.product_name,
+                    product_description = mostRecentProduct.product_description,
+                    product_price = mostRecentProduct.product_price,
+                    product_image = mostRecentProduct.product_image
+                };
+                return Json(pro);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<IActionResult> getRandomProducts()
+        {
+            try
+            {
+                var products = await _repo.GetWithIncludeAsyncRange(p=>!p.product_deleted,p=>p.Category);
+                var random = new Random();
+                var productsByCategory = products
+                    .GroupBy(p => p.cat_id)
+                    .SelectMany(g => g.OrderBy(_ => random.Next()))
+                    .ToList();
+                var selectedProducts = productsByCategory.Take(8).ToList();
+                var projectedProducts = selectedProducts.Select(p => new
+                {
+                    product_id = p.product_id,
+                    product_name = p.product_name,
+                    product_description = p.product_description,
+                    product_price = p.product_price,
+                    product_image = p.product_image,
+                    cat_id = p.cat_id,
+                    Category = p.Category.category_name
+                }).ToList();
+                return Json(projectedProducts);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        //public async Task<IActionResult> GetRecentlyAddedProducts()
+        //{
+        //    try
+        //    {
+        //        // Fetch all products that are not deleted
+        //        var products = await _repo.GetWithIncludeAsyncRange(p => !p.product_deleted, p => p.Category);
+
+        //        // Order products by their product_id in descending order to get the most recent products first
+        //        var recentProducts = products
+        //            .OrderByDescending(p => p.product_id)
+        //            .Take(8) // Take the first 8 products
+        //            .Select(product => new // Project the selected products into an anonymous type
+        //            {
+        //                product_id = product.product_id,
+        //                product_name = product.product_name,
+        //                product_description = product.product_description,
+        //                product_price = product.product_price,
+        //                product_image = product.product_image,
+        //                cat_id = product.cat_id,
+        //                Category = product.Category.category_name
+        //            })
+        //            .ToList(); // Convert the result to a list
+
+        //        // Return the result as JSON
+        //        return Json(recentProducts);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Log the exception (optional)
+        //        return StatusCode(500, "Internal server error");
+        //    }
+        //}
+
+        public async Task<IActionResult> GetRecentlyAddedProducts()
+        {
+            try
+            {
+                var products = await _repo.GetWithIncludeAsyncRange(p => !p.product_deleted, p => p.Category);
+
+                var productsByCategory = new List<Product>();
+
+                // Group products by category
+                var groupedProducts = products.GroupBy(p => p.cat_id);
+
+                // Iterate through each group of products by category
+                foreach (var group in groupedProducts)
+                {
+                    // Order products within each category by product_id in descending order
+                    var orderedProducts = group.OrderByDescending(p => p.product_id).ToList();
+
+                    // Skip the first product and take subsequent recent products until 8 products are added
+                    var recentProducts = orderedProducts.Skip(1).Take(8 - productsByCategory.Count);
+
+                    // Add the recent products to the list
+                    productsByCategory.AddRange(recentProducts);
+
+                    // If there are 8 products, break the loop
+                    if (productsByCategory.Count >= 8)
+                        break;
+                }
+
+                // Project the selected products into an anonymous type and return the result as JSON
+                var result = productsByCategory.Select(p => new
+                {
+                    product_id = p.product_id,
+                    product_name = p.product_name,
+                    product_description = p.product_description,
+                    product_price = p.product_price,
+                    product_image = p.product_image,
+                    cat_id = p.cat_id,
+                    Category = p.Category.category_name
+                }).ToList();
+
+                return Json(result);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ProductDetails(int id)
+        {
+            try
+            {
+                var obj = await _repo.GetAsync(p => p.product_id == id);
+                return View(obj);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (optional)
+                return StatusCode(500, "Internal server error");
             }
         }
     }

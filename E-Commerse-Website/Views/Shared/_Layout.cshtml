@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="~/assets/css/tiny-slider.css" />
     <link rel="stylesheet" href="~/assets/css/glightbox.min.css" />
     <link rel="stylesheet" href="~/assets/css/main.css" />
-    @await RenderSectionAsync("Styles", required:false);
+    @await RenderSectionAsync("Styles", required:false)
 </head>
 
 <body>
@@ -49,10 +49,10 @@
                                 <li>
                                     <div class="select-position">
                                         <select id="select4">
-                                            <option value="0" selected>$ USD</option>
+                                            <option value="0" selected>₹ INR</option>
                                             <option value="1">€ EURO</option>
                                             <option value="2">$ CAD</option>
-                                            <option value="3">₹ INR</option>
+                                            <option value="3">$ USD</option>
                                             <option value="4">¥ CNY</option>
                                             <option value="5">৳ BDT</option>
                                         </select>
@@ -562,7 +562,7 @@
     }
     });
     </script> *@
-    @await RenderSectionAsync("Scripts", required: false);
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 
 </html>

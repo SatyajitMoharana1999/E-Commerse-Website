@@ -308,7 +308,9 @@
                 $("#image_cancel_button").hide();
                 $('label[for="p_img"]').show();
             }
+
             $("#p_add_submit").click(function(){
+                debugger;
                 if ($("#p_id").val() != 0) {
                     //$("#p_form").validate().settings.rules["p_name"] = undefined;
                     $('#p_img').rules('remove', 'required');
@@ -323,14 +325,17 @@
                         product_description: $("#p_description").val(),
                     }
                     //console.log(obj);
-                    let imagefile = croppedImageBlob || $("#p_img")[0].files[0];
-                    let filename =  $("#p_img")[0].files[0].name;
+                    let imagefile = croppedImageBlob || $("#p_img")[0].files[0] || "";
 
                     let pvm = new FormData();
                     for (let p in obj) {
                         pvm.append(`product.${p}`, obj[p]);
                     }
-                    pvm.append(`imagefile`, imagefile, filename);
+
+                    if (imagefile != "") {
+                        let filename = $("#p_img")[0].files[0].name;
+                        pvm.append(`imagefile`, imagefile, filename);
+                    }
                     $.ajax({
                         url: "/Category/productupsert",
                         type: "post",

@@ -67,5 +67,15 @@ namespace E_Commerse_Website.Services.IRepo
             query = query.Where(entity);
             return await query.FirstOrDefaultAsync();
         }
+        public async Task<IEnumerable<T>> GetWithIncludeAsyncRange(Expression<Func<T, bool>> entity,params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = dbSet;
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            query = query.Where(entity);
+            return await query.ToListAsync();
+        }
     }
 }

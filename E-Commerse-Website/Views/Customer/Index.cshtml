@@ -4,8 +4,15 @@
 @section Styles{
     <style>
         .hero-area .hero-slider .single-slider{
-            background-size:50%;
+            background-size:40%;
             background-position: center right;
+            border:1px solid #ddd;
+        }
+
+        .hero-small-banner{
+            background-size: 55% !important;
+            background-position: center right;
+            border: 1px solid #ddd;
         }
     </style>
 }
@@ -63,7 +70,7 @@
             </div>
             <div class="col-lg-4 col-12">
                 <div class="row">
-                    <div class="col-lg-12 col-md-6 col-12 md-custom-padding">
+                    <div class="col-lg-12 col-md-6 col-12 md-custom-padding" id="sml_ban">
                         <!-- Start Small Banner -->
                         <div class="hero-small-banner"
                              style="background-image: url('~/assets/images/hero/slider-bnr.jpg');">
@@ -110,7 +117,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" id="TrandingProduct">
             <div class="col-lg-3 col-md-6 col-12">
                 <!-- Start Single Product -->
                 <div class="single-product">
@@ -373,7 +380,7 @@
                         <div class="button wow fadeInUp" data-wow-delay=".8s">
                             <a href="javascript:void(0)" class="btn">Purchase Now</a>
                         </div> *@
-                        <h1>Satyajit</h1>
+                        <h1 class="text-light">Satyajit</h1>
                     </div>
                 </div>
             </div>
@@ -395,7 +402,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" id="RecentlyAdded">
             <div class="col-lg-3 col-md-6 col-12">
                 <!-- Start Single Product -->
                 <div class="single-product">
@@ -642,19 +649,19 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-6 col-md-6 col-12">
-                <div class="single-banner" style="background-image:url('~/assets/images/banner/banner-1-bg.jpg')">
+                <div class="single-banner" style="background-image:url('@Url.Content("~/assets/images/banner/banner-1-bg.jpg")')">
                     <div class="content">
-                        <h2>Smart Watch 2.0</h2>
+                        <h2>Smart Watchs</h2>
                         <p>Space Gray Aluminum Case with <br>Black/Volt Real Sport Band </p>
                         <div class="button">
-                            <a href="product-grids.html" class="btn">View Details</a>
+                            <a href="product-grids.html" class="btn">Shop Now</a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-6 col-md-6 col-12">
                 <div class="single-banner custom-responsive-margin"
-                     style="background-image:url('~/assets/images/banner/banner-2-bg.jpg')">
+                     style="background-image:url('@Url.Content("~/assets/images/banner/banner-2-bg.jpg")')">
                     <div class="content">
                         <h2>Smart Headphone</h2>
                         <p>
@@ -727,6 +734,9 @@
     <script>
         $(function(){
             getSliderProductList();
+            getSmallBannerProduct();
+            getTrandingProducts();
+            getRecentlyAddedProducts();
 
             function initializeSlider() {
                 tns({
@@ -744,20 +754,21 @@
             }
 
             let img_location = `@Url.Content("~/ProductImages/")` || "";
-            console.log(img_location);
+            
+            //console.log(img_location);
             function getSliderProductList(){
                 $.ajax({
                     url: "/customer/getSliderProductList",
                     type:"Get",
                     success: function(response){
-                        console.log(response);
+                        //console.log(response);
                         let html = ``
                         for (i = 0; i < response.length; i++) {
                             html += `<div class="single-slider"
                                             style="background-image: url(${img_location}${response[i].product_image});">
                                            <div class="content">
                                                <h2>
-                                                   <span>No restocking fee ($35 savings)</span>
+                                                   <span>No restocking fee (₹35 savings)</span>
                                                    ${response[i].product_name}
                                                </h2>
                                                <p>
@@ -772,6 +783,108 @@
                         }
                         $(".hero-slider").html(html);
                         initializeSlider();
+                    }
+                })
+            }
+            function getSmallBannerProduct() {
+                $.ajax({
+                    url: "/customer/getSmallBannerProduct",
+                    type:"Get",
+                    success: function(response){
+                        console.log(response);
+                        let html = `<div class="hero-small-banner"
+                                            style="background-image: url(${img_location}${response.product_image});">
+                                        <div class="content">
+                                            <h2>
+                                                <span>New line required</span>
+                                                 <a href="/customer/productdetails?id=${response.product_id}">${response.product_name}</a>
+                                            </h2>
+                                            <h3>₹${response.product_price}</h3>
+                                        </div>
+                                    </div>`
+                        
+                        $("#sml_ban").html(html);
+                    }
+                })
+            }
+            function getTrandingProducts() {
+                $.ajax({
+                    url: "/customer/getRandomProducts",
+                    type: "Get",
+                    success: function (response) {
+                        console.log(response);
+                        let html = ``
+                        for (i = 0; i < response.length; i++) {
+                            html += `<div class="col-lg-3 col-md-6 col-12">
+                                        <div class="single-product">
+                                            <div class="product-image">
+                                                <img src="${img_location}${response[i].product_image}" alt="#">
+                                                <div class="button">
+                                                    <a href="product-details.html" class="btn"><i class="lni lni-cart"></i> Add to Cart</a>
+                                                </div>
+                                            </div>
+                                            <div class="product-info">
+                                                <span class="category"> ${response[i].category}</span>
+                                                <h4 class="title">
+                                                    <a href="/customer/productdetails?id=${response[i].product_id}"> ${response[i].product_name}</a>
+                                                </h4>
+                                                <ul class="review">
+                                                    <li><i class="lni lni-star-filled"></i></li>
+                                                    <li><i class="lni lni-star-filled"></i></li>
+                                                    <li><i class="lni lni-star-filled"></i></li>
+                                                    <li><i class="lni lni-star-filled"></i></li>
+                                                    <li><i class="lni lni-star"></i></li>
+                                                    <li><span>4.0 Review(s)</span></li>
+                                                </ul>
+                                                <div class="price">
+                                                    <span> ₹${response[i].product_price}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                     </div>`
+                        }
+                        $("#TrandingProduct").html(html);
+                    }
+                })
+            }
+            function getRecentlyAddedProducts() {
+                $.ajax({
+                    url: "/customer/GetRecentlyAddedProducts",
+                    type: "Get",
+                    success: function (response) {
+                        console.log(response);
+                        let html = ``
+                        for (i = 0; i < response.length; i++) {
+
+                            html += `<div class="col-lg-3 col-md-6 col-12">
+                                        <div class="single-product">
+                                            <div class="product-image">
+                                                <img src="${img_location}${response[i].product_image}" alt="#">
+                                                <div class="button">
+                                                    <a href="/customer/productdetails?id=${response[i].product_id}" class="btn"><i class="lni lni-cart"></i> Add to Cart</a>
+                                                </div>
+                                            </div>
+                                            <div class="product-info">
+                                                <span class="category"> ${response[i].category}</span>
+                                                <h4 class="title">
+                                                    <a href="product-grids.html"> ${response[i].product_name}</a>
+                                                </h4>
+                                                <ul class="review">
+                                                    <li><i class="lni lni-star-filled"></i></li>
+                                                    <li><i class="lni lni-star-filled"></i></li>
+                                                    <li><i class="lni lni-star-filled"></i></li>
+                                                    <li><i class="lni lni-star-filled"></i></li>
+                                                    <li><i class="lni lni-star"></i></li>
+                                                    <li><span>4.0 Review(s)</span></li>
+                                                </ul>
+                                                <div class="price">
+                                                    <span> ₹${response[i].product_price}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                     </div>`
+                        }
+                        $("#RecentlyAdded").html(html);
                     }
                 })
             }

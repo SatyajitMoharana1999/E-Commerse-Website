@@ -12,5 +12,6 @@ namespace E_Commerse_Website.Services.IRepo
         void RemoveRange(IEnumerable<T> entities);
         Task<T> GetWithIncludeAsync(Expression<Func<T, bool>> entity, params Expression<Func<T, object>>[] includes);
         Task<IEnumerable<T>> GetAllWithIncludeAsync(params Expression<Func<T, object>>[] includes);
+        Task<IEnumerable<T>> GetWithIncludeAsyncRange(Expression<Func<T, bool>> entity, params Expression<Func<T, object>>[] includes);
     }
 }
