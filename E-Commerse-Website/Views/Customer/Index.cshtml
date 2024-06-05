@@ -764,6 +764,7 @@
                         //console.log(response);
                         let html = ``
                         for (i = 0; i < response.length; i++) {
+                            console.log(response[i].product_id);
                             html += `<div class="single-slider"
                                             style="background-image: url(${img_location}${response[i].product_image});">
                                            <div class="content">
@@ -776,7 +777,7 @@
                                                </p>
                                                <h3><span>Now Only</span> ₹${response[i].product_price}</h3>
                                                <div class="button">
-                                                   <a href="product-grids.html" class="btn">Shop Now</a>
+                                                   <a href="/customer/productdetails?id=${response[i].product_id}" class="btn">Shop Now</a>
                                                </div>
                                            </div>
                                        </div>`

@@ -9,14 +9,14 @@
         <div class="row align-items-center">
             <div class="col-lg-6 col-md-6 col-12">
                 <div class="breadcrumbs-content">
-                    <h1 class="page-title">Single Product</h1>
+                    <h1 class="page-title">@Model.product_name</h1>
                 </div>
             </div>
             <div class="col-lg-6 col-md-6 col-12">
                 <ul class="breadcrumb-nav">
-                    <li><a href="index.html"><i class="lni lni-home"></i> Home</a></li>
-                    <li><a href="index.html">Shop</a></li>
-                    <li>Single Product</li>
+                    <li><a href="/customer/index"><i class="lni lni-home"></i> Home</a></li>
+                    @* <li><a href="index.html">Shop</a></li> *@
+                    <li>@Model.product_name</li>
                 </ul>
             </div>
         </div>
@@ -30,8 +30,8 @@
             <div class="row align-items-center">
                 <div class="col-lg-6 col-md-12 col-12">
                     <div class="product-images">
-                        <main id="gallery">
-                            <div class="main-img">
+                        <main id="gallery" class="">
+                            <div class="main-img d-flex justify-content-center align-items-center">
                                 <img src="@Url.Content("~/ProductImages/"+Model.product_image)" id="current" alt="#">
                             </div>
                            @*  <div class="images">
@@ -46,18 +46,19 @@
                 </div>
                 <div class="col-lg-6 col-md-12 col-12">
                     <div class="product-info">
-                        <h2 class="title">GoPro Karma Camera Drone</h2>
+                        <h2 class="title">@Model.product_name</h2>
                         <p class="category">
                             <i class="lni lni-tag"></i> Drones:<a href="javascript:void(0)">
                                 Action
                                 cameras
                             </a>
                         </p>
-                        <h3 class="price">$850<span>$945</span></h3>
+                        <h3 class="price">
+                            ₹@Model.product_price
+                            @* <span>₹1645</span> *@
+                        </h3>
                         <p class="info-text">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor incididunt
-                            ut labore et dolore magna aliqua.
+                            @Model.product_description
                         </p>
                        @*  <div class="row">
                             <div class="col-lg-4 col-md-4 col-12">
