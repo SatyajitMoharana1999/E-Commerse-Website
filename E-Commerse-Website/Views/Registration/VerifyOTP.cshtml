@@ -1,0 +1,310 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="CodeHim">
+    <title> OTP Verify Mockup Example </title>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'>
+    <style>
+        .otp-field {
+            flex-direction: row;
+            column-gap: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .otp-field input {
+                height: 45px;
+                width: 42px;
+                border-radius: 6px;
+                outline: none;
+                font-size: 1.125rem;
+                text-align: center;
+                border: 1px solid #ddd;
+            }
+
+                .otp-field input:focus {
+                    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+                }
+
+                .otp-field input::-webkit-inner-spin-button,
+                .otp-field input::-webkit-outer-spin-button {
+                    display: none;
+                }
+
+        .resend {
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .re-enter {
+            font-size: 13px;
+        }
+
+        .send-email {
+            font-size: 12px;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: black;
+            font-size: 12px;
+            text-align: right;
+            font-family: monospace;
+        }
+
+            .footer a {
+                color: black;
+                text-decoration: none;
+            }
+
+            label.error{
+                color:red;
+            }
+    </style>
+</head>
+<body>
+    <!-- Start DEMO HTML (Use the following code into your project)-->
+    <div class="container-fluid bg-body-tertiary d-block">
+        <div class="row justify-content-center align-items-center" style="height:100vh;background-image: linear-gradient(to right, #8e2de2, #4a00e0);">
+            <div class="col-12 col-md-6 col-lg-4" style="min-width: 500px;">
+                <div class="card bg-white mb-5 mt-5 border-0" style="box-shadow: 0 12px 15px rgba(0, 0, 0, 0.02);">
+                    <div class="card-body p-4 text-center">
+                        <h4 class="text-primary mb-3">Verify Email Identity</h4>
+                        <p class="text-secondary fw-bold pb-2">Please Enter The One Time Password To Verify Your Account</p>
+                        <div class="otp-field mb-2">
+                            <input type="number" />
+                            <input type="number" disabled />
+                            <input type="number" disabled />
+                            <input type="number" disabled />
+                            <input type="number" disabled />
+                            <input type="number" disabled />
+                        </div>
+                        <p class="text-primary fw-bold send-email">Your code was sent to you via email</p>
+                        <button class="btn btn-primary mb-4" id="verify">Verify</button>
+                        <p class="resend text-muted mb-0 mt-2">Didn't receive code? 
+                            <button type="button" class="btn btn-sm btn-outline-primary fw-bold" id="request_again" style="font-size:12px;">Request again</button>
+                        </p>
+                        <p class="re-enter mt-2">Entered A Wrong Email Addres.
+                            <button type="button" class="btn btn-sm btn-outline-primary fw-bold" id="reEnterEmail" style="font-size:11px;">Re-enter</button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer text-light">
+            Made with ❤️ by Satyajit Moharana | Visit <a href="" class="text-danger" target="_blank">Portfolio</a>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="wrongModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="p-2 px-3 d-flex justify-content-between align-items-center">
+                    <span class="text-danger fw-bold" id="exampleModalLabel">Wrong OTP</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="">
+                        <p class="text-secondary error_message">Enter OTP again. and then Verify</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal-2 -->
+    <div class="modal fade" id="newOtp" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="p-2 px-3 d-flex justify-content-between align-items-center">
+                    <span class="text-secondary fw-bold" id="exampleModalLabel">New OTP</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="">
+                        <p class="text-secondary" id="newOtpContent">A New otp sent to your email</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal-3 -->
+    <div class="modal fade" id="reEnterEmailModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="p-2 px-3 d-flex justify-content-between align-items-center">
+                    <span class="text-secondary fw-bold" id="exampleModalLabel">Enter Your New Email</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="reEnterEmailForm">
+                        <div class="pb-3">
+                            <input type="text" class="form-control" id="inputEmail" name="inputEmail" placeholder="Enter Email Here"/>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-primary float-end">Conform</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- JQ -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!-- Jquery Validation -->
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Custom Script -->
+    <script>
+        $(document).ready(function () {
+            const $inputs = $(".otp-field > input");
+            const $button = $("#verify");
+            const customerId = "@ViewBag.CustomerId"; // Use Razor syntax to get the value from the server-side
+            let customerEmail = "@ViewBag.Email";   // Use Razor syntax to get the value from the server-side
+
+            $inputs.first().focus();
+            $button.attr("disabled", "disabled");
+
+            $inputs.first().on("paste", function (event) {
+                event.preventDefault();
+
+                const pastedValue = (event.originalEvent.clipboardData || window.clipboardData).getData("text");
+                const otpLength = $inputs.length;
+
+                for (let i = 0; i < otpLength; i++) {
+                    if (i < pastedValue.length) {
+                        $inputs.eq(i).val(pastedValue[i]);
+                        $inputs.eq(i).removeAttr("disabled").focus();
+                    } else {
+                        $inputs.eq(i).val("").focus();
+                    }
+                }
+            });
+
+            $inputs.each(function (index1) {
+                $(this).on("keyup", function (e) {
+                    const $currentInput = $(this);
+                    const $nextInput = $currentInput.next("input");
+                    const $prevInput = $currentInput.prev("input");
+
+                    if ($currentInput.val().length > 1) {
+                        $currentInput.val("");
+                        return;
+                    }
+
+                    if ($nextInput.length && $nextInput.is(":disabled") && $currentInput.val() !== "") {
+                        $nextInput.removeAttr("disabled").focus();
+                    }
+
+                    if (e.key === "Backspace") {
+                        $inputs.each(function (index2) {
+                            if (index1 <= index2 && $prevInput.length) {
+                                $(this).attr("disabled", true).val("");
+                                $prevInput.focus();
+                            }
+                        });
+                    }
+
+                    $button.removeClass("active").attr("disabled", "disabled");
+
+                    const inputsNo = $inputs.length;
+                    if (!$inputs.eq(inputsNo - 1).is(":disabled") && $inputs.eq(inputsNo - 1).val() !== "") {
+                        $button.addClass("active").removeAttr("disabled");
+                    }
+                });
+            });
+
+            $button.on("click", function () {
+                let otpvalue = "";
+                $inputs.each(function () {
+                    otpvalue += $(this).val();
+                });
+                $.ajax({
+                    url: "/registration/VerifyOTP",
+                    type: "post",
+                    data: { id: customerId, code: otpvalue, email: customerEmail },
+                    success: function (res) {
+                        console.log(res);
+                        if (res.success) {
+                            window.location.href = "/customer/index";
+                            alert("Success");
+                        } else {
+                            $(".error_message").html(res.message);
+                            $("#wrongModal").modal("show");
+                            //alert(res.message);  // Show the message to the user
+                        }
+                    },
+                    error: function (err) {
+                        console.error("Error in verification:", err);
+                    }
+                });
+            });
+
+            $("#request_again").click(function(){
+                $.ajax({
+                    url: "/registration/OTPRequest",
+                    type: "post",
+                    data: { id: customerId, email: customerEmail },
+                    success: function (res) {
+                        if (res) {
+                            $("#newOtpContent").html("A New OTP Has Been Sent To Your Email Address");
+                            $("#newOtp").modal("show");
+                        }
+                        else{
+                            alert("something went wrong");
+                        }
+                    }
+                })
+                
+            })
+
+            $("#reEnterEmail").click(function(){
+                $("#reEnterEmailModal").modal("show");
+            })
+            $("#reEnterEmailForm").validate({
+                rules:{
+                    inputEmail:{
+                        required:true,
+                        email:true
+                    }
+                },
+                messages:{
+                    required:"Please Enter A Valid Email",
+                    email:"Please Enter A Valid Email Like - Example@@gmail.com"
+                },
+                submitHandler: function(form){
+                    UpdateEmail();
+                }
+            });
+            function UpdateEmail(){
+                debugger;
+                let email = $("#inputEmail").val();
+                $.ajax({
+                    url: "/registration/ReEnterEmail",
+                    type:"post",
+                    data: { id: customerId , email:email},
+                    success:function(res){
+                        if(res){
+                            debugger;
+                            $("#reEnterEmailModal").modal("hide");
+                            $("#newOtpContent").html("A New OTP Has Been Sent To Your New Email Address")
+                            $("#newOtp").modal("show");
+                            customerEmail=email
+                        }
+                        else{
+                            alert("Somethimg went wrong")
+                        }
+                    }
+                })
+            }
+        });
+    </script>
+</body>
+</html>

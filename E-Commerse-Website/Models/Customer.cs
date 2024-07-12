@@ -16,6 +16,7 @@ namespace E_Commerse_Website.Models
         public string? customer_country { get; set; }
         public string? customer_city { get; set; }
         public string? customer_address { get; set; }
+        public bool isVerified { get; set; } = false;
         [ValidateNever]
         public string? customer_image { get; set; }
        

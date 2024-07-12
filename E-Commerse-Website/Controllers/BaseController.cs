@@ -47,7 +47,7 @@ namespace E_Commerse_Website.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        
         public void RequireCall(string activeClass)
         {
             if (User.Identity.IsAuthenticated)

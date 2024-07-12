@@ -1,0 +1,139 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="CodeHim">
+    <title> OTP Verify Mockup Example </title>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'>
+    <link href="~/icon/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <style>
+        .otp-field {
+            flex-direction: row;
+            column-gap: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .otp-field input {
+                height: 45px;
+                width: 42px;
+                border-radius: 6px;
+                outline: none;
+                font-size: 1.125rem;
+                text-align: center;
+                border: 1px solid #ddd;
+            }
+
+                .otp-field input:focus {
+                    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+                }
+
+                .otp-field input::-webkit-inner-spin-button,
+                .otp-field input::-webkit-outer-spin-button {
+                    display: none;
+                }
+
+        .resend {
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .re-enter {
+            font-size: 13px;
+        }
+
+        .send-email {
+            font-size: 12px;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: black;
+            font-size: 12px;
+            text-align: right;
+            font-family: monospace;
+        }
+
+            .footer a {
+                color: black;
+                text-decoration: none;
+            }
+
+        label.error {
+            color: #F44336;
+            font-style: italic;
+            font-size: 12px;
+            font-weight:bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Start DEMO HTML (Use the following code into your project)-->
+    <div class="container-fluid bg-body-tertiary d-block">
+        <div class="row justify-content-center align-items-center" style="height:100vh;background-image: linear-gradient(to right, #8e2de2, #4a00e0);">
+            <div class="col-12 col-md-6 col-lg-4" style="min-width: 650px;">
+                <div class="card bg-white mb-5 mt-5 border-0" style="box-shadow: 0 12px 15px rgba(0, 0, 0, 0.02);">
+                    <div class="card-body p-4 text-center">
+                        <form action="/Registration/ReEnterEmail" method="post" id="email_form">
+                            <h4 class="text-secondary mb-4">Enter your Email again</h4>
+                            <div class="px-3  mb-3">
+                                <div class="input-group inputWrapper">
+                                    <span class="input-group-text" id="basic-addon1">@@</span>
+                                    <input type="text" class="form-control" id="inputEmail" name="inputEmail" placeholder="Your Email Here" aria-label="Username" aria-describedby="basic-addon1">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-primary">Conform</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer text-light">
+            Made with ❤️ by Satyajit Moharana | Visit <a href="" class="text-danger" target="_blank">Portfolio</a>
+        </div>
+    </div>
+
+    <!-- JQ -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!-- Jquery Validation -->
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script>
+        console.log("Checking jQuery:", typeof jQuery !== "undefined"); // Check if jQuery is loaded
+        $(function(){
+            console.log("Validation script initialized");  // Verify script initialization
+            $("#email_form").validate({
+                rules: {
+                    inputEmail: {
+                        required: true,
+                        email: true,
+                    }
+                },
+                messages: {
+                    inputEmail: {
+                        required: "This Email Feild Should Not Be Empty. You Have To Fill This Before Submit",
+                        email: "Please Enter A Valid Email (example@@gmail.com)."
+                    }
+                },
+                errorPlacement: function (error, element) {
+                    if (element.closest('.inputWrapper').length) {
+                        error.insertAfter(element.closest('.inputWrapper'));
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
+            });
+        })
+       
+    </script>
+</body>
+</html>

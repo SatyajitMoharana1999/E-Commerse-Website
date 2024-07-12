@@ -1,5 +1,6 @@
 ﻿using E_Commerse_Website.Models;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.WebRequestMethods;
 
 namespace E_Commerse_Website.Data
 {
@@ -14,8 +15,9 @@ namespace E_Commerse_Website.Data
         public DbSet<Feedback> tbl_feedback{ get; set; }
         public DbSet<Faqs> tbl_faqs{ get; set; }
         public DbSet<AdminHistory> tbl_adminHistory { get; set; }
+		public DbSet<OTP_Customer> tbl_OTP_Customer { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>().HasOne(p => p.Category).WithMany(c => c.Product).HasForeignKey(p=>p.cat_id);
             modelBuilder.Entity<Product>().HasOne(p => p.Admin).WithMany(c => c.Product).HasForeignKey(p=>p.adm_id);

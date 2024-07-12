@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace E_Commerse_Website.Controllers
 {
+    [Authorize(AuthenticationSchemes = "AdminCookie", Roles = "Admin")]
     public class AdminController : BaseController
     {
         private readonly myContext _context;
@@ -41,26 +42,29 @@ namespace E_Commerse_Website.Controllers
         }
 
         //----------------------------------------------------------------------------------------- View Page  -  Login    ////
+        [AllowAnonymous]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Login(string ReturnUrl)
         {
 
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
             {
                 return RedirectToAction("Index");
             }
             ViewBag.ReturnUrl = ReturnUrl;
             return View();
         }
+
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login(string adminEmail, string adminPassword, string ReturnUrl)
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
             {
-                // Redirect to another page, such as the home page
                 return RedirectToAction("Index", "Home");
             }
-            var row = _context.tbl_admin.FirstOrDefault(a => a.admin_email == adminEmail);
+
+            var row =await _context.tbl_admin.FirstOrDefaultAsync(a => a.admin_email == adminEmail);
             if (row != null && row.admin_password == adminPassword)
             {
                 List<Claim> claims = new List<Claim>();
@@ -68,13 +72,13 @@ namespace E_Commerse_Website.Controllers
                 claims.Add(new Claim(ClaimTypes.Name, row.admin_name));
                 claims.Add(new Claim(ClaimTypes.Role, "Admin"));
                 claims.Add(new Claim(ClaimTypes.UserData, row.admin_image));
-                ClaimsIdentity CI = new ClaimsIdentity(claims, "myCookie");
+                ClaimsIdentity CI = new ClaimsIdentity(claims, "AdminCookie");
                 ClaimsPrincipal CP = new ClaimsPrincipal(CI);
                 var AP = new AuthenticationProperties
                 {
 
                 };
-                await HttpContext.SignInAsync("myCookie", CP, AP);
+                await HttpContext.SignInAsync("AdminCookie", CP, AP);
                 return Redirect(string.IsNullOrEmpty(ReturnUrl) ? "/home/index" : ReturnUrl);
             }
             else
@@ -93,8 +97,8 @@ namespace E_Commerse_Website.Controllers
             {
                 return Redirect("/Admin/login");
             }
-            await HttpContext.SignOutAsync("myCookie");
-            return Redirect("/home/index");
+            await HttpContext.SignOutAsync("AdminCookie");
+            return Redirect("/Customer/index");
         }
 
         //--------------------------------------------------------------------------------------- View Page  -  Admin Details   ////

@@ -1,19 +1,25 @@
 ﻿using E_Commerse_Website.Data;
 using E_Commerse_Website.Models;
 using E_Commerse_Website.Services.Implimentation;
+using E_Commerse_Website.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace E_Commerse_Website.Controllers
 {
     public class CustomerController : Controller
     {
         private readonly IProductRepo _repo;
-        public CustomerController(IProductRepo repo)
+        private readonly ICustomerRepo _cRepo;
+        public CustomerController(IProductRepo repo, ICustomerRepo cRepo)
         {
             _repo = repo;
+            _cRepo = cRepo;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            await RequiredCustomerCall();
             return View();
         }
 
@@ -185,5 +191,21 @@ namespace E_Commerse_Website.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        public async Task RequiredCustomerCall()
+        {
+            // Debugging: Output authentication state to console
+            Console.WriteLine($"User authenticated: {User.Identity.IsAuthenticated}");
+
+            if (User.Identity.IsAuthenticated)
+            {
+                if (User.IsInRole("Customer"))
+                {
+                    Claim c_name = User.FindFirst(ClaimTypes.Name);
+                    ViewData["CustomerName"] = c_name.Value;
+                }
+            }
+        }
+
     }
 }

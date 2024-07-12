@@ -4,6 +4,7 @@ using E_Commerse_Website.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Commerse_Website.Migrations
 {
     [DbContext(typeof(myContext))]
-    partial class myContextModelSnapshot : ModelSnapshot
+    [Migration("20240629133359_Customer_OTP")]
+    partial class Customer_OTP
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -158,9 +161,6 @@ namespace E_Commerse_Website.Migrations
                     b.Property<string>("customer_phone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("isVerified")
-                        .HasColumnType("bit");
-
                     b.HasKey("customer_id");
 
                     b.ToTable("tbl_customer");
@@ -225,6 +225,9 @@ namespace E_Commerse_Website.Migrations
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

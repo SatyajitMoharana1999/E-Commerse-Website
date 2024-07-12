@@ -85,18 +85,25 @@
                     </div>
                     <div class="col-lg-4 col-md-4 col-12">
                         <div class="top-end">
-                            <div class="user">
-                                <i class="lni lni-user"></i>
+                            <div class="user text-muted">
+                                <i class="lni lni-user text-muted"></i>
                                 Hello
                             </div>
-                            <ul class="user-login">
-                                <li>
-                                    <a href="login.html">Sign In</a>
-                                </li>
-                                <li>
-                                    <a href="register.html">Register</a>
-                                </li>
-                            </ul>
+                            @if (ViewData["CustomerName"] != null)
+                            {
+                                <span class="text-light">@ViewData["CustomerName"]</span>
+                            }
+                            else
+                            {
+                                <ul class="user-login">
+                                    <li>
+                                        <a href="login.html">Sign In</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Register", "Registration")">Register</a>
+                                    </li>
+                                </ul>
+                            }
                         </div>
                     </div>
                 </div>
@@ -515,6 +522,9 @@
     @*------------------- JQ  -------------------*@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     @*-------------------------------------------------*@
+    @*------------------- Jquery Validation  -------------------*@
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
 
     <!-- ========================= JS here ========================= -->
     <script src="~/assets/js/bootstrap.min.js"></script>

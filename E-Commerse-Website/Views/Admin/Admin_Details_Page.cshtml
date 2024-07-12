@@ -141,7 +141,7 @@
         })
 
         function showfun(){
-            $(".text_section ul li span,i").hide();
+            $(".text_section ul li span,.text_section ul li i").hide();
             $(".text_section ul li .inpwr").show();
             $(".text_section #A_cancel,#A_conform,#edit_details").show();
             $(".text_section #edit_details").hide();
@@ -155,7 +155,7 @@
             $(".text_section ul li .inpwr").hide();
             $(".text_section #A_cancel,#A_conform").hide();
             $(".text_section #edit_details").show();
-            $(".text_section ul li span,i").show();
+            $(".text_section ul li span,.text_section ul li i").show();
             $(".image_wrapper #iw_text").show();
             $(".image_wrapper #iw_text_upl").hide();
             $(".image_wrapper").css(`background-image`, `url('../AdminImages/@Model.admin_image')`);

@@ -1,0 +1,242 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Registration Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- MATERIAL DESIGN ICONIC FONT -->
+    <link rel="stylesheet" href="~/css/CustomerRegistration/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
+    <!-- STYLE CSS -->
+    <link rel="stylesheet" href="~/css/CustomerRegistration/CustomerRegistration.css" />
+    <!-- Include validation CSS (optional, for styling) -->
+    @* <link rel="stylesheet" href="~/lib/jquery-validation/dist/jquery.validate.css"> *@
+    <style>
+        label.error{
+            color: #9C27B0;
+            font-style:italic;
+            font-size:12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="inner">
+            <form action="register" id="cd_form">
+                <h2 class="heading">Registration Form</h2>
+                <div class="form-group">
+                    <div class="form-wrapper">
+                        <label for="inputName">Full Name:</label>
+                        <div class="form-holder">
+                            <i class="zmdi zmdi-account-o"></i>
+                            <input type="text" class="form-control" id="inputName" name="inputName">
+                        </div>
+                    </div>
+                    <div class="form-wrapper">
+                        <label for="inputEmail">Email:</label>
+                        <div class="form-holder">
+                            <i style="font-style: normal; font-size: 15px;">@@</i>
+                            <input type="text" class="form-control" id="inputEmail" name="inputEmail">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-wrapper">
+                        <label for="inputPassword">Password:</label>
+                        <div class="form-holder">
+                            <i class="zmdi zmdi-lock-outline"></i>
+                            <input type="password" class="form-control" placeholder="********" id="inputPassword" name="inputPassword">
+                        </div>
+                    </div>
+                    <div class="form-wrapper">
+                        <label for="reTypeinputPassword">Repeat Password:</label>
+                        <div class="form-holder">
+                            <i class="zmdi zmdi-lock-outline"></i>
+                            <input type="password" class="form-control" placeholder="********" id="reTypeinputPassword" name="reTypeinputPassword">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-wrapper">
+                        <label for="inputCountry">Country:</label>
+                        <div class="form-holder">
+                            <input type="text" class="form-control commonCCA" placeholder="Your Country" id="inputCountry" name="inputCountry">
+                            <i class="zmdi zmdi-pin"></i>
+                        </div>
+                    </div>
+                    <div class="form-wrapper">
+                        <label for="inputCity">City:</label>
+                        <div class="form-holder">
+                            <input type="text" class="form-control commonCCA" placeholder="Your City" id="inputCity" name="inputCity">
+                            <i class="zmdi zmdi-pin"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-wrapper">
+                        <label for="inputAddress">Address:</label>
+                        <div class="form-holder select">
+                            <input type="text" class="form-control commonCCA" placeholder="Your Address" id="inputAddress" name="inputAddress">
+                            <i class="zmdi zmdi-pin"></i>
+                        </div>
+                    </div>
+                    <div class="form-wrapper">
+                        <label for="inputGender">Gender:</label>
+                        <div class="form-holder select">
+                            <select name="inputGender" id="inputGender" class="form-control">
+                                <option value="" selected disabled>Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <i class="zmdi zmdi-face"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-end">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="checkbox" name="checkbox"> I hereby agree to all the terms and conditions.
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    <div class="button-holder">
+                        <button type="submit">Register Now</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JQ -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!-- Jquery Validation -->
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <!-- Custom Script -->
+    <script>
+        //console.log("Checking jQuery:", typeof jQuery !== "undefined"); // Check if jQuery is loaded
+        $(document).ready(function () {
+            //console.log("Validation script initialized");  // Verify script initialization
+            $("#cd_form").validate({
+                rules: {
+                    inputName: {
+                        required: true
+                    },
+                    inputEmail: {
+                        required: true,
+                        email: true
+                    },
+                    inputPassword: {
+                        required: true,
+                        minlength: 8,
+                        strongPassword: true
+                    },
+                    reTypeinputPassword: {
+                        required: true,
+                        minlength: 8,
+                        equalTo: "#inputPassword"
+                    },
+                    inputCountry: {
+                        required: true,
+                    },
+                    inputCity: {
+                        required: true,
+                    },
+                    inputAddress: {
+                        required: true,
+                    },
+                    inputGender: {
+                        required: true,
+                    },
+                    checkbox: {
+                        required: true
+                    }
+                },
+                messages: {
+                    inputName: {
+                        required: "Please fill in your Full Name",
+                    },
+                    inputEmail: {
+                        required: "Please enter your email",
+                        email: "Please enter a valid email address"
+                    },
+                    inputPassword: {
+                        required: "Please enter a password",
+                        minlength: "Password should be at least 8 characters long"
+                    },
+                    reTypeinputPassword: {
+                        required: "Please confirm your password",
+                        minlength: "Password should be at least 8 characters long",
+                        equalTo: "Passwords do not match"
+                    },
+                    inputCountry: {
+                        required: "Please enter your country",
+                    },
+                    inputCity: {
+                        required: "Please enter your city",
+                    },
+                    inputAddress: {
+                        required: "Please enter your address",
+                    },
+                    inputGender: {
+                        required: "Please select your gender",
+                    },
+                    checkbox: {
+                        required: "You must agree to the terms and conditions"
+                    }
+                },
+                errorPlacement: function (error, element) {
+                    if (element.closest('.form-holder').length) {
+                        error.insertAfter(element.closest('.form-holder'));
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function (form) {
+                    SendCustomerData()
+                }
+            });
+
+            $.validator.addMethod("strongPassword", function (value, element) {
+                var hasUppercase = /[A-Z]/.test(value);
+                var hasSymbolOrNumber = /[!@@#\\$%\\^&\\*(),.?":{}|<>0-9]/.test(value);
+
+                return this.optional(element) || (hasUppercase && hasSymbolOrNumber);
+            }, "Password must include at least one uppercase letter and one symbol or number.");
+
+
+            function SendCustomerData() {
+                let formData = new FormData();
+
+                // Add text data to FormData
+                formData.append("customer_name", $("#inputName").val());
+                formData.append("customer_email", $("#inputEmail").val());
+                formData.append("customer_password", $("#inputPassword").val());
+                formData.append("customer_gender", $("#inputGender").val());
+                formData.append("customer_country", $("#inputCountry").val());
+                formData.append("customer_city", $("#inputCity").val());
+                formData.append("customer_address", $("#inputAddress").val());
+
+                $.ajax({
+                    url: "/registration/register",
+                    type: "post",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (res) {
+                        if(res){
+                            let id = res.id;
+                            let email = res.email;
+                            window.location.href=`/registration/VerifyOTP?email=${encodeURIComponent(email)}&id=${id}`
+                        }
+                    }
+                })
+            }
+        });
+    </script>
+</body>
+</html>
