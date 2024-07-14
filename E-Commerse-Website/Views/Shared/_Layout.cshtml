@@ -16,6 +16,11 @@
     <link rel="stylesheet" href="~/assets/css/tiny-slider.css" />
     <link rel="stylesheet" href="~/assets/css/glightbox.min.css" />
     <link rel="stylesheet" href="~/assets/css/main.css" />
+
+    <!-- ========================= CSS for Login PopUp bs5 modal ========================= -->
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />
+    <link href="~/css/loginpopup.css" rel="stylesheet" />
+
     @await RenderSectionAsync("Styles", required:false)
 </head>
 
@@ -97,7 +102,7 @@
                             {
                                 <ul class="user-login">
                                     <li>
-                                        <a href="login.html">Sign In</a>
+                                        <button class="border-0 bg-transparent text-light" data-bs-toggle="modal" data-bs-target="#LoginPopUp">Sign In</button>
                                     </li>
                                     <li>
                                         <a href="@Url.Action("Register", "Registration")">Register</a>
@@ -518,6 +523,53 @@
     <a href="#" class="scroll-top">
         <i class="lni lni-chevron-up"></i>
     </a>
+
+
+
+    <!-- Modal -->      @* for login popup *@
+    <div class="modal fade customModal " id="LoginPopUp" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="top:20%;">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="home show justify-content-center align-items-center">
+                        <div class="form_container">
+                            <i class="uil uil-times form_close" data-bs-dismiss="modal" aria-label="Close"></i>
+                            <!-- Login From -->
+                            <div class="form login_form">
+                                <form action="#">
+                                    <h2>Login</h2>
+
+                                    <div class="input_box">
+                                        <input type="email" placeholder="Enter your email" required />
+                                        <i class="uil uil-envelope-alt email"></i>
+                                    </div>
+                                    <div class="input_box">
+                                        <input type="password" placeholder="Enter your password" required />
+                                        <i class="uil uil-lock password"></i>
+                                        <i class="uil uil-eye-slash pw_hide"></i>
+                                    </div>
+
+                                    <div class="option_field justify-content-end">
+                                        @* <span class="checkbox">
+                                            <input type="checkbox" id="check" />
+                                            <label for="check">Remember me</label>
+                                        </span> *@
+                                        <a   href="#" class="forgot_pw">Forgot password?</a>
+                                    </div>
+
+                                    <button class="button border border-light text-light">Login Now</button>
+
+                                    <div class="login_signup">Don't have an account? <a href="#" id="signup">Signup</a></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
     @*------------------- JQ  -------------------*@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

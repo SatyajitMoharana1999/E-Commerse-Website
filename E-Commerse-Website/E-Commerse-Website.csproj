@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\css\loginPopUp.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MailKit" Version="4.7.0" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
