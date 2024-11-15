@@ -1,0 +1,11 @@
+﻿@media only screen and (max-width:767px){
+    .margin-768-0{
+        margin:0 !important;
+    }
+}
+
+@media (max-width:480px) {
+    .padding-0 {
+        padding: 0 !important;
+    }
+}

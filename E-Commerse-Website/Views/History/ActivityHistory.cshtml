@@ -7,23 +7,24 @@
             padding-left:.5rem;
         }
 
-        .historyContent div:hover span{
-            color:inherit !important;
-            transition:.2s ease-out;
-        }
-
-        .history_details{
-            opacity:0;
-            transition:.2s linear;
-        }
+       
 
         .historyContent > div:hover .history_details{
             opacity:1;
             transition: .2s linear;
         }
+        @@media only screen and (max-width:469px){
+            .historyContent div span{
+                font-size:.7rem !important;
+                
+            }
+            .historyContent div{
+                height:50px;
+            }
+        }
     </style>
 }
-<div class="container p-3 ps-4 Activity-container">
+<div class=" p-3 ps-4 Activity-container padding-0">
     <h4>Activity History</h4>
     <div class="historyContent">
         
@@ -47,37 +48,33 @@
                         console.log(res);
                         $.each(res,function(index,value) {
                             if (value.aH_title.split(' ')[1] == "Updated") {
-                                html += `<div class="mb-1 p-3 text-info bg-info bg-opacity-10 border border-info border-start-0 rounded-end d-flex justify-content-between">
+                                html += `<div class="history_details mb-1 p-3 text-info bg-info bg-opacity-10 border border-info border-start-0 rounded-end d-flex justify-content-between align-items-center" data-id="${value.aH_id}">
                                                 <span class="fw-bold text-dark">
                                                     ${value.aH_title} 
-                                                    <a class="history_details btn btn-sm btn-outline-secondary ms-2" data-id="${value.aH_id}">Open Details</a>
                                                 </span>
                                                 <span class="text-secondary fst-italic">${value.aH_title.split(' ')[0]}</span>
                                             </div>`
                             }
                             if (value.aH_title.split(' ')[1] == "Added") {
-                                html += `<div class="mb-1 p-3 text-success bg-success bg-opacity-10 border border-success border-start-0 rounded-end d-flex justify-content-between">
+                                html += `<div class="history_details mb-1 p-3 text-success bg-success bg-opacity-10 border border-success border-start-0 rounded-end d-flex justify-content-between align-items-center" data-id="${value.aH_id}">
                                                 <span class="fw-bold text-dark">
                                                     New ${value.aH_title}
-                                                    <a class="history_details btn btn-sm btn-outline-secondary ms-2" data-id="${value.aH_id}">Open Details</a>
                                                 </span>
                                                 <span class="text-secondary fst-italic">${value.aH_title.split(' ')[0]}</span>
                                             </div>`
                             }
                             if (value.aH_title.split(' ')[1] == "Deleted") {
-                                html += `<div class="mb-1 p-3 bg-danger text-danger bg-opacity-10 border border-danger border-start-0 rounded-end d-flex justify-content-between">
+                                html += `<div class="history_details mb-1 p-3 bg-danger text-danger bg-opacity-10 border border-danger border-start-0 rounded-end d-flex justify-content-between align-items-center" data-id="${value.aH_id}">
                                                 <span class="fw-bold text-dark">
                                                     ${value.aH_title}
-                                                    <a class="history_details btn btn-sm btn-outline-secondary ms-2" data-id="${value.aH_id}">Open Details</a>
                                                 </span>
                                                 <span class="text-secondary fst-italic">${value.aH_title.split(' ')[0]}</span>
                                             </div>`
                             }
                             if (value.aH_title.split(' ')[1] == "Recategorised") {
-                                html += `<div class="mb-1 p-3 bg-secondary text-secondary bg-opacity-10 border border-secondary border-start-0 rounded-end d-flex justify-content-between">
+                                    html += `<div class="history_details mb-1 p-3 bg-secondary text-secondary bg-opacity-10 border border-secondary border-start-0 rounded-end d-flex justify-content-between align-items-center" data-id="${value.aH_id}">
                                                 <span class="fw-bold text-dark">
                                                     ${value.aH_title}
-                                                    <a class="history_details btn btn-sm btn-outline-secondary ms-2" data-id="${value.aH_id}">Open Details</a>
                                                 </span>
                                                 <span class="text-secondary fst-italic">${value.aH_title.split(' ')[0]}</span>
                                             </div>`
@@ -89,6 +86,7 @@
             })
         }
         $(".historyContent").on("click", ".history_details", function () {
+            
             let index = $(this).data("id");
             window.location.href = "/History/ActivityDetails/"+index;
         })

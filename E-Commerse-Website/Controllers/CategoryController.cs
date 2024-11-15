@@ -11,7 +11,7 @@ using System.Security.Claims;
 
 namespace E_Commerse_Website.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(AuthenticationSchemes="AdminCookie",Roles = "Admin")]
     public class CategoryController : BaseController
     {
         private readonly IUnitOfWork _unit;

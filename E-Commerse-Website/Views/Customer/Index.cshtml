@@ -743,6 +743,22 @@
             getTrandingProducts();
             getRecentlyAddedProducts();
 
+            const mediaQuery = window.matchMedia('(max-width: 768px)');
+            // Function to toggle slider description based on screen width
+            function toggleSliderDescription(e) {
+                if (e.matches) {
+                    // Hide description if screen width is <= 768px
+                    $('.sliderproductDESC').hide();
+                } else {
+                    // Show description for larger screens
+                    $('.sliderproductDESC').show();
+                }
+            }
+            // Attach the listener and trigger the function
+            mediaQuery.addListener(toggleSliderDescription);
+            toggleSliderDescription(mediaQuery);
+
+
             function initializeSlider() {
                 tns({
                     container: '.hero-slider',
@@ -769,7 +785,7 @@
                         //console.log(response);
                         let html = ``
                         for (i = 0; i < response.length; i++) {
-                            console.log(response[i].product_id);
+                            // console.log(response[i].product_id);
                             html += `<div class="single-slider"
                                             style="background-image: url(${img_location}${response[i].product_image});">
                                            <div class="content">
@@ -777,7 +793,7 @@
                                                    <span>No restocking fee (₹35 savings)</span>
                                                    ${response[i].product_name}
                                                </h2>
-                                               <p>
+                                               <p class="sliderproductDESC">
                                                    ${response[i].product_description}
                                                </p>
                                                <h3><span>Now Only</span> ₹${response[i].product_price}</h3>
@@ -789,6 +805,7 @@
                         }
                         $(".hero-slider").html(html);
                         initializeSlider();
+                        toggleSliderDescription(mediaQuery);
                     }
                 })
             }
@@ -797,7 +814,7 @@
                     url: "/customer/getSmallBannerProduct",
                     type:"Get",
                     success: function(response){
-                        console.log(response);
+                        // console.log(response);
                         let html = `<div class="hero-small-banner"
                                             style="background-image: url(${img_location}${response.product_image});">
                                         <div class="content">
@@ -818,7 +835,7 @@
                     url: "/customer/getRandomProducts",
                     type: "Get",
                     success: function (response) {
-                        console.log(response);
+                        // console.log(response);
                         let html = ``
                         for (i = 0; i < response.length; i++) {
                             html += `<div class="col-lg-3 col-md-6 col-12">
@@ -826,7 +843,7 @@
                                             <div class="product-image">
                                                 <img src="${img_location}${response[i].product_image}" alt="#">
                                                 <div class="button">
-                                                    <a href="product-details.html" class="btn"><i class="lni lni-cart"></i> Add to Cart</a>
+                                                    <button class="btn addToCart" data-id="${response[i].product_id}"><i class="lni lni-cart"></i> Add to Cart</button>
                                                 </div>
                                             </div>
                                             <div class="product-info">
@@ -858,16 +875,16 @@
                     url: "/customer/GetRecentlyAddedProducts",
                     type: "Get",
                     success: function (response) {
-                        console.log(response);
+                        // console.log(response);
                         let html = ``
                         for (i = 0; i < response.length; i++) {
-
+                           // debugger;
                             html += `<div class="col-lg-3 col-md-6 col-12">
                                         <div class="single-product">
                                             <div class="product-image">
                                                 <img src="${img_location}${response[i].product_image}" alt="#">
                                                 <div class="button">
-                                                    <a href="/customer/productdetails?id=${response[i].product_id}" class="btn"><i class="lni lni-cart"></i> Add to Cart</a>
+                                                    <button class="btn addToCart" data-id="${response[i].product_id}"><i class="lni lni-cart"></i> Add to Cart</button>
                                                 </div>
                                             </div>
                                             <div class="product-info">
@@ -894,6 +911,32 @@
                     }
                 })
             }
+
+            $("#TrandingProduct,#RecentlyAdded").on("click", ".addToCart", function () {
+                debugger;
+                let pid = $(this).data("id");
+                console.log("XXX "+pid);
+                $.ajax({
+                    url:"/customer/AddToCart",
+                    type:"post",
+                    data: {id:pid},
+                    success: function (response) {
+                        debugger;
+                        if (response.success) {
+                            console.log("success");
+                            getCartItems();
+                        }
+                        else{
+                            console.log(response.message)
+                            if (response.loginPopUp) {
+                                debugger;
+                            }
+                        }
+                        $("#messageContent").html(response.message);
+                        $("#messageModal").modal("show");
+                    }
+                })
+            })
         })
 
     </script>

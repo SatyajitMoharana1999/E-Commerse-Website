@@ -15,6 +15,7 @@ builder.Services.AddDbContext<myContext>(o=>o.UseSqlServer(builder.Configuration
 builder.Services.AddScoped<ICustomerRepo, CustomerRepo>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IProductRepo, ProductRepo>();
+builder.Services.AddScoped<ICartRepo, CartRepo>();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = "CustomerCookie"; // or "AdminCookie" based on your requirement
@@ -23,13 +24,23 @@ builder.Services.AddAuthentication(options =>
     {
         options.LoginPath = "/admin/login";
         options.Cookie.Name = "AdminCookie";
-        options.ExpireTimeSpan = TimeSpan.FromHours(5);
+        options.ExpireTimeSpan = TimeSpan.FromHours(5); // Adjust as necessary
+        options.Cookie.HttpOnly = true; // Ensures the cookie is only accessible via HTTP(S)
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Use Always for HTTPS, None for HTTP
+        options.Cookie.SameSite = SameSiteMode.Strict; // Adjust based on your cross-site requirements
+        options.Cookie.IsEssential = true; // Ensures the cookie is always stored
+        //options.SlidingExpiration = true; // Resets the expiration time on each request
     })
     .AddCookie("CustomerCookie", options =>
     {
         options.LoginPath = "/customer/login";
         options.Cookie.Name = "CustomerCookie";
-        options.ExpireTimeSpan = TimeSpan.FromHours(5);
+        options.ExpireTimeSpan = TimeSpan.FromHours(5); // Adjust as necessary
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SameSite = SameSiteMode.Strict;
+        options.Cookie.IsEssential = true;
+        options.SlidingExpiration = true;
     });
 
 

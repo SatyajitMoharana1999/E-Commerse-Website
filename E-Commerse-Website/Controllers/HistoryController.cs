@@ -6,6 +6,7 @@ using System.Security.Claims;
 
 namespace E_Commerse_Website.Controllers
 {
+    [Authorize(AuthenticationSchemes = "AdminCookie",Roles ="Admin")]
     public class HistoryController : BaseController
     {
         private readonly IUnitOfWork _unit;

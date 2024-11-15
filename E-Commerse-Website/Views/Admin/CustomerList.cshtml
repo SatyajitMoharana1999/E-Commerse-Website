@@ -2,18 +2,18 @@
 @section Styles{
     <link href="~/css/customerlist.css" rel="stylesheet" />
 }
-<div class="container ">
-    <div class="row p-3">
-        <div class="col-lg-6">
+<div class="cu-table-wrap px-4 py-3 padding-0">
+    <div class="d-flex justify-content-between align-items-center heading-section">
+        <div class="heading">
             <h2 class="text-secondary">Customer List</h2>
         </div>
-        <div class="col-lg-6 d-flex justify-content-end align-items-center ">
+        <div class=" d-flex justify-content-end align-items-center rbs">
             <button class="btn btn-danger mx-2" id="s_d_b">Delete Selected</button>
             <a href="@Url.Action("Upsert","Admin")" class="btn btn-primary"><i class="bi bi-plus-circle me-2"></i>Add Customer</a>
         </div>
     </div>
 </div>
-<div class="container px-4">
+<div class=" px-4 padding-0">
     <div class="shadow p-2 border ">
         <table class="table table-bordered" id="AdminCustomerTable" style="width:100%">
             <thead>
@@ -122,19 +122,36 @@
 
             // Manually handle column visibility based on screen width
             $(window).on('resize', function () {
-                var screenWidth = $(window).width();
+                // var screenWidth = $(window).width();
+                var screenWidth = $(".cu-table-wrap").width();
 
-                if (screenWidth < 1200) {
+                if (screenWidth < 1000) {
                     adminCustomerTable.column(4).visible(false);
+                    // adminCustomerTable.column(3).visible(false);
                 } else {
                     adminCustomerTable.column(4).visible(true);
+                    // adminCustomerTable.column(3).visible(true);
                 }
 
-                if (screenWidth < 1080) {
+                if (screenWidth < 865) {
                     adminCustomerTable.column(3).visible(false);
                 } else {
                     adminCustomerTable.column(3).visible(true);
                 }
+
+                if (screenWidth < 665) {
+                    adminCustomerTable.column(2).visible(false);
+                } else {
+                    adminCustomerTable.column(2).visible(true);
+                }
+
+                if (screenWidth < 450) {
+                    adminCustomerTable.column(1).visible(false);
+                } else {
+                    adminCustomerTable.column(1).visible(true);
+                }
+
+               
             }).resize(); // Trigger the resize event on page load
 
             // Function to get customer data and update the table

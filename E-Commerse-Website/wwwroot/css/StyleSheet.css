@@ -95,13 +95,16 @@
     color: #6610f2;
 }
 
-@media (max-width:900px){
-    .menubar{
+@media (min-width:768px) and (max-width:991px){
+    .menu-wrap{
+        width:230px;
+    }
+    .menubar {
         /*background-color:red;*/
-        width:220px;
+        width: 100%;
     }
     .content {
-        padding-left: 220px;
+        padding-left: 230px;
     }
     .menubar ul li a{
         padding: .5rem;
@@ -109,4 +112,66 @@
     .menubar ul li {
         margin: .4rem .7rem;
     }
+}
+
+@media (max-width:767px){
+    .logo_section{
+        padding:1rem;
+        background-color:transparent;
+        border:none;
+        border-radius:0px;
+        border-bottom:1px solid #fff3;
+    }
+    .menu-wrap {
+        display: none;
+        position: absolute;
+        width: 100%;
+        justify-content: center;
+        background-color: #1e1e2dee;
+        height:100vh;
+        position:fixed;
+    }
+    .menubar{
+        background-color:transparent;
+        border:none;
+    }
+    .menubar ul{
+        background-color:transparent;
+    }
+    .menubar ul li a {
+        justify-content: center;
+    }
+    .content {
+        padding-left: .5rem;
+        padding-top: 4rem;
+    }
+    .con{
+        border:none;
+        padding:.5rem;
+        
+    }
+    /*------------------------blur background for small device open menu---------------------*/
+    .contentBlur {
+        filter: blur(7px);
+        transition: .6s linear;
+    }
+    
+}
+@media only screen and (max-width:479px){
+    .con{
+        padding:0;
+    }
+    .adh1,.adh{
+        font-size:.8rem;
+    }
+}
+
+@media (min-width:768px) {
+    #menu-close{
+        display:none;
+    }
+    #openMenu{
+        display:none;
+    }
+   
 }

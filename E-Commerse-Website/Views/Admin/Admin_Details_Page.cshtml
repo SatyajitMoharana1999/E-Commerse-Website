@@ -2,7 +2,7 @@
 @{}
 
 
-<div class="container">
+<div class="">
     <div class="main_wrap">
         <form class="pro_con shadow-sm" id="myform" method="post" enctype="multipart/form-data" action="/Admin/Admin_Details_Page">
             <div class="image_wrapper" style="background-image: url('../AdminImages/@Model.admin_image');">
@@ -25,14 +25,14 @@
                         <input type="hidden" id="aid" asp-for="admin_id" />
                         <strong>Name :</strong>
                         <span id="name">@Model.admin_name</span>
-                        <i class="bi bi-pen-fill" id="in"></i>
+                        @* <i class="bi bi-pen-fill" id="in"></i> *@
                         <div class="inpwr">
                             <input type="text" id="ani" value="@Model.admin_name" asp-for="admin_name" name="admin_name" />
                         </div>
                     <li>
                         <strong>Email :</strong>
                         <span id="email">@Model.admin_email</span>
-                        <i class="bi bi-pen-fill" id="ie"></i>
+                        @* <i class="bi bi-pen-fill" id="ie"></i> *@
                         <div class="inpwr">
                             <input type="text" id="ane" value="@Model.admin_email" asp-for="admin_email" name="admin_email" />
                         </div>
@@ -40,16 +40,16 @@
                     <li>
                         <strong>Password :</strong>
                         <span id="password"><em>Hidden</em></span>
-                        <i class="bi bi-pen-fill" id="ip"></i>
+                        @* <i class="bi bi-pen-fill" id="ip"></i> *@
                         <div class="inpwr">
                             <input type="text" id="anp" value="@Model.admin_password" asp-for="admin_password" name="admin_password" />
                         </div>
                     </li>
                 </ul>
-                <div class="btn-group-sm">
-                    <button type="button" class="btn btn-primary btn-sm" id="edit_details"><i class="bi bi-pencil-square"></i> Edit Details</button>
-                    <button type="button" class="btn btn-danger btn-sm" id="A_cancel"><i class="bi bi-pencil-square"></i> Cancel</button>
-                    <button type="submit" class="btn btn-success btn-sm" id="A_conform"><i class="bi bi-pencil-square"></i> Conform</button>
+                <div class="btn-group-sm profile-actions">
+                    <button type="button" class="btn btn-primary btn-sm" id="edit_details"><i class="bi bi-pencil-square"></i> <span>Edit Details</span></button>
+                    <button type="button" class="btn btn-danger btn-sm" id="A_cancel"><i class="bi bi-x-lg"></i> <span>Cancel</span></button>
+                    <button type="submit" class="btn btn-success btn-sm" id="A_conform"><i class="bi bi-check-lg"></i> <span>Conform</span></button>
                 </div>
             </div>
         </form>

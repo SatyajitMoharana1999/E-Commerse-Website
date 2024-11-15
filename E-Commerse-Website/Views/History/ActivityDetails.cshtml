@@ -49,7 +49,7 @@
     string[] secondWords = secondCustomerJson.Split(new string[] { "{", "}", ":", "\"", "," }, StringSplitOptions.RemoveEmptyEntries);
 
     
-    <div class="container p-4">
+    <div class=" p-4 padding-0">
         <h4 class="mb-3">@Model.AH_title</h4>
         <div>
             <p class="text-secondary">
@@ -153,7 +153,7 @@
     int firstEndIndex = dec_info.IndexOf("}", firstStartIndex) + 1;
     string CustomerJson = dec_info.Substring(firstStartIndex, firstEndIndex - firstStartIndex);
     string[] Words = CustomerJson.Split(new string[] { "{", "}", ":", "\"", "," }, StringSplitOptions.RemoveEmptyEntries);
-    <div class="container p-4">
+    <div class=" p-4 padding-0">
         <h4 class="mb-3 text-danger">@Model.AH_title</h4>
         <div>
             <p class="text-secondary">
@@ -227,7 +227,7 @@
     @* @dec_info
     <div>----------------------------------------------------------------</div>
     @CustomerJson *@
-    <div class="container p-4">
+    <div class=" p-4 padding-0">
         <h4 class="mb-3 text-success">@Model.AH_title</h4>
         <div>
             <p class="text-secondary">
@@ -341,7 +341,7 @@
 
     Match match = Regex.Match(Model.AH_description, pattern);
     string idString = match.Groups[0].Value;      
-    <div class="container p-4">
+    <div class=" p-4 padding-0">
         <h4 class="mb-3 text-secondary">@Model.AH_title</h4>
         <div>
             <p class="text-secondary">

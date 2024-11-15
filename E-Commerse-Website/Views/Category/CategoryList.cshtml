@@ -62,29 +62,57 @@
             text-align: center;
             z-index: 2;
         }
+        @@media only screen and (max-width:469px){
+            .heading-section{
+                padding-top:1rem;
+            }
+            .heading-section .heading {
+                font-size: calc(1rem + .8vw);
+            }
 
+            .heading-section  a.rb{
+                font-size:.8rem;
+                padding:.3rem .6rem;
+            }
+
+            .category-table th{
+                font-size:.8rem;
+            }
+
+            .category-table th:last-child {
+                min-width:85px;
+            }
+            .category-table td{
+                font-size: .8rem;
+            }
+
+            .category-table td button{
+                font-size:.8rem;
+                padding:.2rem .4rem;
+            }
+        }
        
     </style>
 }
 
-<div class="container p-4 ">
-    <div class="container d-flex justify-content-between align-items-center mb-3 ">
-       <h3>Category List</h3>
+<div class=" p-4 padding-0">
+    <div class=" d-flex justify-content-between align-items-center mb-3 heading-section">
+       <h3 class="heading text-secondary">Category List</h3>
         <button type="button" class="btn btn-primary d-none" id="addButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <i class="bi bi-plus-circle me-2"></i>Add Category
         </button>
-        <a href="@Url.Action("AddCategory","Category")" class="btn btn-primary" id="add_button_2nd">
+        <a href="@Url.Action("AddCategory","Category")" class="btn btn-primary rb" id="add_button_2nd">
             <i class="bi bi-plus-circle me-2"></i>Add Category
         </a>
     </div>
     <!-- Button trigger modal -->
     
-    <table class="table shadow table-bordered">
+    <table class="table shadow table-bordered category-table">
         <thead>
             <tr>
                 <th>#</th>
-                <th>Category Name</th>
-                <th>Avilable Products</th>
+                <th>Category</th>
+                <th>Products</th>
                 <th>Actions</th>
             </tr>
         </thead>

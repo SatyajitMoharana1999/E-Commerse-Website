@@ -1,6 +1,9 @@
 ﻿@{
     Layout = null;
 }
+@{
+    var forgetpassword = @ViewBag.forgetpassword ?? false;
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -168,6 +171,7 @@
             const $button = $("#verify");
             const customerId = "@ViewBag.CustomerId"; // Use Razor syntax to get the value from the server-side
             let customerEmail = "@ViewBag.Email";   // Use Razor syntax to get the value from the server-side
+            let forgetpassword = "@ViewBag.forgetpassword" //to check from where the request come from (register page or forget password page) to verify otp
 
             $inputs.first().focus();
             $button.attr("disabled", "disabled");
@@ -222,6 +226,8 @@
             });
 
             $button.on("click", function () {
+                debugger;
+                var forgetpassword = @forgetpassword.ToString().ToLower();
                 let otpvalue = "";
                 $inputs.each(function () {
                     otpvalue += $(this).val();
@@ -229,12 +235,18 @@
                 $.ajax({
                     url: "/registration/VerifyOTP",
                     type: "post",
-                    data: { id: customerId, code: otpvalue, email: customerEmail },
+                    data: { code: otpvalue, email: customerEmail, forgetpassword: forgetpassword },
                     success: function (res) {
+                        debugger;
                         console.log(res);
                         if (res.success) {
-                            window.location.href = "/customer/index";
-                            alert("Success");
+                            if (forgetpassword) {
+                                window.location.href = `/registration/ResetPassword?email=${encodeURIComponent(customerEmail)}&id=${customerId}`;
+                            }
+                            else{
+                                window.location.href = "/customer/index";
+                                alert("Success");
+                            }
                         } else {
                             $(".error_message").html(res.message);
                             $("#wrongModal").modal("show");

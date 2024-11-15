@@ -141,7 +141,7 @@ h3 {
 }
 
 h4 {
-  font-size: 25px;
+  font-size: 14px;
 }
 
 h5 {
@@ -1503,9 +1503,21 @@ top: -1px;
 .header .topbar .top-middle {
   text-align: center;
 }
+.top-middle ul li.animateFocus a {
+    /*animation: animatefocus 4s infinite;*/
+    color:orange;
+}
 
+@keyframes animatefocus{
+    0%,25%,100%{
+        color:white;
+    }
+    50%{
+        color:yellow;
+    }
+}
 @media (max-width: 767px) {
-  .header .topbar .top-middle {
+    .header .topbar .top-middle {
     display: none;
   }
 }
@@ -1525,6 +1537,9 @@ top: -1px;
   color: #fff;
   font-size: 14px;
   font-weight: 500;
+}
+.header .topbar .top-middle .useful-links li.animateFocus a {
+    color:orange;
 }
 
 .header .topbar .top-middle .useful-links li a:hover {
@@ -1715,7 +1730,28 @@ top: -1px;
   position: relative;
 }
 
-.header .navbar-cart .wishlist a:hover {
+@media (min-width:768px){
+    .pcWrap-mobile{
+        display:none;
+    }
+}
+.header .navbar-cart .profile{
+    margin-left:12px;
+}
+.header .navbar-cart .profile span {
+  height: 40px;
+  width: 40px;
+  line-height: 39px;
+  display: inline-block;
+  border-radius: 50%;
+  border: 1px solid #eee;
+  color: #555;
+  font-size: 18px;
+  text-align: center;
+  position: relative;
+}
+
+.header .navbar-cart .profile span:hover,.header .navbar-cart .wishlist a:hover {
   color: #fff;
   background-color: #0167F3;
   border-color: transparent;
@@ -1914,23 +1950,23 @@ top: -1px;
 
 .header .navbar-cart .cart-items .shopping-item .shopping-list li .content h4 {
   margin-bottom: 5px;
-  line-height: 22px;
+  line-height: 18px;
 }
 
-.header .navbar-cart .cart-items .shopping-item .shopping-list li .content h4 a {
+.header .navbar-cart .cart-items .shopping-item .shopping-list li .content h4 .singleItem {
   font-size: 14px;
   font-weight: 600;
   color: #081828;
 }
 
 @media (max-width: 767px) {
-  .header .navbar-cart .cart-items .shopping-item .shopping-list li .content h4 a {
-    font-size: 13px;
-  }
+    .header .navbar-cart .cart-items .shopping-item .shopping-list li .content h4 .singleItem {
+        font-size: 13px;
+    }
 }
 
-.header .navbar-cart .cart-items .shopping-item .shopping-list li .content h4 a:hover {
-  color: #0167F3;
+.header .navbar-cart .cart-items .shopping-item .shopping-list li .content h4 .singleItem:hover {
+    color: #0167F3;
 }
 
 .header .navbar-cart .cart-items .shopping-item .shopping-list li .content .quantity {
@@ -2957,8 +2993,11 @@ top: 2px;
 
 @media (max-width: 767px) {
   .hero-area .hero-slider .single-slider {
-    height: 350px;
+    height: 260px;
     margin-bottom: 12px;
+  }
+  .topbar{
+      display:none;
   }
 }
 
@@ -4889,4 +4928,26 @@ top: 2px;
   .footer .footer-bottom .socila li span {
     display: none;
   }
+}
+
+
+
+.logout-button {
+    /*border:1px solid #7d2f2f;
+    color:aliceblue;
+    padding:2px 5px;*/
+
+    margin-left: .8rem;
+}
+
+.logout-button i {
+    font-size: 1.1rem;
+}
+.logout-button i:hover{
+    color:red;
+}
+
+.header .topbar .top-end{
+    display: flex;
+    align-items: center;
 }

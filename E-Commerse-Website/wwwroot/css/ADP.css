@@ -241,7 +241,32 @@ input#ci{
     .pro_table {
         padding-top: 1rem;
         padding-left: 0rem;
-        height:20rem;
+        height:fit-content;
+    }
+
+    .pt-con::-webkit-scrollbar {
+        display: none;
+        width: 7px;
+    }
+
+    /* Track */
+    .pt-con::-webkit-scrollbar-track {
+        background: #fff;
+        box-shadow: inset 0 0 3px grey;
+        border-radius: 5px;
+        border: 1px solid rgba(156, 95, 255,.3);
+    }
+
+    /* Handle */
+    .pt-con::-webkit-scrollbar-thumb {
+        background: transparent;
+        border-radius: 5px;
+        border: 2px solid rgb(156, 95, 255);
+    }
+
+    /* Handle on hover */
+    .pt-con::-webkit-scrollbar-thumb:hover {
+        background: rgb(156, 95, 255);
     }
 }
 
@@ -264,6 +289,63 @@ input#ci{
 @media (max-width:740px){
     .text_section ul li span{
         width:9rem;
+    }
+}
+@media (max-width:480px){
+    .pro_con {
+       /* flex-direction:column;
+        align-items:flex-start;*/
+        /*padding-inline:1rem;*/
+        margin:0;
+        padding:0;
+    }
+    .con {
+        margin: 0;
+        padding: 0;
+    }
+    .image_wrapper{
+        width:90px;
+        height:90px;
+    }
+    .text_section ul li{
+        margin:0;
+        flex-wrap:wrap;
+    }
+    .text_section ul li strong {
+        width: 5rem;
+        font-size:.7rem;
+    }
+    .text_section ul li span {
+        min-width:9rem;
+        width:fit-content;
+        padding-left:0rem;
+         font-size:.9rem;
+    }
+    .text_section ul li input {
+        width: fit-content;
+    }
+    .profile-actions button{
+        padding: .125rem .35rem;
+    }
+    .profile-actions button span {
+        display: none;
+    }
+    .profile-actions button#A_cancel,.profile-actions button#A_conform{
+        transform:translate(0%,60%);
+    }
+    .text_section{
+        position:relative;
+    }
+    .profile-actions{
+        position:absolute;
+        right:0;
+        bottom:0;
+    }
+    .history_content span{
+        font-size:.8rem;
+    }
+    .pt-con .h-heading {
+        font-size: .7rem;
     }
 }
 

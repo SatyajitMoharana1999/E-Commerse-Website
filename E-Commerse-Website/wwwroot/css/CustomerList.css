@@ -16,3 +16,55 @@
 .copy{
     background-color:red !important;
 }
+@media only screen and (max-width:767px) {
+    .left h4,.heading h2 {
+        font-size: calc(1rem + .8vw);
+    }
+
+    .rbs button, .rbs a{
+        font-size:.8rem;
+        padding: .3rem .5rem;
+    }
+
+    .heading-section{
+        flex-wrap:wrap;
+    }
+}
+
+
+@media only screen and (max-width:479px) {
+    .heading-section {
+        padding-top: .75rem;
+        padding-bottom: 1rem;
+        flex-direction: column;
+    }
+    .heading{
+        width:100%;
+        margin-bottom:.25rem;
+    }
+    .rbs{
+        width:100%;
+        justify-content:stretch !important;
+       
+    }
+
+    .rbs button, .rbs a{
+        font-size:.8rem;
+        padding: .3rem .5rem;
+        width:50%;
+        margin:0!important;
+        border-radius:0px;
+    }
+
+    #AdminCustomerTable_wrapper table th{
+        font-size:.8rem;
+    }
+    #AdminCustomerTable_wrapper table td{
+        font-size:.8rem;
+    }
+    #AdminCustomerTable_wrapper table td button{
+        font-size:.8rem;
+        padding:5px 8px;
+    }
+}
+
