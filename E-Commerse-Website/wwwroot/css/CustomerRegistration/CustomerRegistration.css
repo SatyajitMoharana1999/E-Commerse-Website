@@ -278,6 +278,20 @@ button {
         color: #493081;
     }
 
+@media only screen and (max-width:1023px) {
+    .inner {
+        width: 700px;
+    }
+
+    form {
+        padding: 45px 30px 44px;
+    }
+
+    .form-group {
+        flex-direction: row;
+    }
+}
+
 @media (max-width: 767px) {
     .wrapper {
         display: block;
@@ -292,13 +306,13 @@ button {
         display: block;
     }
 
-        .form-group .form-wrapper {
-            width: 100%;
-        }
+    .form-group .form-wrapper {
+        width: 100%;
+    }
 
-            .form-group .form-wrapper:first-child {
-                margin-right: 0px;
-            }
+    .form-group .form-wrapper:first-child {
+        margin-right: 0px;
+    }
 
     .form-end {
         display: block;
@@ -309,7 +323,8 @@ button {
     }
 
     .inner {
-        padding: 30px 15px;
+        padding: 30px 2rem;
+        width:568px;
     }
 
     button {
@@ -321,6 +336,55 @@ button {
         font-size: 30px;
         margin-bottom: 40px;
     }
+    .heading{
+        font-size:20px;
+    }
 }
+
+@media (max-width: 575px){
+
+    .inner {
+        width: 100vw;
+    }
+    .form-control{
+        height:36px;
+    }
+    .heading {
+        font-size: 18px;
+    }
+    .form-wrapper label{
+        font-size:.8rem;
+    }
+    .modal-dialog {
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 375px){
+    .customModal .modal-dialog {
+        width:300px;
+    }
+}
+@media (min-width: 1024px){
+    .inner{
+        width:70%;
+        max-width: unset;
+    }
+}
+
+label.error {
+    color: #9C27B0;
+    font-style: italic;
+    font-size: 12px;
+}
+
+.customModal .modal-dialog {
+    max-width: 360px !important;
+    top: 45%;
+    transform: translateY(-50%) !important;
+}
+
+
 
 /*# sourceMappingURL=style.css.map */

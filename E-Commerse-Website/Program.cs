@@ -29,7 +29,14 @@ builder.Services.AddAuthentication(options =>
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Use Always for HTTPS, None for HTTP
         options.Cookie.SameSite = SameSiteMode.Strict; // Adjust based on your cross-site requirements
         options.Cookie.IsEssential = true; // Ensures the cookie is always stored
-        //options.SlidingExpiration = true; // Resets the expiration time on each request
+        options.SlidingExpiration = true; // Resets the expiration time on each request
+        options.Events = new CookieAuthenticationEvents
+        {
+            OnSigningIn = async context =>
+            {
+                context.CookieOptions.Expires = DateTimeOffset.UtcNow.AddHours(5);
+            }
+        };
     })
     .AddCookie("CustomerCookie", options =>
     {
@@ -41,6 +48,13 @@ builder.Services.AddAuthentication(options =>
         options.Cookie.SameSite = SameSiteMode.Strict;
         options.Cookie.IsEssential = true;
         options.SlidingExpiration = true;
+        options.Events = new CookieAuthenticationEvents
+        {
+            OnSigningIn = async context =>
+            {
+                context.CookieOptions.Expires = DateTimeOffset.UtcNow.AddHours(5);
+            }
+        };
     });
 
 

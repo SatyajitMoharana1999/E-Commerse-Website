@@ -1464,6 +1464,16 @@ top: -1px;
   background-color: #081828 !important;
 }
 
+@media (max-width: 991px){
+    .header .topbar .top-left .menu-top-link .select-position select,
+    .header .topbar .top-middle .useful-links li a,
+    .header .topbar .top-end .user,
+    .header .topbar .top-end .user-login li a,
+    .header .topbar .top-end .user-login li button {
+        font-size: .7rem !important;
+    }
+}
+
 .header .topbar .top-left .menu-top-link .select-position select:focus {
   text-decoration: none;
   outline: none;
@@ -1697,6 +1707,11 @@ top: -1px;
   margin-top: 2px;
 }
 
+@media (min-width: 991px){
+    .navbar-nav .nav-item.admin-panel{
+        display:none;
+    }
+}
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
   .header .nav-hotline h3 span {
     font-size: 12px;
@@ -1917,6 +1932,7 @@ top: -1px;
     width: 30%;
     margin-right: 12px;
   }
+
 }
 
 .header .navbar-cart .cart-items .shopping-item .shopping-list li .cart-img {

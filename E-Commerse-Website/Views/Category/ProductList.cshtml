@@ -12,19 +12,66 @@
             position: relative;
             border: 3px solid #0004;
             border-radius: 10px;
+        } 
+        @@media only screen and (max-width:767px){
+            .pt-wrapper .row:first-child>*{
+                width:fit-content !important;
+            }
+
+            .pt-wrapper table td, .pt-wrapper table th {
+                font-size:.8rem
+            }
+
+            .pro-table-wrap h3 {
+                font-size: calc(1rem + .8vw);
+            }
+
+            .dt-search label,.dt-length label{
+                font-size:.8rem;
+            }
+
+        } 
+        @@media only screen and (max-width:540px){
+            .pt-wrapper .row:first-child>*{
+                width:fit-content !important;
+                
+            }
+
+            .pt-wrapper .row:first-child{
+                flex-direction:column;
+                align-items:center;
+            }
+
+            .add-button{
+                font-size:.8rem;
+                padding: 4px 10px;
+            }
+
+            .pagination-text {
+                font-size:.3rem;
+            }
+
+            .dt-search{
+                
+            }
+
+            .cus-len {
+                margin-left:unset !important;
+            }
         }
+
     </style>
 }
-<div class="pro-table-wrap px-4">
+<div class="pro-table-wrap px-4 padding-0">
     <div class="d-flex justify-content-between my-3">
         <div class="">
             <h3 class=" text-secondary">Product List</h3>
         </div>
         <div class=" d-flex justify-content-end align-items-center ">
-            <a href="@Url.Action("ProductUpsert","Category")" class="btn btn-primary fw-bold"><i class="bi bi-plus-circle me-2"></i>Add Product</a>
+            <a href="@Url.Action("ProductUpsert","Category")" class="btn btn-primary fw-bold add-button"><i class="bi bi-plus-circle me-2"></i>Add Product</a>
         </div>
     </div>
-    <div class="shadow p-2 border">
+    <div class="shadow p-2 border pt-wrapper">
         <table class="table table-bordered table-striped text-secondary " id="ProductTable" style="width:100%;background-color:#fff;">
             <thead>
                 <tr>
@@ -66,9 +113,14 @@
     <script>
         $(function(){
             var ProductTable = $('#ProductTable').DataTable({
+                // dom: '<"row"<"col-12"<"table-title">>>rt<"row"<"col-md-6"i><"col-md-6 text-right"p>>',
+                dom: '<"row mb-2 px-2"<"col-7"f><"col-5 ms-auto cus-len"l>><"row"<"col-12"<"table-title">>>rt<"row"<"col-12 d-flex justify-content-center pt-3"p>>',
                 bProcessing: true,
                 bLengthChange: true,
                 lengthMenu: [[7, 15, 25, -1], [7, 15, 25, "All"]],
+                language:{
+                    lengthMenu:'Items_MENU_'
+                },
                 bFilter: true,
                 bSort: true,
                 bPaginate: true,
@@ -117,6 +169,13 @@
                     
                 } else {
                     ProductTable.column(2).visible(true);
+                   
+                }
+                if (screenWidth < 768) {
+                    ProductTable.column(3).visible(false);
+                    
+                } else {
+                    ProductTable.column(3).visible(true);
                    
                 }
 
@@ -170,6 +229,11 @@
                         }
                     }
                 })
+            })
+            $("#ProductTable tbody").on("click", "tr", function () {
+                var data = ProductTable.row(this).data();
+                console.log(data);
+                window.location.href = "/Category/Productdetails/" + data.product_id;
             })
         })
     </script>
