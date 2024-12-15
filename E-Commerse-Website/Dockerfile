@@ -1,27 +1,31 @@
-﻿# Base image for runtime
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-WORKDIR /app
-EXPOSE 80
-
-# Base image for build
+﻿# Use the official .NET SDK image for restoring and building the application
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
+# Set the working directory inside the container
 WORKDIR /src
 
-# Copy the .csproj file and restore dependencies
+# Copy the csproj file and restore dependencies
 COPY ["E-Commerse-Website/E-Commerse-Website.csproj", "E-Commerse-Website/"]
-WORKDIR /src/E-Commerse-Website
-RUN dotnet restore
+RUN dotnet restore "E-Commerse-Website/E-Commerse-Website.csproj"
 
 # Copy the rest of the app and build it
-COPY ["E-Commerse-Website/", "."]
-RUN dotnet build -c Release -o /app/build
+COPY ["E-Commerse-Website/", "E-Commerse-Website/"]
+RUN dotnet build "E-Commerse-Website/E-Commerse-Website.csproj" -c Release -o /app/build
 
-# Publish the app
-FROM build AS publish
-RUN dotnet publish -c Release -o /app/publish
+# Publish the application
+RUN dotnet publish "E-Commerse-Website/E-Commerse-Website.csproj" -c Release -o /app/publish
 
-# Final runtime image
-FROM base AS final
+# Use the official ASP.NET runtime image for the final image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+
+# Set the working directory for the final image
 WORKDIR /app
-COPY --from=publish /app/publish .
+
+# Copy the build from the previous image
+COPY --from=build /app/publish .
+
+# Expose the port that the app will run on
+EXPOSE 80
+
+# Define the entry point for the container
 ENTRYPOINT ["dotnet", "E-Commerse-Website.dll"]
