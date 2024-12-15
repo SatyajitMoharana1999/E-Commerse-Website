@@ -61,7 +61,7 @@
 
     
     <div class=" p-4 padding-0">
-        <h4 class="mb-3">@Model.AH_title</h4>
+        <h4 class="mb-3" style="color:yellow">@Model.AH_title</h4>
         <div>
             <p class="text-secondary">
                 This action is performed by 
@@ -165,7 +165,7 @@
     string CustomerJson = dec_info.Substring(firstStartIndex, firstEndIndex - firstStartIndex);
     string[] Words = CustomerJson.Split(new string[] { "{", "}", ":", "\"", "," }, StringSplitOptions.RemoveEmptyEntries);
     <div class=" p-4 padding-0">
-        <h4 class="mb-3 text-danger">@Model.AH_title</h4>
+        <h4 class="mb-3" style="color:red;">@Model.AH_title</h4>
         <div>
             <p class="text-secondary">
                 This action is performed by
@@ -239,7 +239,7 @@
     <div>----------------------------------------------------------------</div>
     @CustomerJson *@
     <div class=" p-4 padding-0">
-        <h4 class="mb-3 text-success">@Model.AH_title</h4>
+        <h4 class="mb-3" style="color:springgreen">@Model.AH_title</h4>
         <div>
             <p class="text-secondary">
                 This action is performed by
@@ -353,7 +353,7 @@
     Match match = Regex.Match(Model.AH_description, pattern);
     string idString = match.Groups[0].Value;      
     <div class=" p-4 padding-0">
-        <h4 class="mb-3 text-secondary">@Model.AH_title</h4>
+        <h4 class="mb-3 " style="color:#9c5fffff">@Model.AH_title</h4>
         <div>
             <p class="text-secondary">
                 This action is performed by

@@ -1,0 +1,126 @@
+﻿
+<style>
+
+</style>
+<link rel="stylesheet" href="~/assets/css/main.css" />
+@* <!-- Start Resently Added Area -->
+<section class="trending-product section default-product-section-2 rander-section" style="margin-top: 12px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="section-title">
+                    <h2 class="section-name">Resently Added</h2>
+                    <p class="section-description">
+                        There are many variations of passages of Lorem Ipsum available, but the majority have
+                        suffered alteration in some form.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="row RecentlyAdded products">
+            
+        </div>
+    </div>
+</section>
+<!-- End Resently Added Area --> *@
+<div class="randering-wrapper m-0 p-0">
+
+</div>
+
+<script>
+    $(function(){
+        randerSections();
+        function randerSections() {
+            $.ajax({
+                url: "/customer/RanderSection",
+                type: "get",
+                success: function (response) {
+
+                    if (response != null) {
+                        let rander_section = $(".rander-section");  // getting the html code only inside the rander-section class .
+                        // let outer_html = rander_section[0].outerHTML // getting the html code including the rander-section element itself.
+
+                        let outer_html = `<section class="trending-product section default-product-section-2 rander-section" style="margin-top: 12px;">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="section-title">
+                                                                <h2 class="section-name">Resently Added</h2>
+                                                                <p class="section-description">
+                                                                    There are many variations of passages of Lorem Ipsum available, but the majority have
+                                                                    suffered alteration in some form.
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row RecentlyAdded products">
+
+                                                    </div>
+                                                </div>
+                                            </section>`
+
+                        $.each(response, function (key, value) {
+                            let products = value.sectionProducts
+                            if (products.length != 0) {
+                                // We should clone the html code otherwise the original code may harm.
+                                let rc_clone = $(outer_html)    // Dont use clone method to clone because now outer_html is an html string here not a direct dom element . clone function only works on direct dom element.
+                                rc_clone.removeClass("default-product-section-2");
+                                let unique_classname = "rander-section-" + key;
+                                rc_clone.addClass(unique_classname);
+                                // console.log(key,value);
+                                $(".randering-wrapper").append(rc_clone)
+                                console.log(response)
+                                $("." + unique_classname + " .section-name").html(value.section_name)
+                                $("." + unique_classname + " .section-description").html(value.section_description)
+
+                                $("." + unique_classname + " .products").html(buildProductHtml2(products))
+
+                            }
+                        })
+                        console.log(response)
+                    }
+                    else {
+                        console.log("randerSection is empty");
+                    }
+                }
+            })
+        }
+        function buildProductHtml2(productList) {
+            let img_location = `@Url.Content("~/ProductImages/")` || "";
+
+            let html = ``;
+            for (i = 0; i < productList.length; i++) {
+                // debugger;
+                let product = productList[i].product
+                html += `<div class="col-lg-3 col-md-6 col-12">
+                            <div class="single-product">
+                                    <div class="product-image">
+                                        <img src="${img_location}${product.product_image}" alt="#">
+                                        <div class="button">
+                                            <button class="btn addToCart" data-id="${product.product_id}"><i class="lni lni-cart"></i> Add to Cart</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <span class="category"> ${product.category}</span>
+                                        <h4 class="title">
+                                            <a href="/customer/productdetails?id=${product.product_id}"> ${product.product_name}</a>
+                                        </h4>
+                                        <ul class="review">
+                                            <li><i class="lni lni-star-filled"></i></li>
+                                            <li><i class="lni lni-star-filled"></i></li>
+                                            <li><i class="lni lni-star-filled"></i></li>
+                                            <li><i class="lni lni-star-filled"></i></li>
+                                            <li><i class="lni lni-star"></i></li>
+                                            <li><span>4.0 Review(s)</span></li>
+                                        </ul>
+                                        <div class="price">
+                                            <span> ₹${product.product_price}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`
+            }
+            return html;
+        }
+    })
+</script>

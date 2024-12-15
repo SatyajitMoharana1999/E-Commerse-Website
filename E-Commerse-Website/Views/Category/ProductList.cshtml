@@ -14,9 +14,9 @@
             border-radius: 10px;
         } 
         @@media only screen and (max-width:767px){
-            .pt-wrapper .row:first-child>*{
+            /* .pt-wrapper .row:first-child>*{
                 width:fit-content !important;
-            }
+            } */
 
             .pt-wrapper table td, .pt-wrapper table th {
                 font-size:.8rem
@@ -32,10 +32,10 @@
 
         } 
         @@media only screen and (max-width:540px){
-            .pt-wrapper .row:first-child>*{
+            /* .pt-wrapper .row:first-child>*{
                 width:fit-content !important;
                 
-            }
+            } */
 
             .pt-wrapper .row:first-child{
                 flex-direction:column;
@@ -72,7 +72,7 @@
         </div>
     </div>
     <div class="shadow p-2 border pt-wrapper">
-        <table class="table table-bordered table-striped text-secondary " id="ProductTable" style="width:100%;background-color:#fff;">
+        <table class="table table-dark table-bordered table-striped text-secondary " id="ProductTable" style="width:100%;background-color:#fff;">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -114,7 +114,8 @@
         $(function(){
             var ProductTable = $('#ProductTable').DataTable({
                 // dom: '<"row"<"col-12"<"table-title">>>rt<"row"<"col-md-6"i><"col-md-6 text-right"p>>',
-                dom: '<"row mb-2 px-2"<"col-7"f><"col-5 ms-auto cus-len"l>><"row"<"col-12"<"table-title">>>rt<"row"<"col-12 d-flex justify-content-center pt-3"p>>',
+                //dom: '<"row mb-2 px-2"<"col-7"f><"col-5 ms-auto cus-len"l>><"row"<"col-12"<"table-title">>>rt<"row"<"col-12 d-flex justify-content-center pt-3"p>>',
+                dom: '<"row mb-2 px-2"<"col-12 d-flex justify-content-between"fl>><"row"<"col-12"<"table-title">>>rt<"row"<"col-12 d-flex justify-content-center pt-3"p>>',
                 bProcessing: true,
                 bLengthChange: true,
                 lengthMenu: [[7, 15, 25, -1], [7, 15, 25, "All"]],

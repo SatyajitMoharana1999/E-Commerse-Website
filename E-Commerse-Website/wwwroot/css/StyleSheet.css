@@ -3,6 +3,20 @@
     padding: 0px;
     box-sizing: border-box;
 }
+html::-webkit-scrollbar {
+    width: 6px;
+    display:none;
+}
+
+html::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+}
+
+html::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
 .wrapper{
     position:relative;
 }
@@ -12,7 +26,7 @@
     position: absolute;
     top: 0px;
     left: 0px;
-    z-index: 10;
+    z-index: 2;
     position: fixed;
     padding: 6px;
     display:flex;
@@ -23,7 +37,7 @@
     width: 100%;
     height: calc(100% - 4rem);
     border-radius: 10px;
-    border: 1px solid #ddd;
+    /*border: 1px solid #ddd;*/
     background-color: #1e1e2d;
 }
 .logo_section {
@@ -33,7 +47,7 @@
     padding: 0rem 2rem;
     display: flex;
     align-items: center;
-    border: 1px solid #ddd;
+    /*border: 1px solid #ddd;*/
     border-radius: 10px;
     background-color: #1e1e2d;
 }
@@ -44,7 +58,7 @@
     margin: .3rem 0rem;
     padding:0rem .7rem;
     list-style: none;
-    border-radius: 7px;
+    /*border-radius: 7px;*/
 }
 .menubar ul li:hover{
     background-color:#2a2a3c;
@@ -58,7 +72,7 @@
     color:rgb(98 110 140);
     display:flex;
     align-items:center;
-    gap:.8rem;
+    gap:1rem;
 }
 .active {
     background: #2a2a3c;
@@ -70,14 +84,14 @@
     font-size:1.3rem;
     font-weight:900;
 }
-.content{
+.a-content{
     padding-top:calc(4rem + 6px + 6px);
     padding-left:280px;
     padding-right:6px;
 }
 .con{
     min-height:calc(100vh - 4rem - 18px);
-    border:1px solid #ddd;
+    /*border:1px solid #ddd;*/
     border-radius:10px;
     padding-bottom:1rem;
    
@@ -103,14 +117,14 @@
         /*background-color:red;*/
         width: 100%;
     }
-    .content {
+    .a-content {
         padding-left: 230px;
     }
     .menubar ul li a{
         padding: .5rem;
     }
     .menubar ul li {
-        margin: .4rem .7rem;
+        /*margin: .4rem .7rem;*/
     }
 }
 
@@ -141,9 +155,10 @@
     .menubar ul li a {
         justify-content: center;
     }
-    .content {
-        padding-left: .5rem;
-        padding-top: 4rem;
+    .a-content {
+        padding-left: .1rem;
+        padding-top: 4.3rem;
+        padding-right:.1rem;
     }
     .con{
         border:none;
@@ -160,9 +175,13 @@
 @media only screen and (max-width:479px){
     .con{
         padding:0;
+        border:none !important;
     }
     .adh1,.adh{
         font-size:.8rem;
+    }
+    .a-content{
+        padding-top:3.8rem;
     }
 }
 

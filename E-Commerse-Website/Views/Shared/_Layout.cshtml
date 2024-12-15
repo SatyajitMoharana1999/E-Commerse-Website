@@ -727,7 +727,7 @@
                             $("#messageModal").modal("show");
                             setTimeout(function () {
                                 window.location.reload();
-                            }, 3000);
+                            }, 2000);
                         } 
                         else {
                             $("#LoginPopUp").modal("hide");
@@ -832,7 +832,7 @@
                 type: "get",
                 success: function (res) {
                     //debugger;
-                    console.log("this is cart items");
+                    // console.log("this is cart items");
                     console.log(res);
                     if(res!=null && res.length!=0){
                         $(".total-items").show();

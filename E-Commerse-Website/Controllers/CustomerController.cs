@@ -67,6 +67,7 @@ namespace E_Commerse_Website.Controllers
             }
             catch (Exception)
             {
+
                 throw;
             }
         }
@@ -304,6 +305,48 @@ namespace E_Commerse_Website.Controllers
                 throw;
             }
         }
+        public async Task<IActionResult> RanderSection()
+        {
+            try
+            {
+                var section = await _context.tbl_Section.Include(u => u.SectionProducts)
+                    .ThenInclude(sp => sp.Product).ThenInclude(c=>c.Category).Where(p => p.is_active).ToListAsync();
+
+                var result = section.Select(s => new
+                {
+                    s.section_id,
+                    s.section_name,
+                    s.section_description,
+                    s.sort_order,
+                    SectionProducts = s.SectionProducts.Where(sp=>sp.Product!=null && !sp.Product.product_deleted).Select(sp => new
+                    {
+                        sp.section_product_id,
+                        sp.sort_order,
+                        Product = new
+                        {
+                            product_id = sp.Product.product_id,
+                            product_name = sp.Product.product_name,
+                            product_price = sp.Product.product_price,
+                            product_image = sp.Product.product_image,
+                            Category = new
+                            {
+                                category_name=sp.Product.Category.category_name
+                            }
+                        }
+                    })
+                });
+                return Json(result);
+            }
+            catch (Exception)
+            {
+                return Json(null);
+                throw;
+            }
+        }
+
+        
+
+
 
         public async Task<IActionResult> ElectronicsPage()
         {

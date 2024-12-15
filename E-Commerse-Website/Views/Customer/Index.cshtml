@@ -109,21 +109,22 @@
     </div>
 </section>
 <!-- End Hero Area -->
+
 <!-- Start Trending Product Area -->
-<section class="trending-product section" style="margin-top: 12px;">
+<section class="trending-product section default-product-section-1" style="margin-top: 12px;">
     <div class="container">
         <div class="row">
             <div class="col-12">
                 <div class="section-title">
-                    <h2>Trending Product</h2>
-                    <p>
+                    <h2 class="section-name">Trending Product</h2>
+                    <p class="section-description">
                         There are many variations of passages of Lorem Ipsum available, but the majority have
                         suffered alteration in some form.
                     </p>
                 </div>
             </div>
         </div>
-        <div class="row" id="TrandingProduct">
+        <div class="row products" id="TrandingProduct">
             <div class="col-lg-3 col-md-6 col-12">
                 <!-- Start Single Product -->
                 <div class="single-product">
@@ -395,20 +396,20 @@
 </section>
 <!-- End Call Action Area -->
 <!-- Start Resently Added Area -->
-<section class="trending-product section" style="margin-top: 12px;">
+<section class="trending-product section default-product-section-2 rander-section" style="margin-top: 12px;">
     <div class="container">
         <div class="row">
             <div class="col-12">
                 <div class="section-title">
-                    <h2>Resently Added</h2>
-                    <p>
+                    <h2 class="section-name">Resently Added</h2>
+                    <p class="section-description">
                         There are many variations of passages of Lorem Ipsum available, but the majority have
                         suffered alteration in some form.
                     </p>
                 </div>
             </div>
         </div>
-        <div class="row" id="RecentlyAdded">
+        <div class="row RecentlyAdded products" >
             <div class="col-lg-3 col-md-6 col-12">
                 <!-- Start Single Product -->
                 <div class="single-product">
@@ -650,6 +651,19 @@
     </div>
 </section>
 <!-- End Resently Added Area -->
+
+
+<div class="randering-wrapper">
+
+</div>
+
+
+
+
+
+
+
+
 <!-- Start Banner Area -->
 <section class="banner section">
     <div class="container">
@@ -737,7 +751,7 @@
 
 @section Scripts{
     <script>
-        $(function(){
+        $(function () {
             getSliderProductList();
             getSmallBannerProduct();
             getTrandingProducts();
@@ -775,33 +789,33 @@
             }
 
             let img_location = `@Url.Content("~/ProductImages/")` || "";
-            
+
             //console.log(img_location);
-            function getSliderProductList(){
+            function getSliderProductList() {
                 $.ajax({
                     url: "/customer/getSliderProductList",
-                    type:"Get",
-                    success: function(response){
+                    type: "Get",
+                    success: function (response) {
                         //console.log(response);
                         let html = ``
                         for (i = 0; i < response.length; i++) {
                             // console.log(response[i].product_id);
                             html += `<div class="single-slider"
-                                            style="background-image: url(${img_location}${response[i].product_image});">
-                                           <div class="content">
-                                               <h2>
-                                                   <span>No restocking fee (₹35 savings)</span>
-                                                   ${response[i].product_name}
-                                               </h2>
-                                               <p class="sliderproductDESC">
-                                                   ${response[i].product_description}
-                                               </p>
-                                               <h3><span>Now Only</span> ₹${response[i].product_price}</h3>
-                                               <div class="button">
-                                                   <a href="/customer/productdetails?id=${response[i].product_id}" class="btn">Shop Now</a>
-                                               </div>
-                                           </div>
-                                       </div>`
+                                                    style="background-image: url(${img_location}${response[i].product_image});">
+                                                   <div class="content">
+                                                       <h2>
+                                                           <span>No restocking fee (₹35 savings)</span>
+                                                           ${response[i].product_name}
+                                                       </h2>
+                                                       <p class="sliderproductDESC">
+                                                           ${response[i].product_description}
+                                                       </p>
+                                                       <h3><span>Now Only</span> ₹${response[i].product_price}</h3>
+                                                       <div class="button">
+                                                           <a href="/customer/productdetails?id=${response[i].product_id}" class="btn">Shop Now</a>
+                                                       </div>
+                                                   </div>
+                                               </div>`
                         }
                         $(".hero-slider").html(html);
                         initializeSlider();
@@ -812,20 +826,20 @@
             function getSmallBannerProduct() {
                 $.ajax({
                     url: "/customer/getSmallBannerProduct",
-                    type:"Get",
-                    success: function(response){
+                    type: "Get",
+                    success: function (response) {
                         // console.log(response);
                         let html = `<div class="hero-small-banner"
-                                            style="background-image: url(${img_location}${response.product_image});">
-                                        <div class="content">
-                                            <h2>
-                                                <span>New line required</span>
-                                                 <a href="/customer/productdetails?id=${response.product_id}">${response.product_name}</a>
-                                            </h2>
-                                            <h3>₹${response.product_price}</h3>
-                                        </div>
-                                    </div>`
-                        
+                                                    style="background-image: url(${img_location}${response.product_image});">
+                                                <div class="content">
+                                                    <h2>
+                                                        <span>New line required</span>
+                                                         <a href="/customer/productdetails?id=${response.product_id}">${response.product_name}</a>
+                                                    </h2>
+                                                    <h3>₹${response.product_price}</h3>
+                                                </div>
+                                            </div>`
+
                         $("#sml_ban").html(html);
                     }
                 })
@@ -836,50 +850,27 @@
                     type: "Get",
                     success: function (response) {
                         // console.log(response);
-                        let html = ``
-                        for (i = 0; i < response.length; i++) {
-                            html += `<div class="col-lg-3 col-md-6 col-12">
-                                        <div class="single-product">
-                                            <div class="product-image">
-                                                <img src="${img_location}${response[i].product_image}" alt="#">
-                                                <div class="button">
-                                                    <button class="btn addToCart" data-id="${response[i].product_id}"><i class="lni lni-cart"></i> Add to Cart</button>
-                                                </div>
-                                            </div>
-                                            <div class="product-info">
-                                                <span class="category"> ${response[i].category}</span>
-                                                <h4 class="title">
-                                                    <a href="/customer/productdetails?id=${response[i].product_id}"> ${response[i].product_name}</a>
-                                                </h4>
-                                                <ul class="review">
-                                                    <li><i class="lni lni-star-filled"></i></li>
-                                                    <li><i class="lni lni-star-filled"></i></li>
-                                                    <li><i class="lni lni-star-filled"></i></li>
-                                                    <li><i class="lni lni-star-filled"></i></li>
-                                                    <li><i class="lni lni-star"></i></li>
-                                                    <li><span>4.0 Review(s)</span></li>
-                                                </ul>
-                                                <div class="price">
-                                                    <span> ₹${response[i].product_price}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                     </div>`
-                        }
-                        $("#TrandingProduct").html(html);
+                        $(".default-product-section-1 #TrandingProduct").html(buildProductHtml(response));
                     }
                 })
             }
+
             function getRecentlyAddedProducts() {
                 $.ajax({
                     url: "/customer/GetRecentlyAddedProducts",
                     type: "Get",
                     success: function (response) {
-                        // console.log(response);
-                        let html = ``
-                        for (i = 0; i < response.length; i++) {
-                           // debugger;
-                            html += `<div class="col-lg-3 col-md-6 col-12">
+
+                        $(".default-product-section-2 .RecentlyAdded").html(buildProductHtml(response));
+                    }
+                })
+            }
+
+            function buildProductHtml(response) {
+                let html = ``;
+                for (i = 0; i < response.length; i++) {
+                    // debugger;
+                    html += `<div class="col-lg-3 col-md-6 col-12">
                                         <div class="single-product">
                                             <div class="product-image">
                                                 <img src="${img_location}${response[i].product_image}" alt="#">
@@ -890,7 +881,7 @@
                                             <div class="product-info">
                                                 <span class="category"> ${response[i].category}</span>
                                                 <h4 class="title">
-                                                    <a href="product-grids.html"> ${response[i].product_name}</a>
+                                                    <a href="/customer/productDetails?id=${response[i].product_id}"> ${response[i].product_name}</a>
                                                 </h4>
                                                 <ul class="review">
                                                     <li><i class="lni lni-star-filled"></i></li>
@@ -905,28 +896,26 @@
                                                 </div>
                                             </div>
                                         </div>
-                                     </div>`
-                        }
-                        $("#RecentlyAdded").html(html);
-                    }
-                })
+                                    </div>`
+                }
+                return html;
             }
 
             $("#TrandingProduct,#RecentlyAdded").on("click", ".addToCart", function () {
                 debugger;
                 let pid = $(this).data("id");
-                console.log("XXX "+pid);
+                // console.log("XXX "+pid);
                 $.ajax({
-                    url:"/customer/AddToCart",
-                    type:"post",
-                    data: {id:pid},
+                    url: "/customer/AddToCart",
+                    type: "post",
+                    data: { id: pid },
                     success: function (response) {
                         debugger;
                         if (response.success) {
-                            console.log("success");
+                            // console.log("success");
                             getCartItems();
                         }
-                        else{
+                        else {
                             console.log(response.message)
                             if (response.loginPopUp) {
                                 debugger;
@@ -937,7 +926,106 @@
                     }
                 })
             })
-        })
+            randerSections();
+            function randerSections() {
+                $.ajax({
+                    url: "/customer/RanderSection",
+                    type: "get",
+                    success: function (response) {
+
+                        if (response != null) {
+                            let rander_section = $(".rander-section");  // getting the html code only inside the rander-section class .
+                            let outer_html = rander_section[0].outerHTML // getting the html code including the rander-section element itself.
+
+                            $.each(response, function (key, value) {
+                                let products = value.sectionProducts
+                                if (products.length != 0) {
+                                    // We should clone the html code otherwise the original code may harm.
+                                    let rc_clone = $(outer_html)    // Dont use clone method to clone because now outer_html is an html string here not a direct dom element . clone function only works on direct dom element.
+                                    rc_clone.removeClass("default-product-section-2");
+                                    let unique_classname = "rander-section-" + key;
+                                    rc_clone.addClass(unique_classname);
+                                    // console.log(key,value);
+                                    $(".randering-wrapper").append(rc_clone)
+                                    console.log(response)
+                                    $("." + unique_classname + " .section-name").html(value.section_name)
+                                    $("." + unique_classname + " .section-description").html(value.section_description)
+
+                                    $("." + unique_classname + " .products").html(buildProductHtml2(products))
+
+                                }
+                            })
+                            console.log(response)
+                        }
+                        else {
+                            console.log("randerSection is empty");
+                        }
+                    }
+                })
+            }
+            function buildProductHtml2(productList) {
+                let html = ``;
+                for (i = 0; i < productList.length; i++) {
+                    // debugger;
+                    let product = productList[i].product
+                    html += `<div class="col-lg-3 col-md-6 col-12">
+                                        <div class="single-product">
+                                                <div class="product-image">
+                                                    <img src="${img_location}${product.product_image}" alt="#">
+                                                    <div class="button">
+                                                        <button class="btn addToCart" data-id="${product.product_id}"><i class="lni lni-cart"></i> Add to Cart</button>
+                                                    </div>
+                                                </div>
+                                                <div class="product-info">
+                                                    <span class="category"> ${product.category}</span>
+                                                    <h4 class="title">
+                                                        <a href="/customer/productdetails?id=${product.product_id}"> ${product.product_name}</a>
+                                                    </h4>
+                                                    <ul class="review">
+                                                        <li><i class="lni lni-star-filled"></i></li>
+                                                        <li><i class="lni lni-star-filled"></i></li>
+                                                        <li><i class="lni lni-star-filled"></i></li>
+                                                        <li><i class="lni lni-star-filled"></i></li>
+                                                        <li><i class="lni lni-star"></i></li>
+                                                        <li><span>4.0 Review(s)</span></li>
+                                                    </ul>
+                                                    <div class="price">
+                                                        <span> ₹${product.product_price}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>`
+                }
+                return html;
+            }
+
+            $(".randering-wrapper").on("click", ".addToCart", function () {
+
+                let pid = $(this).data("id");
+                console.log("XXX " + pid);
+                $.ajax({
+                    url: "/customer/AddToCart",
+                    type: "post",
+                    data: { id: pid },
+                    success: function (response) {
+
+                        if (response.success) {
+                            // console.log("success");
+                            getCartItems();
+                        }
+                        else {
+                            console.log(response.message)
+
+                        }
+                        $("#messageContent").html(response.message);
+                        $("#messageModal").modal("show");
+                    }
+                })
+            });
+
+        });
+
+        
 
     </script>
 }

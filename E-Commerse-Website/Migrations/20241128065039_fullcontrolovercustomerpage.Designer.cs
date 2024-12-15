@@ -4,6 +4,7 @@ using E_Commerse_Website.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Commerse_Website.Migrations
 {
     [DbContext(typeof(myContext))]
-    partial class myContextModelSnapshot : ModelSnapshot
+    [Migration("20241128065039_fullcontrolovercustomerpage")]
+    partial class fullcontrolovercustomerpage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -291,9 +294,6 @@ namespace E_Commerse_Website.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("section_deleted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("section_description")
                         .HasColumnType("nvarchar(max)");
 
@@ -328,9 +328,6 @@ namespace E_Commerse_Website.Migrations
                     b.Property<int>("section_id")
                         .HasColumnType("int");
 
-                    b.Property<bool>("section_product_deleted")
-                        .HasColumnType("bit");
-
                     b.Property<int>("sort_order")
                         .HasColumnType("int");
 
@@ -355,9 +352,6 @@ namespace E_Commerse_Website.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("is_active")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("slider_deleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("slider_description")
@@ -393,9 +387,6 @@ namespace E_Commerse_Website.Migrations
 
                     b.Property<int>("slider_id")
                         .HasColumnType("int");
-
-                    b.Property<bool>("slider_product_deleted")
-                        .HasColumnType("bit");
 
                     b.Property<int>("sort_order")
                         .HasColumnType("int");

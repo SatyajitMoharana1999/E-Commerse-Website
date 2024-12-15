@@ -4,7 +4,7 @@
 
 <div class="">
     <div class="main_wrap">
-        <form class="pro_con shadow-sm" id="myform" method="post" enctype="multipart/form-data" action="/Admin/Admin_Details_Page">
+        <form class="pro_con shadow-sm border" id="myform" method="post" enctype="multipart/form-data" action="/Admin/Admin_Details_Page">
             <div class="image_wrapper" style="background-image: url('../AdminImages/@Model.admin_image');">
                 @* <div id="iw_text">
                 <input type="file" id="ci" class="change_image" name="imageFile"/>
@@ -55,7 +55,7 @@
         </form>
         <div class="pro_table">
             <div class="pt-con">
-            <div class="text-secondary h-heading pb-1 mb-1">My Activity History</div>
+            <div class="text-secondary h-heading pb-1 mb-1 bg-dark fw-bold">My Activity History</div>
                 <div class="history_content">
 
                 </div>
@@ -177,7 +177,7 @@
                         console.log(res);
                         $.each(res, function (index, value) {
                             html += `<div class="mb-1 p-2 text-secondary bg-secondary bg-opacity-10  border-start-0 rounded-end d-flex justify-content-between h-content" data-hc="${value.aH_id}">
-                                                        <span class=" text-dark">${value.aH_title}</span>
+                                                        <span class=" text-secondary">${value.aH_title}</span>
                                                         <span class="text-secondary fst-italic">${value.aH_title.split(' ')[0]}</span>
                                                     </div>`
                         })

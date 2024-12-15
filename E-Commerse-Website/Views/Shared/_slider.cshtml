@@ -1,0 +1,130 @@
+﻿
+ 
+@* 
+<link rel="stylesheet" href="~/assets/css/LineIcons.3.0.css" />
+<link rel="stylesheet" href="~/assets/css/tiny-slider.css" />
+<link rel="stylesheet" href="~/assets/css/glightbox.min.css" />
+ *@
+<link rel="stylesheet" href="~/assets/css/main.css" />
+ <style>
+    
+    /*--------- custom ---------*/
+    .hero-area .hero-slider .single-slider {
+        background-size: 40%;
+        background-position: center right;
+        border: 1px solid #ddd;
+    }
+
+    .hero-small-banner {
+        background-size: 55% !important;
+        background-position: center right;
+        border: 1px solid #ddd;
+    }
+
+ </style>
+<!-- Start Hero Area -->
+<section class="hero-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-12 custom-padding-right">
+                <div class="slider-head">
+                    <!-- Start Hero Slider -->
+                    <div class="tns-outer" id="tns1-ow">
+                        <div class="tns-controls" aria-label="Carousel Navigation" tabindex="0"><button type="button" data-controls="prev" tabindex="-1" aria-controls="tns1"><i class="lni lni-chevron-left"></i></button><button type="button" data-controls="next" tabindex="-1" aria-controls="tns1"><i class="lni lni-chevron-right"></i></button></div><div class="tns-liveregion tns-visually-hidden" aria-live="polite" aria-atomic="true">slide <span class="current">3</span>  of 3</div><div id="tns1-mw" class="tns-ovh">
+                            <div class="tns-inner" id="tns1-iw">
+                                <div class="hero-slider  tns-slider tns-carousel tns-subpixel tns-calc tns-horizontal" id="tns1" style="transform: translate3d(-40%, 0px, 0px);">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Hero Slider -->
+                </div>
+            </div>
+            <div class="col-lg-4 col-12">
+                <div class="row">
+                    <div class="col-lg-12 col-md-6 col-12 md-custom-padding" id="sml_ban">
+                        <div class="hero-small-banner" style="background-image: url(/ProductImages/00c7ac52-3de5-43c2-b0e6-bd106bc51cb6.jpg);">
+                            <div class="content">
+                                <h2>
+                                    <span>New line required</span>
+                                    <a href="/customer/productdetails?id=13">Redmi 13C 5G</a>
+                                </h2>
+                                <h3>₹15000</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-6 col-12">
+                        <!-- Start Small Banner -->
+                        <div class="hero-small-banner style2">
+                            <div class="content">
+                                <h2>Weekly Sale!</h2>
+                                <p>Saving up to 50% off all online store items this week.</p>
+                                <div class="button">
+                                    <a class="btn" href="product-grids.html">Shop Now</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Start Small Banner -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Hero Area -->
+
+<script src="~/assets/js/tiny-slider.js"></script>
+<script>
+    $(function () {
+        function getSliderProductList() {
+            let img_location = `@Url.Content("~/ProductImages/")` || "";
+            $.ajax({
+                url: "/customer/getSliderProductList",
+                type: "Get",
+                success: function (response) {
+                    console.log("partial");
+                    console.log(response);
+                    let html = ``
+                    for (i = 0; i < response.length; i++) {
+                        console.log(response[i].product_id);
+                        html += `<div class="single-slider"
+                                        style="background-image: url(${img_location}${response[i].product_image});">
+                                        <div class="content">
+                                            <h2>
+                                                <span>No restocking fee (₹35 savings)</span>
+                                                ${response[i].product_name}
+                                            </h2>
+                                            <p class="sliderproductDESC">
+                                                ${response[i].product_description}
+                                            </p>
+                                            <h3><span>Now Only</span> ₹${response[i].product_price}</h3>
+                                            <div class="button">
+                                                <a href="/customer/productdetails?id=${response[i].product_id}" class="btn">Shop Now</a>
+                                            </div>
+                                        </div>
+                                    </div>`
+                    }
+                    $(".hero-slider").html(html);
+                    initializeSlider();
+                }
+            })
+        }
+        function initializeSlider() {
+            tns({
+                container: '.hero-slider',
+                slideBy: 'page',
+                autoplay: true,
+                autoplayButtonOutput: false,
+                mouseDrag: true,
+                gutter: 0,
+                items: 1,
+                nav: false,
+                controls: true,
+                controlsText: ['<i class="lni lni-chevron-left"></i>', '<i class="lni lni-chevron-right"></i>'],
+            });
+        }
+
+        getSliderProductList();
+    });
+</script>

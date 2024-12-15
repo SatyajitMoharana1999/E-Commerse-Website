@@ -9,4 +9,37 @@
     .padding-0 {
         padding: 0 !important;
     }
+    .padding-inline-0 {
+        padding-inline: 0 !important;
+    }
+    .padding-top-10{
+        padding-top:10px !important;
+    }
+   
+
+}
+.popup-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: red;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    display:none;
+}
+.p-show{
+    animation: pop-open .5s ease-in;
+}
+
+@keyframe pop-open{
+    0%{
+        opacity:0;
+    }
+    100%{
+        opacity:1;
+    }
 }

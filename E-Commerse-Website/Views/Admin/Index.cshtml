@@ -1,13 +1,709 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@{
-}
-<h1>Satyajit Moharana admin index</h1>
-<p>@ViewData["AdminName"]</p>
+@section Styles{
+    <link rel="stylesheet" href="~/assets/css/LineIcons.3.0.css" />
+    <style>
+        .custom-card{
+            max-width: 100%;
+            min-height:fit-content;
+            height:100%;
+        }
 
+        .single-section .section-name {
+            width: 65%;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .slider-details::-webkit-scrollbar, .section-details::-webkit-scrollbar {
+            width: 0px;
+        }
+
+        .hover:hover {
+            mask-image: linear-gradient(#000c,#000c);
+        }
+
+        .slider-card {
+            position: relative;
+        }
+
+        .section-card {
+            position: relative;
+        }
+
+        .u-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cb-small{
+            font-size:.8rem;
+            padding:.2rem .8rem;
+            width:48%;
+        }
+
+        .fader-wrap{
+            position:relative;
+            flex:1;
+        }
+        .slider-details,.section-details{
+            padding-top: .5rem;
+            padding-bottom: .5rem;
+            /* height:14rem; */
+            max-height:14rem; 
+            overflow-y:scroll;
+            /* position:relative; */
+            height:100%;
+            /* transition: max-height 2s ease; */
+        }
+        .slider-details::before,.section-details::before{
+            content:"";
+            position:absolute;
+            top:0px;
+            left:0px;
+            width:100%;
+            height:1rem;
+            background-color:var(--bs-body-bg);
+            mask-image:linear-gradient(rgb(0,0,0), rgba(0,0,0,0.2));
+        }
+        .slider-details::after,.section-details::after{
+            content:"";
+            position:absolute;
+            bottom:0px;
+            left:0px;
+            width:100%;
+            height:1rem;
+                background-color: var(--bs-body-bg);
+            mask-image:linear-gradient( rgba(0,0,0,0),rgb(255,255,255));
+        }
+
+        .arrow-wrap{
+            position: absolute;
+            bottom: 0px;
+            left: 50%;
+            transform:translate(-50%,20%);
+            animation: up-down 1s linear alternate infinite;
+        }
+        @@keyframes up-down{
+            0%{
+                transform: translate(-50%,35%);
+            }
+            100%{
+                transform: translate(-50%,50%);
+            }
+        }
+        
+        .single{
+            /* border:1px solid #fff; */
+            padding:.2rem .6rem;
+            border-radius:5px;
+            margin:.4rem 0rem;
+            font-size:.8rem;
+            font-weight:bold;
+
+        }
+       
+
+        .conformation{
+            position:absolute;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+            z-index:10;
+            height:100%;
+            width:100%;
+            /* background-color:red; */
+            backdrop-filter:blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .conform-message-box{
+            width:80%;
+            height:80%;
+            max-height:125px;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-direction:column;
+            position:relative;
+        }
+
+        
+        /*----------------------------------------- modal css -----------------------------------------*/
+        .customModal .modal-dialog {
+            /* max-width: 360px !important; */
+            width:800px;
+        }
+
+        .modal-open .modal {
+            padding-right: 0 !important;
+        }
+
+        @@keyframes scale_in {
+            0% {
+                transform: scale(1.1);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @@keyframes scale_out {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1.1);
+                opacity: 0;
+            }
+        }
+
+        .modal.fade .modal-dialog {
+            transition: transform .3s ease-out;
+            /*transform: translate(0, -50px);*/
+            transform: scale(0.9) !important;
+        }
+
+        .modal.show .modal-dialog {
+            transform: translate(0, 0px) !important;
+        }
+
+        .customModal .modal-dialog {
+            max-width: 100% !important;
+            width: 100%;
+        }
+
+        
+        /*----------------------------------------- modal end -----------------------------------------*/
+        .hero-area .hero-slider .single-slider {
+            background-size: 40%;
+            background-position: center right;
+            border: 1px solid #ddd;
+        }
+
+        .hero-small-banner {
+            background-size: 55% !important;
+            background-position: center right;
+            border: 1px solid #ddd;
+        }
+
+
+        .preview .hero-area .hero-small-banner {
+            filter: blur(2px);
+        }
+
+        .preview{
+            min-height:20rem;
+        }
+
+        .preview a,.preview .randering-wrapper button{
+            pointer-events:none;
+        }
+
+        .preview .slider-head {
+            animation: blink 2s linear 5;
+            /* border: 2px solid #081828bb; */
+        }
+
+        @@keyframes blink {
+            0%, 100% {
+                border: 2px solid transparent;
+            }
+
+            50% {
+                border: 2px solid #8505ff80;
+            }
+        }
+        /*---------------------------------------------- slider css ----------------------------------------------*/
+        
+    </style>
+
+    <link rel="stylesheet" href="~/assets/css/tiny-slider.css" />
+    <link rel="stylesheet" href="~/css/LoaderSVG.css" />
+}
+<div class="container-fluid p-3 padding-inline-0 padding-top-10">
+    <div class="row g-3">
+        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6">
+            <div class="card custom-card bg-dark text-light ">
+                <div class="card-body slider-card u-card">
+                    <div class="slider-conformation conformation " style="display:none;">
+                        <div class="conform-message-box rounded border-0" style="backdrop-filter:blur(10px); background-color:#000c">
+                            <p class="m-0 fw-bold ">Are You Sure ?</p>
+                            <div>
+                                <button class="btn btn-danger btn-sm fw-bold slider-close-button"><i class="bi bi-x-circle"></i></button>
+                                <button class="btn btn-primary btn-sm fw-bold slider-conform-button"><i class="bi bi-check-circle"></i></button>
+                            </div>
+
+                            <div class="d-flex align-items-center" style="gap:.4rem;">
+                                <input class=" slider-check" type="checkbox">
+                                <span class="" style="font-size:.8rem"> Never Show This Again</span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center border-bottom pb-1 w-100 mb-3">
+                        <h5 class="m-0">Product Slider</h5>
+                        <i class="bi bi-info-circle"></i>
+                    </div>
+                    <div class="w-100 d-flex justify-content-between">
+                        <button class="slider-preview btn cb-small btn-secondary fw-bold"><i class="bi bi-eye-fill me-1"></i> Preview</button>
+                        <a href="@Url.Action("SliderAction","Admin")" class="btn cb-small btn-primary fw-bold"><i class="bi bi-lightning-charge-fill me-1"></i>Actions</a>
+                    </div>
+                    <div class="fader-wrap">
+
+                        <div class="slider-details mt-2" data-check-overflow>
+
+                            @* <div class="d-flex justify-content-between single-section align-items-center">
+                                <div class="section-name" style="cursor:pointer">hellohelloh llohellohellohel lohello</div>
+                                <div class="d-flex align-items-center form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                                </div>
+                            </div> *@
+                           @*  <div class="w-100 spinner-container d-flex justify-content-center align-items-center" style="height:8rem;">
+                                <div class="spinner-grow text-secondary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                
+                            </div> *@
+                            <div class="placeholder-glow opacity-25">
+                                <span class="placeholder w-100 my-1 border-0 rounded" style="height:1.5rem"></span>
+                            </div>
+                            <div class="placeholder-glow opacity-25">
+                                <span class="placeholder w-100 my-1 border-0 rounded" style="height:1.5rem"></span>
+                            </div>
+                            <div class="placeholder-glow opacity-25">
+                                <span class="placeholder w-100 my-1 border-0 rounded" style="height:1.5rem"></span>
+                            </div>
+                            
+                        
+                        </div>
+                        <div class="arrow-wrap">
+                            <i class="bi bi-chevron-compact-down fs-3"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6">
+            <div class="card custom-card bg-dark text-light ">
+                <div class="card-body section-card u-card">
+                    <div class="section-conformation conformation " style="display:none;">
+                        <div class="conform-message-box rounded border-0" style="backdrop-filter:blur(10px); background-color:#000c">
+                            <p class="m-0 fw-bold">Are You Sure ?</p>
+                            <div>
+                                <button class="btn btn-danger btn-sm fw-bold section-close-button"><i class="bi bi-x-circle"></i></button>
+                                <button class="btn btn-primary btn-sm fw-bold section-conform-button" ><i class="bi bi-check-circle"></i></button>
+                            </div>
+                            <div class="d-flex align-items-center" style="gap:.4rem;">
+                                <input class = " section-check" type="checkbox" >
+                                <span class="" style="font-size:.8rem"> Never Show This Again</span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center border-bottom pb-1 w-100 mb-3">
+                        <h5 class="m-0">Sections</h5>
+                        <i class="bi bi-info-circle"></i>
+                    </div>
+                    <div class="w-100 d-flex justify-content-between">
+                        <button class="section-preview btn cb-small btn-secondary fw-bold"><i class="bi bi-eye-fill me-1"></i> Preview</button>
+                        <a href="@Url.Action("SectionAction","Admin")" class="btn cb-small btn-primary fw-bold"><i class="bi bi-lightning-charge-fill me-1"></i>Actions</a>
+                    </div>
+
+                    <div class="fader-wrap">
+
+                        <div class="section-details mt-2" data-check-overflow>
+
+                            @* <div class="w-100 spinner-container d-flex justify-content-center align-items-center" style="height:8rem;">
+                                <div class="spinner-grow text-secondary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div> *@
+                            <div class="placeholder-glow opacity-25">
+                                <span class="placeholder w-100 my-1 border-0 rounded" style="height:1.5rem"></span>
+                            </div>
+                            <div class="placeholder-glow opacity-25">
+                                <span class="placeholder w-100 my-1 border-0 rounded" style="height:1.5rem"></span>
+                            </div>
+                            <div class="placeholder-glow opacity-25">
+                                <span class="placeholder w-100 my-1 border-0 rounded" style="height:1.5rem"></span>
+                            </div>
+                        
+                        </div>
+                        <div class="arrow-wrap">
+                            <i class="bi bi-chevron-compact-down  fs-3"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-4 col-lg-6 col-md-12 col-sm-6">
+            <div class="card custom-card">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal -->      @* for preview *@
+<div class="modal fade customModal preview-modal" @* id="LoginPopUp" *@ tabindex="-1" data-bs-keyboard="false" aria-hidden="true" @* style="transform:scale(80%);" *@>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body p-0 bg-body-secondary">
+                <button type="button" class="btn-close float-end p-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="px-3 mt-4">
+                    <p class="fw-bold text-secondary m-0 preview-title"></p>
+                </div>
+
+                <div class="preview  pb-5 mb-4 mt-1">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     <script>
+        
+        $(function(){
+            loadProductSlider()
+            function loadProductSlider(){
+                $.ajax({
+                    url:"/Admin/GetSliderList",
+                    type:"get",
+                    success: function(response){
+                        console.log(response);
+                        var html = ``;
+                        if (!response || response.length === 0) {
+                            html = `<div class="h-100 w-100 d-flex justify-content-center align-items-center" >
+                                            <h3 class="text-secondary user-select-none">Empty</h3>
+                                        </div>`
+                        }
+                        else{
+                            $.each(response, function (key, value) {
+                                console.log(value);
+                                html += `<div class="d-flex justify-content-between single single-slider bg-secondary bg-opacity-10 align-items-center">
+                                            <div class="slider-name" style="cursor:pointer" data-id="${value.slider_id}">${value.slider_name}</div>
+                                            <div class="d-flex align-items-center form-switch">
+                                                <input class="form-check-input slider-checkbox" type="checkbox" role="switch" data-id="${value.slider_id}" ${value.is_active ? "checked" : ""}>
+                                            </div>
+                                        </div> `
+                            });
+                        }
+                        $(".slider-details").html(html);
+                        loadOverflowArrow()
+                    }
+                })
+            }
 
+            loadProductSection();
+            function loadProductSection(){
+                $.ajax({
+                    url:"/Admin/GetSectionList",
+                    type:"get",
+                    success: function(response){
+
+                        console.log(response);
+                        var html = ``;
+                        
+                        
+                        if(!response || response.length === 0){
+                            html=`<div class="h-100 w-100 d-flex justify-content-center align-items-center">
+                                    <h3 class="text-secondary user-select-none">Empty</h3>
+                                </div>`
+                        }
+                        else{
+                            $.each(response, function (key, value) {
+                                html += `<div class="d-flex justify-content-between single-section single bg-secondary bg-opacity-10 align-items-center">
+                                                <div class="section-name" style="cursor:pointer" data-id="${value.section_id}">${value.section_name}</div>
+                                                <div class="d-flex align-items-center form-switch load-spinner">
+                                                    <input class="form-check-input section-checkbox" type="checkbox" role="switch" data-id="${value.section_id}" ${value.is_active ? "checked" : ""} >
+                                                </div>
+                                            </div> `
+                            });
+                        }
+                        $(".section-details").html(html);
+                        loadOverflowArrow()
+                    }
+                })
+            }
+
+            function loadOverflowArrow() {
+                $("[data-check-overflow]").each(function(){
+                    const el = $(this);
+                    
+                    if (el[0].scrollHeight > el[0].clientHeight) {
+                        el.next(".arrow-wrap").show()
+                    }
+                    else{
+                        el.next(".arrow-wrap").hide()
+                    }
+                })
+            }
+
+
+            $(".section-details").on("change", ".section-checkbox", function () {
+                const section_id = $(this).data("id");
+                const is_active = $(this).prop("checked");
+                if (!getCookie("Section-Conformation-Cookie")) { /* -------------------------------- C O O K I E   section-conformation -------------------- */
+                    $(".section-conformation").data("section_id", section_id).show();
+                }
+               else{
+                    const spinner = `<div class="me-3">
+                                    <div class="spinner-border text-danger" role="status" style="height:.8rem; width:.8rem;">
+                                      <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>`
+                
+                    $(this).hide();
+                    $(this).parent().append(spinner);
+
+                    $.ajax({
+                        url: "/admin/SectionActive",
+                        type: "Post",
+                        data: { section_id: section_id, is_active },
+                        success: function (response) {
+                            loadProductSection();
+                        }
+                    })
+                    
+               }
+            })
+             $(".slider-details").on("change", ".slider-checkbox", function () {
+                const slider_id = $(this).data("id");
+                const is_active = $(this).prop("checked");
+                if (!getCookie("Slider-Conformation-Cookie")) { /* -------------------------------- C O O K I E   slider-conformation -------------------- */
+                    $(".slider-conformation").data("slider_id", slider_id).show();
+                }
+                else{
+                    const spinner = `<div class="me-3">
+                                        <div class="spinner-border text-danger" role="status" style="height:.8rem; width:.8rem;">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>`
+                
+                    $(this).hide();
+                    $(this).parent().append(spinner);
+
+                    $.ajax({
+                        url: "/admin/SliderActive",
+                        type: "Post",
+                        data: { slider_id: slider_id, is_active },
+                        success: function (response) {
+                            loadProductSlider();
+                        }
+                    })
+                    
+                }
+            })
+
+            $(".section-close-button").click(function(){
+                if ($(".section-check").prop("checked")) {
+                    setCookie("Section-Conformation-Cookie", "true", 4);
+                }
+
+                const section_id = $(".section-conformation").data("section_id")
+                const checkbox = $(`.section-checkbox[data-id="${section_id}"]`)
+                if (checkbox.prop("checked")) {
+                    checkbox.prop("checked", false);
+                } else {
+                    checkbox.prop("checked", true);
+                }
+                $(".section-conformation").hide();
+            })
+
+
+            $(".slider-close-button").click(function(){
+                if ($(".slider-check").prop("checked")) {
+                    setCookie("Slider-Conformation-Cookie", "true", 4);
+                }
+
+                const slider_id = $(".slider-conformation").data("slider_id")
+                const checkbox = $(`.slider-checkbox[data-id="${slider_id}"]`)
+                if (checkbox.prop("checked")) {
+                    checkbox.prop("checked", false);
+                } else {
+                    checkbox.prop("checked", true);
+                }
+                $(".slider-conformation").hide();
+            })
+
+
+            $(".section-card").on("click", ".section-conform-button", function () {
+                const section_id = $(".section-conformation").data("section_id")
+                // console.log("from-section");
+                // console.log(section_id);
+
+                const spinner = `<div class="me-3">
+                                            <div class="spinner-border text-danger" role="status" style="height:.8rem; width:.8rem;">
+                                              <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </div>`
+                const checkbox = $(`.section-checkbox[data-id="${section_id}"]`);
+                const is_active = checkbox.prop("checked");
+                checkbox.hide();
+                checkbox.parent().append(spinner);
+
+                $(".section-conformation").hide();
+                if ($(".section-check").prop("checked")) {
+                    setCookie("Section-Conformation-Cookie", "true", 4);
+                }
+
+                $.ajax({
+                    url:"/admin/SectionActive",
+                    type:"Post",
+                    data: { section_id: section_id, is_active },
+                    success: function (response){
+                        loadProductSection();
+                    }
+                })
+                
+            })
+
+
+            $(".slider-card").on("click", ".slider-conform-button", function () {
+                const slider_id = $(".slider-conformation").data("slider_id")
+                // console.log("from-section");
+                // console.log(section_id);
+
+                const spinner = `<div class="me-3">
+                                            <div class="spinner-border text-danger" role="status" style="height:.8rem; width:.8rem;">
+                                              <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </div>`
+                const checkbox = $(`.slider-checkbox[data-id="${slider_id}"]`);
+                const is_active = checkbox.prop("checked");
+                checkbox.hide();
+                checkbox.parent().append(spinner);
+
+                $(".slider-conformation").hide();
+                if ($(".slider-check").prop("checked")) {
+                    setCookie("Slider-Conformation-Cookie", "true", 4);
+                }
+                
+                $.ajax({
+                    url:"/admin/SliderActive",
+                    type:"Post",
+                    data: { slider_id: slider_id, is_active },
+                    success: function (response){
+                        loadProductSlider();
+                    }
+                })
+                
+            })
+
+            function getCookie(name) {
+                const cookies = document.cookie.split(';').map(cookie => cookie.trim());
+                for (const cookie of cookies) {
+                    if (cookie.startsWith(`${name}=`)) {
+                        return cookie.split('=')[1]; // Return the cookie value
+                    }
+                }
+                return null; // Return null if the cookie does not exist
+            }
+
+            function setCookie(name, value, hour) {
+                const date = new Date();
+                date.setTime(date.getTime() + (hour * 60 * 60 * 1000)); // Expiry in 'days'
+                document.cookie = `${name}=${value}; path=/; expires=${date.toUTCString()}`;
+            }
+
+
+            
+
+            $(".slider-preview").click(function(){
+                let loaderAnimation = `<div class="loadingAnimationWraper">
+                                         <svg class="pl" viewBox="0 0 200 200" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+                                                <defs>
+                                                    <linearGradient id="pl-grad1" x1="1" y1="0.5" x2="0" y2="0.5">
+                                                        <stop offset="0%" stop-color="hsl(313,90%,55%)" />
+                                                        <stop offset="100%" stop-color="hsl(223,90%,55%)" />
+                                                    </linearGradient>
+                                                    <linearGradient id="pl-grad2" x1="0" y1="0" x2="0" y2="1">
+                                                        <stop offset="0%" stop-color="hsl(313,90%,55%)" />
+                                                        <stop offset="100%" stop-color="hsl(223,90%,55%)" />
+                                                    </linearGradient>
+                                                </defs>
+                                                <circle class="pl__ring" cx="100" cy="100" r="82" fill="none" stroke="url(#pl-grad1)" stroke-width="36" stroke-dasharray="0 257 1 257" stroke-dashoffset="0.01" stroke-linecap="round" transform="rotate(-90,100,100)" />
+                                                <line class="pl__ball" stroke="url(#pl-grad2)" x1="100" y1="18" x2="100.01" y2="182" stroke-width="36" stroke-dasharray="1 165" stroke-linecap="round" />
+                                            </svg>
+                                        </div>`
+                $(".preview").html(loaderAnimation);
+                $(".preview-modal").modal("show");
+               
+                $.ajax({
+                    url: "/Admin/SliderPartial",
+                    type:"Get",
+                    success: function (data) {
+                        //console.log(data);
+                        setTimeout(function () {
+                            $(".preview").html(data);
+                            $(".preview-title").html("Current Product Slider Preview");
+                        }, 2000);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error loading partial view:', error);
+                    }
+                })
+            })
+            
+            $(".section-preview").click(function(){
+                let loaderAnimation = `<div class="loadingAnimationWraper">
+                                         <svg class="pl" viewBox="0 0 200 200" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+                                                <defs>
+                                                    <linearGradient id="pl-grad1" x1="1" y1="0.5" x2="0" y2="0.5">
+                                                        <stop offset="0%" stop-color="hsl(313,90%,55%)" />
+                                                        <stop offset="100%" stop-color="hsl(223,90%,55%)" />
+                                                    </linearGradient>
+                                                    <linearGradient id="pl-grad2" x1="0" y1="0" x2="0" y2="1">
+                                                        <stop offset="0%" stop-color="hsl(313,90%,55%)" />
+                                                        <stop offset="100%" stop-color="hsl(223,90%,55%)" />
+                                                    </linearGradient>
+                                                </defs>
+                                                <circle class="pl__ring" cx="100" cy="100" r="82" fill="none" stroke="url(#pl-grad1)" stroke-width="36" stroke-dasharray="0 257 1 257" stroke-dashoffset="0.01" stroke-linecap="round" transform="rotate(-90,100,100)" />
+                                                <line class="pl__ball" stroke="url(#pl-grad2)" x1="100" y1="18" x2="100.01" y2="182" stroke-width="36" stroke-dasharray="1 165" stroke-linecap="round" />
+                                            </svg>
+                                        </div>`
+                $(".preview").html(loaderAnimation);
+                $(".preview-modal").modal("show");
+               
+                $.ajax({
+                    url: "/Admin/SectionPartial",
+                    type:"Get",
+                    success: function (data) {
+                        //console.log(data);
+                        setTimeout(function () {
+                            $(".preview").html(data);
+                            $(".preview-title").html("Current Sections");
+                        }, 2000);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error loading partial view:', error);
+                    }
+                })
+            })
+
+
+            $(".preview-modal").on("hide.bs.modal", function () {
+                $(".preview").html("");
+                $(".preview-title").html("");
+            })
+        })
     </script>
 }

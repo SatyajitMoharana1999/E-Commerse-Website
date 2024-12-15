@@ -379,11 +379,125 @@ namespace E_Commerse_Website.Controllers
             }
             
         }
+
+
+        //---------------------------------------------------- Admin Index Page --------------------------------------------------------------------------
+
+        public async Task<IActionResult> GetSliderList()
+        {
+            try
+            {
+                var sliderList = await _unit.SliderRepo.GetAllAsync();
+                var list = sliderList.Where(s => !s.slider_deleted).ToList();
+                return Json(list);
+            }
+            catch (Exception)
+            {
+                return Json(null);
+                throw;
+            }
+        }
+        public async Task<IActionResult> GetSectionList()
+        {
+            try
+            {
+                var sectionList = await _unit.SectionRepo.GetAllAsync();
+                var list = sectionList.Where(s => !s.section_deleted).ToList();
+                return Json(list);
+            }
+            catch (Exception)
+            {
+                return Json(null);
+                throw;
+            }
+        }
+
+        public async Task<IActionResult> SectionActive(int section_id,bool is_active)
+        {
+            try
+            {
+                var section = await _unit.SectionRepo.GetAsync(u => u.section_id == section_id && !u.section_deleted);
+                if (section != null)
+                {
+                    section.is_active = is_active;
+                    await _unit.SaveAsync();
+                    return Json(new { success = true, message = "updated successfully" });
+                }
+                return Json(new { success = false, message = "Something Went Wrong" });
+            }
+            catch (Exception)
+            {
+                return Json(new { success = false, message = "updated successfully" });
+                throw;
+            }
+        }
+
+
+        public async Task<IActionResult> SliderActive(int slider_id,bool is_active)
+        {
+            try
+            {
+                var list = await _unit.SliderRepo.GetAllAsync();
+                var previousActive = list.Where(u => u.is_active == true).FirstOrDefault();
+                var newActive = list.Where(u => u.slider_id == slider_id).FirstOrDefault();
+
+                if(newActive != null)
+                {
+                    if (previousActive != null)
+                    {
+                        previousActive.is_active = false;
+                    }
+                    newActive.is_active = true;
+                    await _unit.SaveAsync();
+                    return Json(new { success = true, message = "updated successfully" });
+                }
+                return Json(new { success = false, message = "Something Went Wrong" });
+            }
+            catch (Exception)
+            {
+                return Json(new { success = false, message = "updated successfully" });
+                throw;
+            }
+        }
+
+
+
+        public IActionResult SliderPartial()
+        {
+            return PartialView("_slider");
+        }
+        public IActionResult SectionPartial()
+        {
+            return PartialView("_section");
+        }
+
+
+
+
+
+        //--------------------------------------------------- Slider Action Page ----------------------------------------------------------------
+
+        public IActionResult SliderAction()
+        {
+            RequireCall("index");
+            return View();
+        }
+
+
+         //--------------------------------------------------- Section Action Page ----------------------------------------------------------------
+
+        public IActionResult SectionAction()
+        {
+            RequireCall("index");
+            return View();
+        }
+
+
         //--------------------------------------------- Extra Methods
 
-       
 
-        
+
+
 
         public IActionResult SomethingWentWrong()
         {

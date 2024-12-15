@@ -1,6 +1,83 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿
 <h1>hello demo</h1>
+@{
+    ViewData["Title"] = "Slider Test";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.4/tiny-slider.css" />
+    <style>
+        .slide-wrapper {
+            overflow: hidden;
+            width: 100%;
+        }
+        .slider {
+            display: flex;
+        }
+        .slide {
+            text-align: center;
+            font-size: 2rem;
+            padding: 20px;
+            background: #eee;
+            border: 1px solid #ccc;
+        }
+    </style>
+}
+
+<section>
+    <div class="slide-wrapper">
+        <div class="slider">
+            <div class="slide">Hello</div>
+            <div class="slide">Hi</div>
+            <div class="slide">GM</div>
+        </div>
+    </div>
+    <div id="controls">
+        <button class="previous">P</button>
+        <button class="next">N</button>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.4/min/tiny-slider.js"></script>
+    <script>
+        $(document).ready(function () {
+            const slider = tns({
+                container: ".slider",
+                items: 1,
+                slideBy: "page",
+                autoplay: true,
+                autoplayTimeout: 3000,
+                autoplayButtonOutput: false,
+                autoplayHoverPause: false,
+                autoplayResetOnVisibility: true,
+                controlsContainer: "#controls",
+                prevButton: ".previous",
+                nextButton: ".next",
+            });
+
+            // Ensure autoplay resumes after interactions
+            $(".previous, .next").on("click", function () {
+                slider.play();
+            });
+
+            // Fallback: Force resume autoplay periodically
+            setInterval(function () {
+                slider.play();
+            }, 5000);
+
+            // Debugging events
+            slider.events.on('transitionEnd', function () {
+                console.log('Slide transitioned.');
+            });
+            slider.events.on('pause', function () {
+                console.log('Autoplay paused.');
+            });
+            slider.events.on('play', function () {
+                console.log('Autoplay resumed.');
+            });
+        });
+    </script>
+
+}

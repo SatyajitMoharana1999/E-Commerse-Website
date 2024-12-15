@@ -96,14 +96,14 @@
                 <div class="col-lg-4 col-sm-12">
                     <div>
                         <div class="d-flex flex-column justify-content-center align-items-center">
-                            <div class="p_img_wrap border border-success shadow mt-3">
+                            <div class="p_img_wrap border shadow mt-3">
                                 <i class="bi bi-x-square" id="image_cancel_button"></i>
                                 <div class="inp_container">
                                     <label for="p_img">
-                                        <i class="bi bi-arrow-up-square text-success"></i>
+                                        <i class="bi bi-arrow-up-square text-secondary"></i>
                                     </label>
                                     <div class="inp_file">
-                                        <div class="up_text text-primary">
+                                        <div class="up_text text-secondary">
                                             <label for="p_img" class="upload_text">Upload</label>
                                         </div>
                                         <div class="inp_wrapper">
@@ -118,34 +118,34 @@
                 <div class="col-lg-8 col-sm-12">
                     <div class="mb-3">
                         <input type="hidden" id="p_id" name="p_id" asp-for="@Model.product.product_id" />
-                        <label for="p_name" class="text-primary">Name</label>
+                        <label for="p_name" class="text-secondary">Name</label>
                         <input type="text" id="p_name" class="form-control" name="p_name" asp-for="@Model.product.product_name" />
                     </div>
                     <div class="mb-3">
                         <div class="row g-3"> 
                             <div class="col-sm-6 col-lg-12 col-xl-6">
-                                <label for="p_category" class="text-primary">Category</label>
+                                <label for="p_category" class="text-secondary">Category</label>
                                 <select type="number" id="p_category" class="form-select" name="p_category" asp-for="@Model.product.cat_id" asp-items="@Model.categoryList">
                                     <option selected disabled>-- Category --</option>
                                 </select>
                             </div>
                             <div class="col-sm-6 col-lg-12 col-xl-6">
-                                <label for="p_price" class="text-primary">Price</label>
+                                <label for="p_price" class="text-secondary">Price</label>
                                 <input type="number" id="p_price" class="form-control" name="p_price" asp-for="@Model.product.product_price"/>
                             </div>
                         </div>
                         
                     </div>
                     <div class="">
-                        <label for="p_description" class="text-primary">Description</label>
+                        <label for="p_description" class="text-secondary">Description</label>
                         <textarea id="p_description" name="p_description" asp-for="@Model.product.product_description" class="form-control" cols="50" rows="2" style="resize:none"></textarea>
                     </div>
                 </div>
             </div>
             <div class="row px-4 pt-3">
                 <div class="d-flex justify-content-end align-items-center">
-                    <a href="@Url.Action("productlist","Category")" class="btn btn-danger mx-1">Back To List</a>
-                    <button type="button" class="btn btn-success mx-1" id="p_add_submit"><i class="bi bi-plus-circle"></i> Submit</button>
+                    <a href="@Url.Action("productlist","Category")" class="btn btn-secondary mx-1">Back To List</a>
+                    <button type="button" class="btn btn-primary mx-1" id="p_add_submit"><i class="bi bi-plus-circle"></i> Submit</button>
                 </div>
             </div>
 

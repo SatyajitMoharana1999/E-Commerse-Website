@@ -1,6 +1,13 @@
 ﻿@model List<Customer>;
 @section Styles{
     <link href="~/css/customerlist.css" rel="stylesheet" />
+    <style>
+        #admintbodydata .selected td{
+            background-color: #000 !important;
+            color: #8f4bff;
+        }
+
+    </style>
 }
 <div class="cu-table-wrap px-4 py-3 padding-0">
     <div class="d-flex justify-content-between align-items-center heading-section">
@@ -66,9 +73,13 @@
     <script>
         $(function () {
             var adminCustomerTable = $('#AdminCustomerTable').DataTable({
+                dom: '<"row mb-2 px-2"<"col-12 d-flex justify-content-between"fl>><"row"<"col-12"<"table-title">>>rt<"row"<"col-12 d-flex justify-content-center pt-3"p>>',
                 bProcessing: true,
                 bLengthChange: true,
                 lengthMenu: [[7, 15, 25, -1], [7, 15, 25, "All"]],
+                language: {
+                    lengthMenu: 'Entries_MENU_'
+                },
                 bFilter: true,
                 bSort: true,
                 bPaginate: true,

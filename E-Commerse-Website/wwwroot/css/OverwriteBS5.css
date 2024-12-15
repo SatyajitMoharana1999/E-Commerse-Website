@@ -1,0 +1,32 @@
+﻿:root{
+    
+}
+.btn-primary {
+    --bs-btn-color: #d9d9d9;
+    --bs-btn-bg: #5815c5;
+    --bs-btn-border-color: #6100ff;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #6021c7;
+    --bs-btn-hover-border-color: #6100ff;
+    --bs-btn-focus-shadow-rgb: 49, 132, 253;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #6021c7;
+    --bs-btn-active-border-color: #6100ff;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #6021c7;
+    --bs-btn-disabled-border-color: #6100ff;
+}
+.form-check-input:checked {
+    background-color: #5815c5;
+    border-color: #6100ff;
+}
+
+.text-primary {
+    --bs-text-opacity: 1;
+    color: rgba(var(--bs-primary-rgb), var(--bs-text-opacity)) !important;
+}
+
+.ct-primary {
+    color: #5815c5
+}

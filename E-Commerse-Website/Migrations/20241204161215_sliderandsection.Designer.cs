@@ -4,6 +4,7 @@ using E_Commerse_Website.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Commerse_Website.Migrations
 {
     [DbContext(typeof(myContext))]
-    partial class myContextModelSnapshot : ModelSnapshot
+    [Migration("20241204161215_sliderandsection")]
+    partial class sliderandsection
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -328,9 +331,6 @@ namespace E_Commerse_Website.Migrations
                     b.Property<int>("section_id")
                         .HasColumnType("int");
 
-                    b.Property<bool>("section_product_deleted")
-                        .HasColumnType("bit");
-
                     b.Property<int>("sort_order")
                         .HasColumnType("int");
 
@@ -393,9 +393,6 @@ namespace E_Commerse_Website.Migrations
 
                     b.Property<int>("slider_id")
                         .HasColumnType("int");
-
-                    b.Property<bool>("slider_product_deleted")
-                        .HasColumnType("bit");
 
                     b.Property<int>("sort_order")
                         .HasColumnType("int");

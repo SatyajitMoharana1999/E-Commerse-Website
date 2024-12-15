@@ -16,6 +16,10 @@ namespace E_Commerse_Website.Data
         public DbSet<Faqs> tbl_faqs{ get; set; }
         public DbSet<AdminHistory> tbl_adminHistory { get; set; }
 		public DbSet<OTP_Customer> tbl_OTP_Customer { get; set; }
+		public DbSet<Slider> tbl_Slider { get; set; }
+		public DbSet<SliderProduct> tbl_SliderProduct { get; set; }
+		public DbSet<Section> tbl_Section { get; set; }
+		public DbSet<SectionProduct> tbl_SectionProduct { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

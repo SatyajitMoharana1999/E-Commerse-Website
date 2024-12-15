@@ -1,13 +1,15 @@
 ﻿@section Styles{
     <style>
         .Activity-container h4 {
-            color: #35356c;
-            border-bottom: 1px solid #35356c;
+            /* color: #35356c; */
             padding-bottom:.5rem;
             padding-left:.5rem;
         }
 
-       
+        .history_details span{
+            font-size:.9rem;
+            /* font-weight:bold; */
+        }
 
         .historyContent > div:hover .history_details{
             opacity:1;
@@ -15,7 +17,7 @@
         }
 
         .history_details:hover{
-            transform:scale(1.02);
+            transform:scale(1.01);
             transition: 150ms ease-in-out;
         }
         @@media only screen and (max-width:469px){
@@ -27,10 +29,22 @@
                 height:50px;
             }
         }
+        .Added:hover span{
+            color: springgreen !important;
+        }
+        .Deleted:hover span{
+            color: #ff0044 !important;
+        }
+        .Updated:hover span{
+            color: yellow !important;
+        }
+        .Recategorised:hover span{
+            color: #9c5fffff !important;
+        }
     </style>
 }
 <div class=" p-3 ps-4 Activity-container padding-0">
-    <h4>Activity History</h4>
+    <h4 class="border-bottom">Activity History</h4>
     <div class="historyContent">
         
     </div>
@@ -53,32 +67,32 @@
                         console.log(res);
                         $.each(res,function(index,value) {
                             if (value.aH_title.split(' ')[1] == "Updated") {
-                                html += `<div class="history_details mb-1 p-3 text-info bg-info bg-opacity-10 border border-info border-start-0 rounded-end d-flex justify-content-between align-items-center" data-id="${value.aH_id}">
-                                                <span class="fw-bold text-dark">
+                                html += `<div class="Updated history_details mb-1 px-3 py-2 bg-secondary bg-opacity-10  border-start-0 rounded-end d-flex justify-content-between align-items-center" data-id="${value.aH_id}">
+                                                <span class=" text-light">
                                                     ${value.aH_title} 
                                                 </span>
                                                 <span class="text-secondary fst-italic">${value.aH_title.split(' ')[0]}</span>
                                             </div>`
                             }
                             if (value.aH_title.split(' ')[1] == "Added") {
-                                html += `<div class="history_details mb-1 p-3 text-success bg-success bg-opacity-10 border border-success border-start-0 rounded-end d-flex justify-content-between align-items-center" data-id="${value.aH_id}">
-                                                <span class="fw-bold text-dark">
+                                html += `<div class=" Added history_details mb-1 px-3 py-2 bg-secondary bg-opacity-10  border-start-0 rounded-end d-flex justify-content-between align-items-center" data-id="${value.aH_id}">
+                                                <span class="text-light">
                                                     New ${value.aH_title}
                                                 </span>
                                                 <span class="text-secondary fst-italic">${value.aH_title.split(' ')[0]}</span>
                                             </div>`
                             }
                             if (value.aH_title.split(' ')[1] == "Deleted") {
-                                html += `<div class="history_details mb-1 p-3 bg-danger text-danger bg-opacity-10 border border-danger border-start-0 rounded-end d-flex justify-content-between align-items-center" data-id="${value.aH_id}">
-                                                <span class="fw-bold text-dark">
+                                html += `<div class="Deleted history_details mb-1 px-3 py-2 bg-secondary bg-opacity-10 border-start-0 rounded-end d-flex justify-content-between align-items-center" data-id="${value.aH_id}">
+                                                <span class=" text-light">
                                                     ${value.aH_title}
                                                 </span>
                                                 <span class="text-secondary fst-italic">${value.aH_title.split(' ')[0]}</span>
                                             </div>`
                             }
                             if (value.aH_title.split(' ')[1] == "Recategorised") {
-                                    html += `<div class="history_details mb-1 p-3 bg-secondary text-secondary bg-opacity-10 border border-secondary border-start-0 rounded-end d-flex justify-content-between align-items-center" data-id="${value.aH_id}">
-                                                <span class="fw-bold text-dark">
+                                html += `<div class="Recategorised history_details mb-1 px-3 py-2 bg-secondary bg-opacity-10 border-start-0 rounded-end d-flex justify-content-between align-items-center" data-id="${value.aH_id}">
+                                                <span class=" text-light">
                                                     ${value.aH_title}
                                                 </span>
                                                 <span class="text-secondary fst-italic">${value.aH_title.split(' ')[0]}</span>
